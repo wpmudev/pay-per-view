@@ -1,0 +1,4 @@
+V1.10: Fixed a bug in DELETE mysql command
+	Fixed a bug when pages/posts are globally disabled and individually enabled
+	Included admin_notices method to warn admin when API login is not set
+V1.0: Initial release

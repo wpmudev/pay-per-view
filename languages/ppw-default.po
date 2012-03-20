@@ -1,0 +1,1157 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Pay Per View V1.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2012-03-20 17:48+0700\n"
+"PO-Revision-Date: 2012-03-20 17:49+0700\n"
+"Last-Translator: Incsub <puck198@hotmail.com>\n"
+"Language-Team: incsub\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-Basepath: .\n"
+"X-Poedit-Language: English\n"
+"X-Poedit-SearchPath-0: C:\\Documents and Settings\\PUCK\\Desktop\\pay-per-view\n"
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:116
+msgid "Login with Facebook"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:117
+msgid "Login with Twitter"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:118
+msgid "Login with WordPress"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:119
+msgid "Submit"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:120
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2025
+msgid "Cancel"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:121
+msgid "Please, wait..."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:345
+msgid "Pay Per View Subscription"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:349
+msgid "Expires at"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:359
+msgid "Recurring days"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:636
+#, php-format
+msgid "Confirm %s %s payment to see this content"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:716
+#, php-format
+msgid "Subscription for %s"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:717
+msgid "Special offer"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:886
+msgid "Last transaction has been reversed. Reason: Payment has been reversed (charge back)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:900
+msgid "Last transaction has been reversed. Reason: Payment has been refunded"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:914
+msgid "Last transaction has been reversed. Reason: Payment Denied"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:926
+msgid "Customer did not include a confirmed shipping address"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:927
+msgid "Funds not captured yet"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:928
+msgid "eCheck that has not cleared yet"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:929
+msgid "Payment waiting for aproval by service provider"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:930
+msgid "Payment waiting for service provider to handle multi-currency process"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:931
+msgid "Customer did not register or confirm his/her email yet"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:932
+msgid "Waiting for service provider to upgrade the PayPal account"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:933
+msgid "Waiting for service provider to verify his/her PayPal account"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:937
+msgid "Last transaction is pending. Reason: "
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:982
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:983
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1253
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1995
+msgid "Pay Per View"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:998
+msgid "page"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1000
+msgid "post"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1030
+msgid "Enabled?"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1033
+#, php-format
+msgid ""
+"Selects if Pay Per View is enabled for this %s or not. If 'Follow global setting' is selected, \n"
+"\t\tGeneral Setting page selection will be valid. 'Always enabled' \n"
+"\t\tand 'Always disabled' selections will enable or disable Pay Per View for this %s, respectively, \n"
+"\t\toverriding general setting."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1044
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1067
+msgid "Follow global setting"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1045
+msgid "Always enabled"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1046
+msgid "Always disabled"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1051
+msgid "Method"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1054
+#, php-format
+msgid ""
+"Selects the content protection method for this %s. If 'Follow global setting' is selected, \n"
+"\t\tmethod selected in General Settings page will be applied. If you want to override general settings, select one of the other methods.\n"
+"\t\tWith 'Use Selection Tool' you need to select each content using the icon %s on the editor tool bar. \n"
+"\t\tFor other methods refer to the settings page. "
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1068
+msgid "Automatic excerpt"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1069
+msgid "Manual excerpt"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1070
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1374
+msgid "Use selection tool"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1075
+msgid "Excerpt length"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1078
+#, php-format
+msgid ""
+"If you want to override the number of words that will be used as an excerpt for the unprotected content, enter it here. \n"
+"\t\tPlease note that this value is only used when Automatic Excerpt method is applied to the %s."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1086
+#, php-format
+msgid "Price (%s)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1089
+#, php-format
+msgid ""
+"If you want to override the default price to reveal this post/page, enter it here. \n"
+"\t\tThis value is NOT used when Selection Tool method is applied to the %s."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1206
+msgid "[Pay Per View] If you are using Daily Pass or Recurring Subscriptions, you need to enable and set API logins."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1254
+msgid "Transactions"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1330
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1335
+msgid "General Settings"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1342
+msgid "Global Settings"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1344
+msgid "These settings provide a quick way to set Pay Per View for your posts and pages. They can be overridden per post basis using post editor page."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1349
+msgid "Protection for posts"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1352
+msgid "Disabled for all posts"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1353
+msgid "Enabled for all posts"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1359
+msgid "Protection for pages"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1362
+msgid "Disabled for all pages"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1363
+msgid "Enabled for all pages"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1369
+msgid "Public content selection method"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1372
+msgid "Automatic excerpt from the content"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1373
+msgid "Manual excerpt from post excerpt field"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1377
+#, php-format
+msgid ""
+"Automatic excerpt selects the first %d words, number being adjustable from \"excerpt length\" field. \n"
+"\t\t\t\t\t\t\tManual excerpt displays whatever included in the post excerpt field of the post. \n"
+"\t\t\t\t\t\t\tWith selection tool, you can freely select part(s) of the content to be protected. \n"
+"\t\t\t\t\t\t\tUsing the latter one may be a little bit sophisticated, but enables more than one part of the content to be protected."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1393
+msgid "Excerpt length (words)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1395
+msgid "Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1399
+#, php-format
+msgid "Unit price (%s)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1401
+msgid "Default price per protected content."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1409
+msgid "Accessibility Settings"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1415
+msgid "Enable on the home page"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1418
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1428
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1439
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1450
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1481
+msgid "Yes"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1419
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1429
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1440
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1451
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1482
+msgid "No"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1425
+msgid "Enable for multiple post pages"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1431
+msgid "Enables the plugin for pages which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. "
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1436
+msgid "Admin sees full content"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1442
+msgid "You may want to select No for test purposes."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1447
+msgid "Authorized users see full content"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1453
+msgid "If Yes, authorized users will see the full content without the need to pay or subscribe. Admin setting is independent of this one."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1465
+msgid "User level where authorization starts"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1468
+msgid "Editor"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1469
+msgid "Author"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1470
+msgid "Contributor"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1471
+msgid "Subscriber"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1473
+msgid "If the above field is selected as yes, users having a higher level than this selection will see the full content."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1478
+msgid "Search bots see full content"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1484
+msgid "You may want to enable this for SEO purposes. Warning: Your full content may be visible in search engine results."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1493
+msgid "Payment Options"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1499
+msgid "One time view"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1502
+msgid "Visitors pay per content they want to reveal. Price can be set globally from the above \"unit price\" field, or per post basis using the post editor. Does not require registration of the visitor."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1519
+msgid "One time view description"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1521
+msgid ""
+"This text will be shown on the button. PRICE (case sensitive) will be replaced by its real value. \n"
+"\t\t\t\t\t\tDESCRIPTION (case sensitive) will be replaced by description field defined in Selection Tool, or the word \"content\" if it is not given."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1526
+msgid "Daily Pass"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1529
+msgid "Visitor pays a lumpsum fee and then he/she can view all the content on the website. Visitor is required to register to the website."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1545
+#, php-format
+msgid "Daily pass price (%s)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1547
+msgid "Price that will be paid once which lets the visitor see full content during validity period."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1551
+msgid "Daily pass validity (days)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1553
+msgid "Daily pass will be valid for this period."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1557
+msgid "Daily pass description"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1559
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1597
+msgid "This text will be shown on the button. PRICE and DAY (case sensitive) will be replaced by their real values."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1564
+msgid "Recurring subscription"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1568
+msgid "Visitor subscribes to view all the content on the website. Visitor is required to register to the website."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1584
+#, php-format
+msgid "Subscription price (%s)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1589
+msgid "Subscription period (days)"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1591
+msgid "Price is valid for this period and it will be renewed after it expires."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1595
+msgid "Subscription description"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1607
+msgid "API Settings"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1613
+msgid "Accept API Logins"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1616
+msgid "Enables login to website using Facebook and Twitter."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1632
+msgid "My website already uses Facebook"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1635
+msgid "By default, Facebook script will be loaded by the plugin. If you are already running Facebook scripts, to prevent any conflict, check this option."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1640
+msgid "Facebook App ID"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1643
+#, php-format
+msgid "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s'>here</a>"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1648
+msgid "Twitter Consumer Key"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1651
+#, php-format
+msgid "Enter your Twitter App ID number here. If you don't have a Twitter App yet, you will need to create one <a href=\"%s\">here</a>"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1656
+msgid "Twitter Consumer Secret"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1659
+msgid "Enter your Twitter App ID Secret here."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1676
+msgid "Save Changes"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1781
+msgid " Pay Per View Transactions"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1784
+msgid "Recent transactions"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1785
+msgid "Pending transactions"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1786
+msgid "Future transactions"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1813
+msgid "Post"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1814
+msgid "User"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1815
+msgid "Date"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1816
+msgid "Expiry Date"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1817
+msgid "Amount"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1818
+msgid "Transaction id"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1819
+msgid "Status"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1901
+#: Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1910
+msgid "None yet"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:1921
+msgid "No Transactions have been found, patience is a virtue."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2002
+msgid "Please enter a value!"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2006
+msgid "Description"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2010
+msgid "Description for this selection."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2013
+msgid "Price"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2017
+msgid "Price for this selection."
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2029
+msgid "Insert"
+msgstr ""
+
+#: C:\Documents
+#: and Settings\PUCK\Desktop\pay-per-view/pay-per-view.php:2098
+msgid "Please install the latest version of <a href=\"http://premium.wpmudev.org/project/update-notifications/\" title=\"Download Now &raquo;\">our free Update Notifications plugin</a> which helps you stay up-to-date with the most stable, secure versions of WPMU DEV themes and plugins. <a href=\"http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/\">More information &raquo;</a>"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/class_wd_help_tooltips.php:296
+msgid "Help"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:53
+msgid "PayPal Express Checkout"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:54
+msgid "PayPal"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:94
+msgid "Your PayPal transaction has been canceled."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:112
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:353
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:809
+msgid "A reversal has been canceled; for example, when you win a dispute and the funds for the reversal have been returned to you."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:116
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:357
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:814
+msgid "The authorization period for this payment has been reached."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:120
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:361
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:819
+msgid "An authorization for this transaction has been voided."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:124
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:365
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:824
+msgid "The payment has failed. This happens only if the payment was made from your customer's bank account."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:128
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:369
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:829
+msgid "The payment has been partially refunded."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:132
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:373
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:834
+msgid "The transaction has not terminated, e.g. an authorization may be awaiting completion."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:136
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:377
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:839
+msgid "The payment has been completed, and the funds have been added successfully to your account balance."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:140
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:381
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:844
+msgid "A payment has been accepted."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:144
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:385
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:849
+msgid "A payment was reversed due to a chargeback or other type of reversal. The funds have been removed from your account balance and returned to the buyer:"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:147
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:388
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:852
+msgid "A reversal has occurred on this transaction due to a chargeback by your customer."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:148
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:389
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:853
+msgid "A reversal has occurred on this transaction due to your customer triggering a money-back guarantee."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:149
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:390
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:854
+msgid "A reversal has occurred on this transaction due to a complaint about the transaction from your customer."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:150
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:391
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:855
+msgid "A reversal has occurred on this transaction because you have given the customer a refund."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:151
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:392
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:856
+msgid "A reversal has occurred on this transaction due to an unknown reason."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:157
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:398
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:863
+msgid "You refunded the payment."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:161
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:402
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:868
+msgid "You denied the payment when it was marked as pending."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:166
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:407
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:874
+msgid "The payment is pending because your customer did not include a confirmed shipping address and your Payment Receiving Preferences is set such that you want to manually accept or deny each of these payments. To change your preference, go to the Preferences  section of your Profile."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:167
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:408
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:875
+msgid "The payment is pending because it has been authorized but not settled. You must capture the funds first."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:168
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:409
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:876
+msgid "The payment is pending because it was made by an eCheck that has not yet cleared."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:169
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:410
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:877
+msgid "The payment is pending because you hold a non-U.S. account and do not have a withdrawal mechanism. You must manually accept or deny this payment from your Account Overview."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:170
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:411
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:878
+msgid "You do not have a balance in the currency sent, and you do not have your Payment Receiving Preferences set to automatically convert and accept this payment. You must manually accept or deny this payment."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:171
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:412
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:879
+msgid "The payment is pending because it is part of an order that has been authorized but not settled."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:172
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:413
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:880
+msgid "The payment is pending while it is being reviewed by PayPal for risk."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:173
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:414
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:881
+msgid "The payment is pending because it was made to an email address that is not yet registered or confirmed."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:174
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:415
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:882
+msgid "The payment is pending because it was made via credit card and you must upgrade your account to Business or Premier status in order to receive the funds. It can also mean that you have reached the monthly limit for transactions on your account."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:175
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:416
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:883
+msgid "The payment is pending because you are not yet verified. You must verify your account before you can accept this payment."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:176
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:417
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:884
+msgid "The payment is pending for an unknown reason. For more information, contact PayPal customer service."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:179
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:420
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:887
+msgid "The payment is pending."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:242
+msgid "There was a problem connecting to PayPal to setup your purchase. Please try again."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:306
+msgid "There was a problem with your PayPal transaction. Please try again</a>."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:310
+msgid "Whoops, looks like you skipped a step! "
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:343
+msgid "eCheck"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:343
+msgid "PayPal balance, Credit Card, or Instant Transfer"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:481
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:484
+msgid "There was a problem finalizing your purchase with PayPal. Please try again</a>."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:515
+#, php-format
+msgid "Your PayPal payment for this order totaling %s is not yet complete. Here is the latest status:"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:522
+#, php-format
+msgid "Your PayPal payment for this order totaling %s is complete. The PayPal transaction number is <strong>%s</strong>."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:585
+msgid "PayPal Express Checkout Settings"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:587
+msgid "Express Checkout is PayPal's premier checkout solution, which streamlines the checkout process for buyers and keeps them on your site after making a purchase. Unlike PayPal Pro, there are no additional fees to use Express Checkout, though you may need to do a free upgrade to a business account. <a target=\"_blank\" href=\"https://cms.paypal.com/us/cgi-bin/?&cmd=_render-content&content_ID=developer/e_howto_api_ECGettingStarted\">More Info &raquo;</a>"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:590
+msgid "PayPal Site"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:625
+msgid "Paypal Currency"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:665
+msgid "PayPal Mode"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:668
+msgid "Sandbox"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:669
+msgid "Live"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:674
+msgid "PayPal Merchant E-mail"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:680
+msgid "PayPal API Credentials"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:682
+msgid "You must login to PayPal and create an API signature to get your credentials. <a target=\"_blank\" href=\"https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_ECAPICredentials\">Instructions &raquo;</a>"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:683
+msgid "API Username"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:686
+msgid "API Password"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:689
+msgid "Signature"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:715
+msgid "PayPal Header Image (optional)"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:717
+msgid "URL for an image you want to appear at the top left of the payment page. The image has a maximum size of 750 pixels wide by 90 pixels high. PayPal recommends that you provide an image that is stored on a secure (https) server. If you do not specify an image, the business name is displayed."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:724
+msgid "PayPal Header Border Color (optional)"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:726
+msgid "Sets the border color around the header of the payment page. The border is a 2-pixel perimeter around the header space, which is 750 pixels wide by 90 pixels high. By default, the color is black."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:733
+msgid "PayPal Header Background Color (optional)"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:735
+msgid "Sets the background color for the header of the payment page. By default, the color is white."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:742
+msgid "PayPal Page Background Color (optional)"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:744
+msgid "Sets the background color for the payment page. By default, the color is white."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:801
+msgid "There was a problem verifying the IPN string with PayPal. Please try again."
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:933
+#, php-format
+msgid "%s Purchase - A content from: %s"
+msgstr ""
+
+#: C:\Documents
+#: and
+#: Settings\PUCK\Desktop\pay-per-view/includes/paypal-express.php:1048
+msgid "There was a problem connecting to PayPal. Please try again."
+msgstr ""
+
