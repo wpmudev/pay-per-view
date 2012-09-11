@@ -48,6 +48,7 @@ class PPW_Gateway_Paypal_Express {
   function __construct($post_id=0) {
     global $ppw;
     $settings = get_option('ppw_options');
+	
 
     //set names here to be able to translate
     $this->admin_name = __('PayPal Express Checkout', 'ppw');
@@ -60,19 +61,21 @@ class PPW_Gateway_Paypal_Express {
     //set paypal vars
     /** @todo Set all array keys to resolve Undefined indexes notice */;
 
-    $this->API_Username = $settings['gateways']['paypal-express']['api_user'];
-    $this->API_Password = $settings['gateways']['paypal-express']['api_pass'];
-    $this->API_Signature = $settings['gateways']['paypal-express']['api_sig'];
-    $this->currencyCode = $settings['gateways']['paypal-express']['currency'];
-    $this->locale = $settings['gateways']['paypal-express']['locale'];
+    $this->API_Username = @$settings['gateways']['paypal-express']['api_user'];
+    $this->API_Password = @$settings['gateways']['paypal-express']['api_pass'];
+    $this->API_Signature = @$settings['gateways']['paypal-express']['api_sig'];
+    $this->currencyCode = @$settings['gateways']['paypal-express']['currency'];
+    $this->locale = @$settings['gateways']['paypal-express']['locale'];
     $this->returnURL = get_permalink($post_id) . "?ppw_confirm=1";
   	$this->cancelURL = get_permalink($post_id) . "?cancel=1";
     $this->version = "69.0"; //api version
 	
+	$this->cookie = $settings["cookie"]; // Cookie validity time
+	
 	$this->post_id = $post_id;
 
     //set api urls
-  	if ($settings['gateways']['paypal-express']['mode'] == 'sandbox')	{
+  	if ( @$settings['gateways']['paypal-express']['mode'] == 'sandbox')	{
   		$this->API_Endpoint = "https://api-3t.sandbox.paypal.com/nvp";
   		$this->paypalURL = "https://www.sandbox.paypal.com/webscr?cmd=_express-checkout&token=";
   	} else {
@@ -233,6 +236,7 @@ class PPW_Gateway_Paypal_Express {
       $token = urldecode($result["TOKEN"]);
       $this->RedirectToPayPal($token);
     } else { //whoops, error
+		$error = "";
       for ($i = 0; $i <= 5; $i++) { //print the first 5 errors
         if (isset($result["L_ERRORCODE$i"])) {
           $error .= "<li>{$result["L_ERRORCODE$i"]} - {$result["L_SHORTMESSAGE$i"]} - {$result["L_LONGMESSAGE$i"]}</li>";
@@ -272,7 +276,7 @@ class PPW_Gateway_Paypal_Express {
       //check response
   		if($result["ACK"] == "Success" || $result["ACK"] == "SuccessWithWarning")	{
 
-        $account_name = ($result["BUSINESS"]) ? $result["BUSINESS"] : $result["EMAIL"];
+        $account_name = isset($result["BUSINESS"]) ? $result["BUSINESS"] : $result["EMAIL"];
 
         //set final amount
         $_SESSION['final_amt'] = 0;
@@ -288,14 +292,8 @@ class PPW_Gateway_Paypal_Express {
 		  }
 		  $_SESSION['final_amt'] += $result['PAYMENTREQUEST_'.$i.'_AMT'];
 		  $_SESSION['final_amts'][] = $result['PAYMENTREQUEST_'.$i.'_AMT'];
-		  $_SESSION['prs'][] = $result['PAYMENTREQUEST_'.$i.'_PAYMENTREQUESTID'];
-		  $_SESSION['ipns'][] = $result['PAYMENTREQUEST_'.$i.'_NOTIFYURL'];
-		  //$_SESSION['seller_ids'][] = $result['PAYMENTREQUEST_'.$i.'_SELLERID'];
-		  $_SESSION['seller_paypal_accounts'][] = $result['PAYMENTREQUEST_'.$i.'_SELLERPAYPALACCOUNTID'];
 		}
 
-        //print payment details
-       // $content .= '<p>' . sprintf(__('Please confirm your final payment for this order totaling %s.', 'ppw'), $_SESSION['final_amt']) . '</p>';
 
   		} else { //whoops, error
         for ($i = 0; $i <= 5; $i++) { //print the first 5 errors
@@ -343,7 +341,6 @@ class PPW_Gateway_Paypal_Express {
 		  $payment_info['method'] = ($result["PAYMENTINFO_{$i}_PAYMENTTYPE"] == 'echeck') ? __('eCheck', 'ppw') : __('PayPal balance, Credit Card, or Instant Transfer', 'ppw');
 		  $payment_info['transaction_id'] = $result["PAYMENTINFO_{$i}_TRANSACTIONID"];
 
-		  //$timestamp = strtotime($result["PAYMENTINFO_{$i}_ORDERTIME"]);
 		  // We use servers timestamp
 		  $timestamp = time();
 		  
@@ -462,7 +459,14 @@ class PPW_Gateway_Paypal_Express {
 	
 			$orders[] = $new_order;
 
-			$expire = time() + 3600; //1 hour is enough
+			// Let admin set cookie expire at the end of session
+			if ( !isset($this->cookie) )
+				$expire = time() + 3600;
+			else if ( !$this->cookie )
+				$expire = ''; 
+			else
+				$expire = time() + 3600 * $this->cookie; 
+			
 			if ( defined('COOKIEPATH') ) $cookiepath = COOKIEPATH;
 			else $cookiepath = "/";
 			if ( defined('COOKIEDOMAIN') ) $cookiedomain = COOKIEDOMAIN;
@@ -665,15 +669,15 @@ class PPW_Gateway_Paypal_Express {
 					<th scope="row"><?php _e('PayPal Mode', 'ppw') ?></th>
 					<td>
 					<select name="ppw[gateways][paypal-express][mode]">
-	          <option value="sandbox"<?php selected($settings['gateways']['paypal-express']['mode'], 'sandbox') ?>><?php _e('Sandbox', 'ppw') ?></option>
-	          <option value="live"<?php selected($settings['gateways']['paypal-express']['mode'], 'live') ?>><?php _e('Live', 'ppw') ?></option>
+	          <option value="sandbox"<?php selected(@$settings['gateways']['paypal-express']['mode'], 'sandbox') ?>><?php _e('Sandbox', 'ppw') ?></option>
+	          <option value="live"<?php selected(@$settings['gateways']['paypal-express']['mode'], 'live') ?>><?php _e('Live', 'ppw') ?></option>
 	        </select>
 					</td>
 	        </tr>
 					<tr>
 					<th scope="row"><?php _e('PayPal Merchant E-mail', 'ppw') ?></th>
 					<td>
-					<input value="<?php echo esc_attr($settings['gateways']['paypal-express']['merchant_email']); ?>" size="30" name="ppw[gateways][paypal-express][merchant_email]" type="text" />
+					<input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['merchant_email']); ?>" size="30" name="ppw[gateways][paypal-express][merchant_email]" type="text" />
 					</td>
 	        </tr>
 	        <tr>
@@ -681,13 +685,13 @@ class PPW_Gateway_Paypal_Express {
 					<td>
 	  				<span class="description"><?php _e('You must login to PayPal and create an API signature to get your credentials. <a target="_blank" href="https://cms.paypal.com/us/cgi-bin/?cmd=_render-content&content_ID=developer/e_howto_api_ECAPICredentials">Instructions &raquo;</a>', 'ppw') ?></span>
 	          <p><label><?php _e('API Username', 'ppw') ?><br />
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['api_user']); ?>" size="30" name="ppw[gateways][paypal-express][api_user]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['api_user']); ?>" size="30" name="ppw[gateways][paypal-express][api_user]" type="text" />
 	          </label></p>
 	          <p><label><?php _e('API Password', 'ppw') ?><br />
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['api_pass']); ?>" size="30" name="ppw[gateways][paypal-express][api_pass]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['api_pass']); ?>" size="30" name="ppw[gateways][paypal-express][api_pass]" type="text" />
 	          </label></p>
 	          <p><label><?php _e('Signature', 'ppw') ?><br />
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['api_sig']); ?>" size="70" name="ppw[gateways][paypal-express][api_sig]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['api_sig']); ?>" size="70" name="ppw[gateways][paypal-express][api_sig]" type="text" />
 	          </label></p>
 	        </td>
 	        </tr>
@@ -716,7 +720,7 @@ class PPW_Gateway_Paypal_Express {
 					<td>
 	  				<span class="description"><?php _e('URL for an image you want to appear at the top left of the payment page. The image has a maximum size of 750 pixels wide by 90 pixels high. PayPal recommends that you provide an image that is stored on a secure (https) server. If you do not specify an image, the business name is displayed.', 'ppw') ?></span>
 	          <p>
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['header_img']); ?>" size="80" name="ppw[gateways][paypal-express][header_img]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['header_img']); ?>" size="80" name="ppw[gateways][paypal-express][header_img]" type="text" />
 	          </p>
 	        </td>
 	        </tr>
@@ -725,7 +729,7 @@ class PPW_Gateway_Paypal_Express {
 					<td>
 	  				<span class="description"><?php _e('Sets the border color around the header of the payment page. The border is a 2-pixel perimeter around the header space, which is 750 pixels wide by 90 pixels high. By default, the color is black.', 'ppw') ?></span>
 	          <p>
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['header_border']); ?>" size="6" maxlength="6" name="ppw[gateways][paypal-express][header_border]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['header_border']); ?>" size="6" maxlength="6" name="ppw[gateways][paypal-express][header_border]" type="text" />
 	          </p>
 	        </td>
 	        </tr>
@@ -734,7 +738,7 @@ class PPW_Gateway_Paypal_Express {
 					<td>
 	  				<span class="description"><?php _e('Sets the background color for the header of the payment page. By default, the color is white.', 'ppw') ?></span>
 	          <p>
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['header_back']); ?>" size="6" maxlength="6" name="ppw[gateways][paypal-express][header_back]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['header_back']); ?>" size="6" maxlength="6" name="ppw[gateways][paypal-express][header_back]" type="text" />
 	          </p>
 	        </td>
 	        </tr>
@@ -743,7 +747,7 @@ class PPW_Gateway_Paypal_Express {
 					<td>
 	  				<span class="description"><?php _e('Sets the background color for the payment page. By default, the color is white.', 'ppw') ?></span>
 	          <p>
-	          <input value="<?php echo esc_attr($settings['gateways']['paypal-express']['page_back']); ?>" size="6" maxlength="6" name="ppw[gateways][paypal-express][page_back]" type="text" />
+	          <input value="<?php echo esc_attr(@$settings['gateways']['paypal-express']['page_back']); ?>" size="6" maxlength="6" name="ppw[gateways][paypal-express][page_back]" type="text" />
 	          </p>
 	        </td>
 	        </tr>
@@ -927,13 +931,20 @@ class PPW_Gateway_Paypal_Express {
     $nvpstr .= "&HDRBACKCOLOR=" . urlencode($settings['gateways']['paypal-express']['header_back']);
     $nvpstr .= "&PAYFLOWCOLOR=" . urlencode($settings['gateways']['paypal-express']['page_back']);
  
-    $nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $_SESSION["ppw_total_amt"]; 
-	$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
+ 	$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
+	$nvpstr .= "&PAYMENTREQUEST_0_CURRENCYCODE=" . $this->currencyCode; // Fix in V1.2.1
 	$post = get_post( $this->post_id );
 	$nvpstr .= "&PAYMENTREQUEST_0_DESC=" . sprintf(__('%s Purchase - A content from: %s', 'ppw'), get_bloginfo('name'), $post->post_title); //cart name
-
-
-
+	// Item details
+	$nvpstr .= "&L_PAYMENTREQUEST_0_NAME0=" . sprintf(__('%s Purchase - A content from: %s', 'ppw'), get_bloginfo('name'), $post->post_title); //cart name
+	$nvpstr .= "&L_PAYMENTREQUEST_0_AMT0=". $_SESSION["ppw_total_amt"]; 
+	$nvpstr .= "&L_PAYMENTREQUEST_0_QTY0=1";
+	// Item Total
+	$nvpstr .= "&PAYMENTREQUEST_ITEMAMT=" . $_SESSION["ppw_total_amt"]; 
+	// Grand Total
+	$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $_SESSION["ppw_total_amt"]; 
+	$nvpstr .= "&PAYMENTREQUEST_0_QTY=1";
+	
     //'---------------------------------------------------------------------------------------------------------------
     //' Make the API call to PayPal
     //' If the API call succeded, then redirect the buyer to PayPal to begin to authorize payment.

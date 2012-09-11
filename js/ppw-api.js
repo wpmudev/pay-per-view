@@ -11,6 +11,7 @@ function create_ppw_login_interface ($me) {
 		'<ul class="payperview-login_links">' +
 			'<li><a href="#" class="payperview-login_link payperview-login_link-facebook">' + l10nPpwApi.facebook + '</a></li>' +
 			'<li><a href="#" class="payperview-login_link payperview-login_link-twitter">' + l10nPpwApi.twitter + '</a></li>' +
+			'<li><a href="#" class="payperview-login_link payperview-login_link-google">' + l10nPpwApi.google + '</a></li>' +
 			'<li><a href="#" class="payperview-login_link payperview-login_link-wordpress">' + l10nPpwApi.wordpress + '</a></li>' +
 			'<li class="ppw_login_submit"><input type="text" class="ppw_username" value="Username" onfocus="ppw_checkclear(this)" /><input type="password" class="ppw_password" value="Password" onfocus="ppw_checkclear(this)" /><a href="javascript:void(0)" class="payperview-login_link payperview-login_link-submit">' + l10nPpwApi.submit + '</a></li>' +
 			'<li><a href="#" class="payperview-login_link payperview-login_link-cancel">' + l10nPpwApi.cancel + '</a></li>' +
@@ -81,6 +82,51 @@ function create_ppw_login_interface ($me) {
 									"action": "ppw_twitter_login",
 									"secret": data.secret,
 									"data": search
+								}, function (data) {
+									var status = 0;
+									try { status = parseInt(data.status); } catch (e) { status = 0; }
+									if (!status) { // ... handle error
+										$root.remove();
+										return false;
+									}
+									if ( data.reveal ) { // user has subscribed or has right to see content
+										window.location.href = window.location.href;
+									}
+									else {
+										var user_id = parseInt(data.user_id); // Get the user ID
+										var custom = $me.find(".ppw_custom").val(); // Get existing custom value
+										if ( custom && user_id ) { // Make a double check
+											var c = custom.split(":");
+											$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]); // Modify
+											$me.submit(); // Send form to Paypal
+										}
+									}
+								});
+							}
+						} catch (e) {}
+					}, 300);
+				})
+				return false;
+			};
+		} else if ($lnk.is(".payperview-login_link-google")) {
+			callback = function () {
+				var googleLogin = window.open('https://www.google.com/accounts', "google_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=400,width=800");
+				$.post(_ppw_data.ajax_url, {
+					"action": "ppw_get_google_auth_url",
+					"url": window.location.href
+				}, function (data) {
+					var href = data.url;
+					googleLogin.location = href;
+					var gTimer = setInterval(function () {
+						try {
+							if (googleLogin.location.hostname == window.location.hostname) {
+								// We're back!
+								clearInterval(gTimer);
+								googleLogin.close();
+								// change UI
+								$root.html('<img src="' + _ppw_data.root_url + 'waiting.gif" /> ' + l10nPpwApi.please_wait);
+								$.post(_ppw_data.ajax_url, {
+									"action": "ppw_google_login"
 								}, function (data) {
 									var status = 0;
 									try { status = parseInt(data.status); } catch (e) { status = 0; }
