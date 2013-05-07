@@ -8,5 +8,5 @@ if ( is_file($lang_file) && is_readable($lang_file) ) {
 	$strings = get_file_contents($lang_file);
 } else {
 	$strings = get_file_contents(dirname(__FILE__) . '/en_dlg.js');
-	$strings = preg_replace( '/([\'"])en\./', '$1'.$mce_locale.'.', $strings, 1 );
+	$strings = preg_replace( '/([\'"])en\./', '$1'.$mce_locale.'.', $strings, 1 );				 			 			 		 
 }

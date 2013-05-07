@@ -1,183 +1,179 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: Pay Per View 1.3\n"
+"Project-Id-Version: Pay Per View 1.4.1.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-01-04 20:09+0700\n"
-"PO-Revision-Date: 2013-01-04 20:09+0700\n"
+"POT-Creation-Date: 2013-05-07 17:41-0500\n"
+"PO-Revision-Date: 2013-05-07 17:42-0500\n"
 "Last-Translator: incsub.com <hakan@incsub.com>\n"
 "Language-Team: incsub\n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Poedit-KeywordsList: __;_e\n"
+"X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_attr_e;esc_attr_x;"
+"esc_html__;esc_html_e;esc_html_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.3\n"
-"X-Poedit-SearchPath-0: C:\\Users\\Hakan\\Desktop\\pay-per-view\n"
+"X-Generator: Poedit 1.5.5\n"
+"X-Poedit-SearchPath-0: ..\n"
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:139
+#: ../pay-per-view.php:143
 msgid "Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:168
+#: ../pay-per-view.php:172
 msgid "Login with Facebook"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:169
+#: ../pay-per-view.php:173
 msgid "Login with Twitter"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:170
+#: ../pay-per-view.php:174
 msgid "Login with Google"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:171
+#: ../pay-per-view.php:175
 msgid "Login with WordPress"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:172
+#: ../pay-per-view.php:176
 msgid "Submit"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:173
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2396
+#: ../pay-per-view.php:177 ../pay-per-view.php:2413
 msgid "Cancel"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:174
+#: ../pay-per-view.php:178
 msgid "Please, wait..."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:478
+#: ../pay-per-view.php:482
 msgid "Pay Per View Subscription"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:482
+#: ../pay-per-view.php:486
 msgid "Expires at"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:492
+#: ../pay-per-view.php:496
 msgid "Recurring days"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:798
+#: ../pay-per-view.php:815
 #, php-format
 msgid "Confirm %s %s payment to see this content"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:878
+#: ../pay-per-view.php:895
 #, php-format
 msgid "Subscription for %s"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:879
+#: ../pay-per-view.php:896
 msgid "Special offer"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1048
+#: ../pay-per-view.php:1065
 msgid ""
 "Last transaction has been reversed. Reason: Payment has been reversed "
 "(charge back)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1062
+#: ../pay-per-view.php:1079
 msgid "Last transaction has been reversed. Reason: Payment has been refunded"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1076
+#: ../pay-per-view.php:1093
 msgid "Last transaction has been reversed. Reason: Payment Denied"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1088
+#: ../pay-per-view.php:1105
 msgid "Customer did not include a confirmed shipping address"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1089
+#: ../pay-per-view.php:1106
 msgid "Funds not captured yet"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1090
+#: ../pay-per-view.php:1107
 msgid "eCheck that has not cleared yet"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1091
+#: ../pay-per-view.php:1108
 msgid "Payment waiting for aproval by service provider"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1092
+#: ../pay-per-view.php:1109
 msgid "Payment waiting for service provider to handle multi-currency process"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1093
+#: ../pay-per-view.php:1110
 msgid "Customer did not register or confirm his/her email yet"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1094
+#: ../pay-per-view.php:1111
 msgid "Waiting for service provider to upgrade the PayPal account"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1095
+#: ../pay-per-view.php:1112
 msgid "Waiting for service provider to verify his/her PayPal account"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1099
+#: ../pay-per-view.php:1116
 msgid "Last transaction is pending. Reason: "
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1144
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1146
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1526
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2366
+#: ../pay-per-view.php:1161 ../pay-per-view.php:1163 ../pay-per-view.php:1543
+#: ../pay-per-view.php:2383
 msgid "Pay Per View"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1171
+#: ../pay-per-view.php:1188
 msgid "Enabled"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1172
+#: ../pay-per-view.php:1189
 msgid "Disabled"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1173
+#: ../pay-per-view.php:1190
 msgid "Automatic excerpt"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1174
+#: ../pay-per-view.php:1191
 msgid "Manual excerpt"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1175
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1677
+#: ../pay-per-view.php:1192 ../pay-per-view.php:1694
 msgid "Use selection tool"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1178
+#: ../pay-per-view.php:1195
 msgid "page"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1180
+#: ../pay-per-view.php:1197
 msgid "post"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1258
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1281
+#: ../pay-per-view.php:1275 ../pay-per-view.php:1298
 msgid "Follow global setting"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1259
+#: ../pay-per-view.php:1276
 msgid "Always enabled"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1260
+#: ../pay-per-view.php:1277
 msgid "Always disabled"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1264
+#: ../pay-per-view.php:1281
 msgid "Enabled?"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1268
+#: ../pay-per-view.php:1285
 #, php-format
 msgid ""
 "Selects if Pay With a Like is enabled for this %s or not. If Follow global "
@@ -186,11 +182,11 @@ msgid ""
 "Like for this %s, respectively, overriding general setting."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1272
+#: ../pay-per-view.php:1289
 msgid "Effective status"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1276
+#: ../pay-per-view.php:1293
 #, php-format
 msgid ""
 "Effective status dynamically shows the final result of the setting that will "
@@ -199,11 +195,11 @@ msgid ""
 "intention will be correctly reflected to the settings after you save."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1287
+#: ../pay-per-view.php:1304
 msgid "Method"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1291
+#: ../pay-per-view.php:1308
 #, php-format
 msgid ""
 "Selects the content protection method for this %s. If Follow Global Setting "
@@ -213,11 +209,11 @@ msgid ""
 "editor tool bar. For other methods refer to the settings page."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1295
+#: ../pay-per-view.php:1312
 msgid "Effective method"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1299
+#: ../pay-per-view.php:1316
 #, php-format
 msgid ""
 "Effective method dynamically shows the final result of the setting that will "
@@ -226,11 +222,11 @@ msgid ""
 "you save."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1305
+#: ../pay-per-view.php:1322
 msgid "Excerpt length"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1309
+#: ../pay-per-view.php:1326
 #, php-format
 msgid ""
 "If you want to override the number of words that will be used as an excerpt "
@@ -238,56 +234,55 @@ msgid ""
 "only used when Automatic Excerpt method is applied to the %s."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1315
+#: ../pay-per-view.php:1332
 #, php-format
 msgid "Price (%s)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1319
+#: ../pay-per-view.php:1336
 #, php-format
 msgid ""
 "If you want to override the default price to reveal this %s, enter it here. "
 "This value is NOT used when Selection Tool method is applied to the %s."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1467
+#: ../pay-per-view.php:1484
 msgid ""
 "<b>[Pay Per View]</b> If you are using Daily Pass or Recurring "
 "Subscriptions, you need to enable and set API logins."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1474
+#: ../pay-per-view.php:1491
 msgid ""
 "<b>[Pay Per View]</b> Plugin will not function correctly with default "
 "permalink structure. You need to use a pretty permalink structure."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1527
+#: ../pay-per-view.php:1544
 msgid "Transactions"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1528
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1992
+#: ../pay-per-view.php:1545 ../pay-per-view.php:2009
 msgid "Customization"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1528
+#: ../pay-per-view.php:1545
 msgid "Customization Help"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1606
+#: ../pay-per-view.php:1623
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1611
+#: ../pay-per-view.php:1628
 msgid "General Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1618
+#: ../pay-per-view.php:1635
 msgid "Global Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1620
+#: ../pay-per-view.php:1637
 msgid ""
 "Pay Per View allows protecting posts/page content or parts of post/page "
 "content until visitor pays a nominal fee or subscribes to the website. These "
@@ -295,69 +290,69 @@ msgid ""
 "They can be overridden per post basis using post editor page."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1625
+#: ../pay-per-view.php:1642
 msgid "Protection for posts"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1628
+#: ../pay-per-view.php:1645
 msgid "Disabled for all posts"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1629
+#: ../pay-per-view.php:1646
 msgid "Enabled for all posts"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1635
+#: ../pay-per-view.php:1652
 msgid "Protection for pages"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1638
+#: ../pay-per-view.php:1655
 msgid "Disabled for all pages"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1639
+#: ../pay-per-view.php:1656
 msgid "Enabled for all pages"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1651
+#: ../pay-per-view.php:1668
 msgid "You have the following custom post type(s): "
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1655
+#: ../pay-per-view.php:1672
 msgid " Note: See the below customization section for details."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1657
+#: ../pay-per-view.php:1674
 msgid ""
 "You don't have any custom post types. Changing this setting will have no "
 "effect."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1661
+#: ../pay-per-view.php:1678
 msgid "Protection for custom post types"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1664
+#: ../pay-per-view.php:1681
 msgid "Disabled for all custom post types"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1665
+#: ../pay-per-view.php:1682
 msgid "Enabled for all custom post types"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1672
+#: ../pay-per-view.php:1689
 msgid "Public content selection method"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1675
+#: ../pay-per-view.php:1692
 msgid "Automatic excerpt from the content"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1676
+#: ../pay-per-view.php:1693
 msgid "Manual excerpt from post excerpt field"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1680
+#: ../pay-per-view.php:1697
 #, php-format
 msgid ""
 "Automatic excerpt selects the first %d words, number being adjustable from "
@@ -368,280 +363,273 @@ msgid ""
 "protected."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1686
+#: ../pay-per-view.php:1703
 msgid "Excerpt length (words)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1688
+#: ../pay-per-view.php:1705
 msgid ""
 "Number of words of the post content that will be displayed publicly. Only "
 "effective if Automatic excerpt is selected."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1692
+#: ../pay-per-view.php:1709
 #, php-format
 msgid "Unit price (%s)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1694
+#: ../pay-per-view.php:1711
 msgid "Default price per protected content."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1702
+#: ../pay-per-view.php:1719
 msgid "Accessibility Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1708
+#: ../pay-per-view.php:1725
 msgid "Enable on the home page"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1711
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1721
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1732
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1743
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1767
+#: ../pay-per-view.php:1728 ../pay-per-view.php:1738 ../pay-per-view.php:1749
+#: ../pay-per-view.php:1760 ../pay-per-view.php:1784
 msgid "Yes"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1712
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1722
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1733
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1744
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1768
+#: ../pay-per-view.php:1729 ../pay-per-view.php:1739 ../pay-per-view.php:1750
+#: ../pay-per-view.php:1761 ../pay-per-view.php:1785
 msgid "No"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1718
+#: ../pay-per-view.php:1735
 msgid "Enable for multiple post pages"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1724
+#: ../pay-per-view.php:1741
 msgid ""
 "Enables the plugin for pages (except the home page) which contain content "
 "for more that one post/page, e.g. archive, category pages. Some themes use "
 "excerpts here so enabling plugin for these pages may cause strange output. "
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1729
+#: ../pay-per-view.php:1746
 msgid "Admin sees full content"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1735
+#: ../pay-per-view.php:1752
 msgid "You may want to select No for test purposes."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1740
+#: ../pay-per-view.php:1757
 msgid "Authorized users see full content"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1746
+#: ../pay-per-view.php:1763
 msgid ""
 "If Yes, authorized users will see the full content without the need to pay "
 "or subscribe. Admin setting is independent of this one."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1751
+#: ../pay-per-view.php:1768
 msgid "User level where authorization starts"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1754
+#: ../pay-per-view.php:1771
 msgid "Editor"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1755
+#: ../pay-per-view.php:1772
 msgid "Author"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1756
+#: ../pay-per-view.php:1773
 msgid "Contributor"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1757
+#: ../pay-per-view.php:1774
 msgid "Subscriber"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1759
+#: ../pay-per-view.php:1776
 msgid ""
 "If the above field is selected as yes, users having a higher level than this "
 "selection will see the full content."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1764
+#: ../pay-per-view.php:1781
 msgid "Search bots see full content"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1770
+#: ../pay-per-view.php:1787
 msgid ""
 "You may want to enable this for SEO purposes. Warning: Your full content may "
 "be visible in search engine results."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1775
+#: ../pay-per-view.php:1792
 msgid "Cookie validity time (hours)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1777
+#: ../pay-per-view.php:1794
 msgid ""
 "Validity time of the cookie which lets visitor to be exempt from the "
 "protection after he/she liked. Tip: If you want the cookie to expire at the "
 "end of the session (when the browser closes), enter zero here."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1785
+#: ../pay-per-view.php:1802
 msgid "Payment Options"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1791
+#: ../pay-per-view.php:1808
 msgid "One time view"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1794
+#: ../pay-per-view.php:1811
 msgid ""
 "Visitors pay per content they want to reveal. Price can be set globally from "
 "the above \"unit price\" field, or per post basis using the post editor. "
 "Does not require registration of the visitor."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1804
+#: ../pay-per-view.php:1821
 msgid "One time view description"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1806
+#: ../pay-per-view.php:1823
 msgid ""
 "This text will be shown on the button. PRICE (case sensitive) will be "
-"replaced by its real value. \n"
+"replaced by its real value.\n"
 "\t\t\t\t\t\tDESCRIPTION (case sensitive) will be replaced by description "
 "field defined in Selection Tool, or the word \"content\" if it is not given."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1811
+#: ../pay-per-view.php:1828
 msgid "Daily Pass"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1814
+#: ../pay-per-view.php:1831
 msgid ""
 "Visitor pays a lumpsum fee and then he/she can view all the content on the "
 "website. Visitor is required to register to the website."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1823
+#: ../pay-per-view.php:1840
 #, php-format
 msgid "Daily pass price (%s)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1825
+#: ../pay-per-view.php:1842
 msgid ""
 "Price that will be paid once which lets the visitor see full content during "
 "validity period."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1829
+#: ../pay-per-view.php:1846
 msgid "Daily pass validity (days)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1831
+#: ../pay-per-view.php:1848
 msgid "Daily pass will be valid for this period."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1835
+#: ../pay-per-view.php:1852
 msgid "Daily pass description"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1837
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1873
+#: ../pay-per-view.php:1854 ../pay-per-view.php:1890
 msgid ""
 "This text will be shown on the button. PRICE and DAY (case sensitive) will "
 "be replaced by their real values."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1842
+#: ../pay-per-view.php:1859
 msgid "Recurring subscription"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1846
+#: ../pay-per-view.php:1863
 msgid ""
 "Visitor subscribes to view all the content on the website. Visitor is "
 "required to register to the website."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1855
+#: ../pay-per-view.php:1872
 #, php-format
 msgid "Subscription price (%s)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1862
+#: ../pay-per-view.php:1879
 msgid "Subscription period (days)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1865
+#: ../pay-per-view.php:1882
 msgid "Price is valid for this period and it will be renewed after it expires."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1870
+#: ../pay-per-view.php:1887
 msgid "Subscription description"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1884
+#: ../pay-per-view.php:1901
 msgid "API Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1890
+#: ../pay-per-view.php:1907
 msgid "Accept API Logins"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1893
+#: ../pay-per-view.php:1910
 msgid "Enables login to website using Facebook and Twitter."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1902
+#: ../pay-per-view.php:1919
 msgid "My website already uses Facebook"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1905
+#: ../pay-per-view.php:1922
 msgid ""
 "By default, Facebook script will be loaded by the plugin. If you are already "
 "running Facebook scripts, to prevent any conflict, check this option."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1910
+#: ../pay-per-view.php:1927
 msgid "Facebook App ID"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1913
+#: ../pay-per-view.php:1930
 #, php-format
 msgid ""
 "Enter your App ID number here. If you don't have a Facebook App yet, you "
 "will need to create one <a href='%s'>here</a>"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1918
+#: ../pay-per-view.php:1935
 msgid "Twitter Consumer Key"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1921
+#: ../pay-per-view.php:1938
 #, php-format
 msgid ""
 "Enter your Twitter App ID number here. If you don't have a Twitter App yet, "
 "you will need to create one <a href=\"%s\">here</a>"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1926
+#: ../pay-per-view.php:1943
 msgid "Twitter Consumer Secret"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1929
+#: ../pay-per-view.php:1946
 msgid "Enter your Twitter App ID Secret here."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1946
+#: ../pay-per-view.php:1963
 msgid "Save Changes"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:1997
+#: ../pay-per-view.php:2014
 msgid "Customization Examples"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2000
+#: ../pay-per-view.php:2017
 msgid ""
 "For protecting html codes that you cannot add to post content, there is a "
 "template function <b>wpmudev_ppw_html</b>. This function replace all such "
@@ -651,34 +639,34 @@ msgid ""
 "function."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2016
+#: ../pay-per-view.php:2033
 msgid ""
 "Note: In this usage, enabled/disabled and method settings of the post has no "
 "significance. Such an html code will be fully protected. However, "
 "Accessibility Settings will be applied."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2021
+#: ../pay-per-view.php:2038
 msgid ""
 "Some custom post types use templates which take the post content directly "
 "from the database. For such applications you may need to use <b>wpmudev_ppw</"
 "b> function to manage the content."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2025
+#: ../pay-per-view.php:2042
 msgid ""
 "Example: Suppose that the content of a post type is displayed like this: "
 "<code>&lt;?php echo custom_description(); ?&gt;</code>. Then edit that part "
 "of the template like this:"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2039
+#: ../pay-per-view.php:2056
 msgid ""
 "For both of the above usages you <b>must</b> create a function in your "
 "functions.php to call necessary css and js files. Here is an example:"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2061
+#: ../pay-per-view.php:2078
 #, php-format
 msgid ""
 "If you want to apply your own styles copy contents of front.css to your "
@@ -688,84 +676,83 @@ msgid ""
 "your edited styles will not be affected from plugin updates."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2155
+#: ../pay-per-view.php:2172
 msgid " Pay Per View Transactions"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2158
+#: ../pay-per-view.php:2175
 msgid "Recent transactions"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2159
+#: ../pay-per-view.php:2176
 msgid "Pending transactions"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2160
+#: ../pay-per-view.php:2177
 msgid "Future transactions"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2187
+#: ../pay-per-view.php:2204
 msgid "Post"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2188
+#: ../pay-per-view.php:2205
 msgid "User"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2189
-msgid "Date"
+#: ../pay-per-view.php:2206
+msgid "Date/Time"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2190
+#: ../pay-per-view.php:2207
 msgid "Expiry Date"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2191
+#: ../pay-per-view.php:2208
 msgid "Amount"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2192
+#: ../pay-per-view.php:2209
 msgid "Transaction id"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2193
+#: ../pay-per-view.php:2210
 msgid "Status"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2277
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2286
+#: ../pay-per-view.php:2294 ../pay-per-view.php:2303
 msgid "None yet"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2297
+#: ../pay-per-view.php:2314
 msgid "No Transactions have been found, patience is a virtue."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2373
+#: ../pay-per-view.php:2390
 msgid "Please enter a value!"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2377
+#: ../pay-per-view.php:2394
 msgid "Description"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2381
+#: ../pay-per-view.php:2398
 msgid "Description for this selection."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2384
+#: ../pay-per-view.php:2401
 msgid "Price"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2388
+#: ../pay-per-view.php:2405
 msgid "Price for this selection."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2400
+#: ../pay-per-view.php:2417
 msgid "Insert"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2549
+#: ../pay-per-view.php:2566
 #, php-format
 msgid ""
 "Easily get updates, support, and one-click WPMU DEV plugin/theme "
@@ -775,7 +762,7 @@ msgid ""
 "dev/update-notifications-plugin-information/\">(find out more)</a></small>"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/pay-per-view.php:2553
+#: ../pay-per-view.php:2570
 #, php-format
 msgid ""
 "Updates, Support, Premium Plugins, Community - <strong><a href=\"%s\" title="
@@ -783,139 +770,122 @@ msgid ""
 "strong>."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/class_wd_help_tooltips.php:296
+#: ../includes/class_wd_help_tooltips.php:296
 msgid "Help"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:54
+#: ../includes/paypal-express.php:54
 msgid "PayPal Express Checkout"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:55
+#: ../includes/paypal-express.php:55
 msgid "PayPal"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:97
+#: ../includes/paypal-express.php:97
 msgid "Your PayPal transaction has been canceled."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:115
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:350
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:819
+#: ../includes/paypal-express.php:115 ../includes/paypal-express.php:350
+#: ../includes/paypal-express.php:819
 msgid ""
 "A reversal has been canceled; for example, when you win a dispute and the "
 "funds for the reversal have been returned to you."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:119
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:354
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:824
+#: ../includes/paypal-express.php:119 ../includes/paypal-express.php:354
+#: ../includes/paypal-express.php:824
 msgid "The authorization period for this payment has been reached."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:123
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:358
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:829
+#: ../includes/paypal-express.php:123 ../includes/paypal-express.php:358
+#: ../includes/paypal-express.php:829
 msgid "An authorization for this transaction has been voided."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:127
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:362
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:834
+#: ../includes/paypal-express.php:127 ../includes/paypal-express.php:362
+#: ../includes/paypal-express.php:834
 msgid ""
 "The payment has failed. This happens only if the payment was made from your "
 "customer's bank account."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:131
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:366
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:839
+#: ../includes/paypal-express.php:131 ../includes/paypal-express.php:366
+#: ../includes/paypal-express.php:839
 msgid "The payment has been partially refunded."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:135
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:370
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:844
+#: ../includes/paypal-express.php:135 ../includes/paypal-express.php:370
+#: ../includes/paypal-express.php:844
 msgid ""
 "The transaction has not terminated, e.g. an authorization may be awaiting "
 "completion."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:139
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:374
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:849
+#: ../includes/paypal-express.php:139 ../includes/paypal-express.php:374
+#: ../includes/paypal-express.php:849
 msgid ""
 "The payment has been completed, and the funds have been added successfully "
 "to your account balance."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:143
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:378
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:854
+#: ../includes/paypal-express.php:143 ../includes/paypal-express.php:378
+#: ../includes/paypal-express.php:854
 msgid "A payment has been accepted."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:147
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:382
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:859
+#: ../includes/paypal-express.php:147 ../includes/paypal-express.php:382
+#: ../includes/paypal-express.php:859
 msgid ""
 "A payment was reversed due to a chargeback or other type of reversal. The "
 "funds have been removed from your account balance and returned to the buyer:"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:150
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:385
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:862
+#: ../includes/paypal-express.php:150 ../includes/paypal-express.php:385
+#: ../includes/paypal-express.php:862
 msgid ""
 "A reversal has occurred on this transaction due to a chargeback by your "
 "customer."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:151
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:386
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:863
+#: ../includes/paypal-express.php:151 ../includes/paypal-express.php:386
+#: ../includes/paypal-express.php:863
 msgid ""
 "A reversal has occurred on this transaction due to your customer triggering "
 "a money-back guarantee."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:152
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:387
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:864
+#: ../includes/paypal-express.php:152 ../includes/paypal-express.php:387
+#: ../includes/paypal-express.php:864
 msgid ""
 "A reversal has occurred on this transaction due to a complaint about the "
 "transaction from your customer."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:153
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:388
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:865
+#: ../includes/paypal-express.php:153 ../includes/paypal-express.php:388
+#: ../includes/paypal-express.php:865
 msgid ""
 "A reversal has occurred on this transaction because you have given the "
 "customer a refund."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:154
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:389
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:866
+#: ../includes/paypal-express.php:154 ../includes/paypal-express.php:389
+#: ../includes/paypal-express.php:866
 msgid "A reversal has occurred on this transaction due to an unknown reason."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:160
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:395
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:873
+#: ../includes/paypal-express.php:160 ../includes/paypal-express.php:395
+#: ../includes/paypal-express.php:873
 msgid "You refunded the payment."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:164
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:399
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:878
+#: ../includes/paypal-express.php:164 ../includes/paypal-express.php:399
+#: ../includes/paypal-express.php:878
 msgid "You denied the payment when it was marked as pending."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:169
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:404
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:884
+#: ../includes/paypal-express.php:169 ../includes/paypal-express.php:404
+#: ../includes/paypal-express.php:884
 msgid ""
 "The payment is pending because your customer did not include a confirmed "
 "shipping address and your Payment Receiving Preferences is set such that you "
@@ -923,65 +893,57 @@ msgid ""
 "preference, go to the Preferences  section of your Profile."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:170
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:405
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:885
+#: ../includes/paypal-express.php:170 ../includes/paypal-express.php:405
+#: ../includes/paypal-express.php:885
 msgid ""
 "The payment is pending because it has been authorized but not settled. You "
 "must capture the funds first."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:171
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:406
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:886
+#: ../includes/paypal-express.php:171 ../includes/paypal-express.php:406
+#: ../includes/paypal-express.php:886
 msgid ""
 "The payment is pending because it was made by an eCheck that has not yet "
 "cleared."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:172
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:407
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:887
+#: ../includes/paypal-express.php:172 ../includes/paypal-express.php:407
+#: ../includes/paypal-express.php:887
 msgid ""
 "The payment is pending because you hold a non-U.S. account and do not have a "
 "withdrawal mechanism. You must manually accept or deny this payment from "
 "your Account Overview."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:173
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:408
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:888
+#: ../includes/paypal-express.php:173 ../includes/paypal-express.php:408
+#: ../includes/paypal-express.php:888
 msgid ""
 "You do not have a balance in the currency sent, and you do not have your "
 "Payment Receiving Preferences set to automatically convert and accept this "
 "payment. You must manually accept or deny this payment."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:174
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:409
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:889
+#: ../includes/paypal-express.php:174 ../includes/paypal-express.php:409
+#: ../includes/paypal-express.php:889
 msgid ""
 "The payment is pending because it is part of an order that has been "
 "authorized but not settled."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:175
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:410
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:890
+#: ../includes/paypal-express.php:175 ../includes/paypal-express.php:410
+#: ../includes/paypal-express.php:890
 msgid "The payment is pending while it is being reviewed by PayPal for risk."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:176
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:411
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:891
+#: ../includes/paypal-express.php:176 ../includes/paypal-express.php:411
+#: ../includes/paypal-express.php:891
 msgid ""
 "The payment is pending because it was made to an email address that is not "
 "yet registered or confirmed."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:177
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:412
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:892
+#: ../includes/paypal-express.php:177 ../includes/paypal-express.php:412
+#: ../includes/paypal-express.php:892
 msgid ""
 "The payment is pending because it was made via credit card and you must "
 "upgrade your account to Business or Premier status in order to receive the "
@@ -989,86 +951,82 @@ msgid ""
 "transactions on your account."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:178
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:413
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:893
+#: ../includes/paypal-express.php:178 ../includes/paypal-express.php:413
+#: ../includes/paypal-express.php:893
 msgid ""
 "The payment is pending because you are not yet verified. You must verify "
 "your account before you can accept this payment."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:179
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:414
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:894
+#: ../includes/paypal-express.php:179 ../includes/paypal-express.php:414
+#: ../includes/paypal-express.php:894
 msgid ""
 "The payment is pending for an unknown reason. For more information, contact "
 "PayPal customer service."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:182
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:417
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:897
+#: ../includes/paypal-express.php:182 ../includes/paypal-express.php:417
+#: ../includes/paypal-express.php:897
 msgid "The payment is pending."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:246
+#: ../includes/paypal-express.php:246
 msgid ""
 "There was a problem connecting to PayPal to setup your purchase. Please try "
 "again."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:304
+#: ../includes/paypal-express.php:304
 msgid "There was a problem with your PayPal transaction. Please try again</a>."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:308
+#: ../includes/paypal-express.php:308
 msgid "Whoops, looks like you skipped a step! "
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:341
+#: ../includes/paypal-express.php:341
 msgid "eCheck"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:341
+#: ../includes/paypal-express.php:341
 msgid "PayPal balance, Credit Card, or Instant Transfer"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:438
+#: ../includes/paypal-express.php:438
 msgid "Pending Pay Per View order"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:438
+#: ../includes/paypal-express.php:438
 msgid ""
 "A Pay Per View order has arrived, and content revealed to the client, but "
 "payment is kept in pending state by PayPal. Please check your PayPal account."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:491
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:494
+#: ../includes/paypal-express.php:491 ../includes/paypal-express.php:494
 msgid ""
 "There was a problem finalizing your purchase with PayPal. Please try again</"
 "a>."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:525
+#: ../includes/paypal-express.php:525
 #, php-format
 msgid ""
 "Your PayPal payment for this order totaling %s is not yet complete. Here is "
 "the latest status:"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:532
+#: ../includes/paypal-express.php:532
 #, php-format
 msgid ""
 "Your PayPal payment for this order totaling %s is complete. The PayPal "
 "transaction number is <strong>%s</strong>."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:595
+#: ../includes/paypal-express.php:595
 msgid "PayPal Express Checkout Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:597
+#: ../includes/paypal-express.php:597
 msgid ""
 "Express Checkout is PayPal's premier checkout solution, which streamlines "
 "the checkout process for buyers and keeps them on your site after making a "
@@ -1079,35 +1037,35 @@ msgid ""
 "</a>"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:600
+#: ../includes/paypal-express.php:600
 msgid "PayPal Site"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:635
+#: ../includes/paypal-express.php:635
 msgid "Paypal Currency"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:675
+#: ../includes/paypal-express.php:675
 msgid "PayPal Mode"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:678
+#: ../includes/paypal-express.php:678
 msgid "Sandbox"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:679
+#: ../includes/paypal-express.php:679
 msgid "Live"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:684
+#: ../includes/paypal-express.php:684
 msgid "PayPal Merchant E-mail"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:690
+#: ../includes/paypal-express.php:690
 msgid "PayPal API Credentials"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:692
+#: ../includes/paypal-express.php:692
 msgid ""
 "You must login to PayPal and create an API signature to get your "
 "credentials. <a target=\"_blank\" href=\"https://cms.paypal.com/us/cgi-bin/?"
@@ -1115,27 +1073,27 @@ msgid ""
 "\">Instructions &raquo;</a>"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:693
+#: ../includes/paypal-express.php:693
 msgid "API Username"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:696
+#: ../includes/paypal-express.php:696
 msgid "API Password"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:699
+#: ../includes/paypal-express.php:699
 msgid "Signature"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:708
+#: ../includes/paypal-express.php:708
 msgid "Click for Paypal Page Display Settings"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:725
+#: ../includes/paypal-express.php:725
 msgid "PayPal Header Image (optional)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:727
+#: ../includes/paypal-express.php:727
 msgid ""
 "URL for an image you want to appear at the top left of the payment page. The "
 "image has a maximum size of 750 pixels wide by 90 pixels high. PayPal "
@@ -1143,48 +1101,42 @@ msgid ""
 "server. If you do not specify an image, the business name is displayed."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:734
+#: ../includes/paypal-express.php:734
 msgid "PayPal Header Border Color (optional)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:736
+#: ../includes/paypal-express.php:736
 msgid ""
 "Sets the border color around the header of the payment page. The border is a "
 "2-pixel perimeter around the header space, which is 750 pixels wide by 90 "
 "pixels high. By default, the color is black."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:743
+#: ../includes/paypal-express.php:743
 msgid "PayPal Header Background Color (optional)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:745
+#: ../includes/paypal-express.php:745
 msgid ""
 "Sets the background color for the header of the payment page. By default, "
 "the color is white."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:752
+#: ../includes/paypal-express.php:752
 msgid "PayPal Page Background Color (optional)"
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:754
+#: ../includes/paypal-express.php:754
 msgid ""
 "Sets the background color for the payment page. By default, the color is "
 "white."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:811
+#: ../includes/paypal-express.php:811
 msgid ""
 "There was a problem verifying the IPN string with PayPal. Please try again."
 msgstr ""
 
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:943
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:945
-#, php-format
-msgid "%s Purchase - A content from: %s"
-msgstr ""
-
-#: C:\Users\Hakan\Desktop\pay-per-view/includes/paypal-express.php:1065
+#: ../includes/paypal-express.php:1065
 msgid "There was a problem connecting to PayPal. Please try again."
 msgstr ""

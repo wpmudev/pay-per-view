@@ -3,15 +3,15 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.1
-Author: Hakan Evin (Incsub)
+Version: 1.4.1.2
+Author: Hakan Evin (Incsub), Arnold Bailey (Incsub)
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
 Domain Path: /languages/
 WDP ID: 261
 */
 
-/* 
+/*
 Copyright 2007-2012 Incsub (http://incsub.com)
 
 This program is free software; you can redistribute it and/or modify
@@ -36,7 +36,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 class PayPerView {
 
-	var $version="1.4.1";
+	var $version="1.4.1.2";
 
 	/**
      * Constructor
@@ -47,14 +47,18 @@ class PayPerView {
 	function __construct() {
 		// Plugin locations
 		$this->plugin_name = "pay-per-view";
-		$this->plugin_dir = WP_PLUGIN_DIR . '/' . $this->plugin_name;
-		$this->plugin_url = plugins_url( '/' . $this->plugin_name );
+		$this->plugin_dir = plugin_dir_path(__FILE__);
+		$this->plugin_url = plugin_dir_url(__FILE__);
 		$this->page = 'settings_page_' . $this->plugin_name;
-		
+
+		$this->time_format			= get_option('time_format');
+		$this->date_format			= get_option('date_format');
+		$this->datetime_format		= $this->date_format . " " . $this->time_format;
+
 		// We will need sessions
-		if ( !session_id() ) 
+		if ( !session_id() )
 			@session_start();
-		
+
 		// Read all options at once
 		$this->options = get_option( 'ppw_options' );
 
@@ -63,11 +67,11 @@ class PayPerView {
 		add_action( 'init', array( &$this, 'init' ) ); 						// Initial stuff
 		add_action( 'init', array( &$this, 'initiate' ) ); 					// Initiate Paypal forms
 		add_action( 'save_post', array( &$this, 'add_postmeta' ) ); 		// Calls post meta addition function on each save
-		add_filter( 'the_content', array( &$this, 'content' ), 8 ); 		// Manipulate the content. 
+		add_filter( 'the_content', array( &$this, 'content' ), 8 ); 		// Manipulate the content.
 		add_filter( 'the_content', array($this, 'clear'), 130 );			// Clear if a shortcode is left
 		add_action( 'wp_ajax_nopriv_ppw_paypal_ipn', array(&$this, 'handle_paypal_return')); // Send Paypal to IPN function
 		add_action( 'wp_head', array(&$this, 'wp_head') ); 					//Print admin ajax on head
-		
+
 		// Admin side actions
 		add_action( 'admin_menu', array( &$this, 'admin_init' ) ); 			// Creates admin settings window
 		add_action( 'admin_notices', array( &$this, 'admin_notices' ) ); 	// Warns admin
@@ -79,13 +83,13 @@ class PayPerView {
 		// tinyMCE stuff
 		add_action( 'wp_ajax_ppwTinymceOptions', array(&$this, 'tinymce_options') );
 		add_action( 'admin_init', array(&$this, 'load_tinymce') );
-	
+
 		// Add/edit expiry date to user field
 		add_action( 'show_user_profile', array(&$this, 'edit_profile') );
 		add_action( 'edit_user_profile', array(&$this, 'edit_profile') );
 		add_action( 'personal_options_update', array(&$this, 'save_profile') );
 		add_action( 'edit_user_profile_update', array(&$this, 'save_profile') );
-		
+
 		// API login after the options have been initialized
 		if (@$this->options['accept_api_logins']) {
 			add_action('wp_ajax_nopriv_ppw_facebook_login', array($this, 'handle_facebook_login'));
@@ -94,12 +98,12 @@ class PayPerView {
 			add_action('wp_ajax_nopriv_ppw_get_google_auth_url', array($this, 'handle_get_google_auth_url'));
 			add_action('wp_ajax_nopriv_ppw_google_login', array($this, 'handle_google_login'));
 			add_action('wp_ajax_nopriv_ppw_ajax_login', array($this, 'ajax_login'));
-			
+
 			// Google login stuff. New in V1.3
-			if (!class_exists('LightOpenID')) 
+			if (!class_exists('LightOpenID'))
 				include_once  $this->plugin_dir . '/includes/lightopenid/openid.php';
 			$this->openid = new LightOpenID;
-			
+
 			$this->openid->identity = 'https://www.google.com/accounts/o8/id';
 			$this->openid->required = array('namePerson/first', 'namePerson/last', 'namePerson/friendly', 'contact/email');
 			if (!empty($_REQUEST['openid_ns'])) {
@@ -113,7 +117,7 @@ class PayPerView {
 			else
 				$this->_google_user_cache = '';
 		}
-		
+
 		// Show DB results
 		global $wpdb;
 		$this->db = &$wpdb;
@@ -141,7 +145,7 @@ class PayPerView {
 		}
 		return $links;
 	}
-	
+
 	/**
 	 * Load css and javascript
 	 * As of V1.3 this is called from "cachable" method, i.e. when it is required
@@ -158,9 +162,9 @@ class PayPerView {
 			else if ( file_exists( $this->plugin_dir. "/css/front.css" ) )
 				wp_enqueue_style( $this->plugin_name, $this->plugin_url. "/css/front.css", array(), $this->version );
 		}
-		
+
 		// Load the rest only if API use is selected
-		if (!$this->options['accept_api_logins']) 
+		if (!$this->options['accept_api_logins'])
 			return false;
 		wp_register_script('ppw_api_js', $this->plugin_url . '/js/ppw-api.js', array('jquery'), $this->version );
 		wp_enqueue_script('ppw_api_js');
@@ -198,9 +202,9 @@ class PayPerView {
 			"';"));
 		}
     }
-	
+
 	/**
-	 * Print ajax url 
+	 * Print ajax url
 	 * @since 1.4.0
 	 */
 	function wp_head( ) {
@@ -209,7 +213,7 @@ class PayPerView {
 			admin_url('admin-ajax.php'), plugins_url('pay-per-view/images/')
 		);
 	}
-	
+
 	/**
 	 * Login from front end
 	 */
@@ -217,18 +221,18 @@ class PayPerView {
 
 		header("Content-type: application/json");
 		$user = wp_signon( );
-		
+
 		if ( !is_wp_error($user) ) {
 			$reveal = 0;
 			if ( get_user_meta( $user->ID, "ppw_subscribe", true) != '' OR $this->is_authorised() )
 				$reveal = 1;
-			
+
 			die(json_encode(array(
 				"status" => 1,
 				"user_id"=>$user->ID,
 				"reveal"=>$reveal
 			)));
-		}	
+		}
 		die(json_encode(array(
 				"status" => 0,
 				"error" => $user->get_error_message()
@@ -247,46 +251,46 @@ class PayPerView {
 		$fb_uid = @$_POST['user_id'];
 		$token = @$_POST['token'];
 		if (!$token) die(json_encode($resp));
-		
+
 		$request = new WP_Http;
 		$result = $request->request(
-			'https://graph.facebook.com/me?oauth_token=' . $token, 
+			'https://graph.facebook.com/me?oauth_token=' . $token,
 			array('sslverify' => false) // SSL certificate issue workaround
 		);
 		if (200 != $result['response']['code']) die(json_encode($resp)); // Couldn't fetch info
-		
+
 		$data = json_decode($result['body']);
 		if (!$data->email) die(json_encode($resp)); // No email, can't go further
-		
+
 		$email = is_email($data->email);
 		if (!$email) die(json_encode($resp)); // Wrong email
-		
+
 		$wp_user = get_user_by('email', $email);
-		
+
 		if (!$wp_user) { // Not an existing user, let's create a new one
 			$password = wp_generate_password(12, false);
 			$username = @$data->name
 				? preg_replace('/[^_0-9a-z]/i', '_', strtolower($data->name))
 				: preg_replace('/[^_0-9a-z]/i', '_', strtolower($data->first_name)) . '_' . preg_replace('/[^_0-9a-z]/i', '_', strtolower($data->last_name))
 			;
-	
+
 			$wp_user = wp_create_user($username, $password, $email);
 			if (is_wp_error($wp_user)) die(json_encode($resp)); // Failure creating user
 		} else {
 			$wp_user = $wp_user->ID;
 		}
-		
+
 		$user = get_userdata($wp_user);
 
 		wp_set_current_user($user->ID, $user->user_login);
 		wp_set_auth_cookie($user->ID); // Logged in with Facebook, yay
 		do_action('wp_login', $user->user_login);
-		
+
 		// Check if user has already subscribed or authorized. Does not include Admin!!
 		$reveal = 0;
 		if ( get_user_meta( $user->ID, "ppw_subscribe", true) != '' OR $this->is_authorised() )
 			$reveal = 1;
-		
+
 		die(json_encode(array(
 			"status" => 1,
 			"user_id"=>$user->ID,
@@ -301,16 +305,16 @@ class PayPerView {
 		// Make sure options are loaded and fresh
 		if ( !$this->options['twitter-app_id'] )
 			$this->options = get_option( 'ppw_options' );
-		if (!class_exists('TwitterOAuth')) 
+		if (!class_exists('TwitterOAuth'))
 			include WP_PLUGIN_DIR . '/pay-per-view/includes/twitteroauth/twitteroauth.php';
 		$twitter = new TwitterOAuth(
-			$this->options['twitter-app_id'], 
+			$this->options['twitter-app_id'],
 			$this->options['twitter-app_secret'],
 			$token, $secret
 		);
 		return $twitter;
 	}
-	
+
 	/**
 	 * Get OAuth request URL and token.
 	 */
@@ -324,7 +328,7 @@ class PayPerView {
 		));
 		die;
 	}
-	
+
 	/**
 	 * Login or create a new user using whatever data we get from Twitter.
 	 */
@@ -339,19 +343,19 @@ class PayPerView {
 		$data = array();
 		parse_str($data_str, $data);
 		if (!$data) die(json_encode($resp));
-		
+
 		$twitter = $this->_get_twitter_object($data['oauth_token'], $secret);
 		$access = $twitter->getAccessToken($data['oauth_verifier']);
-		
+
 		$twitter = $this->_get_twitter_object($access['oauth_token'], $access['oauth_token_secret']);
 		$tw_user = $twitter->get('account/verify_credentials');
-		
+
 		// Have user, now register him/her
 		$domain = preg_replace('/www\./', '', parse_url(site_url(), PHP_URL_HOST));
 		$username = preg_replace('/[^_0-9a-z]/i', '_', strtolower($tw_user->name));
 		$email = $username . '@twitter.' . $domain; //STUB email
 		$wp_user = get_user_by('email', $email);
-		
+
 		if (!$wp_user) { // Not an existing user, let's create a new one
 			$password = wp_generate_password(12, false);
 			$count = 0;
@@ -359,13 +363,13 @@ class PayPerView {
 				$username .= rand(0,9);
 				if (++$count > 10) break;
 			}
-	
+
 			$wp_user = wp_create_user($username, $password, $email);
 			if (is_wp_error($wp_user)) die(json_encode($resp)); // Failure creating user
 		} else {
 			$wp_user = $wp_user->ID;
 		}
-		
+
 		$user = get_userdata($wp_user);
 		wp_set_current_user($user->ID, $user->user_login);
 		wp_set_auth_cookie($user->ID); // Logged in with Twitter, yay
@@ -375,7 +379,7 @@ class PayPerView {
 		$reveal = 0;
 		if ( get_user_meta( $user->ID, "ppw_subscribe", true) != '' OR $this->is_authorised() )
 			$reveal = 1;
-			
+
 		die(json_encode(array(
 			"status" => 1,
 			"user_id"=>$user->ID,
@@ -387,15 +391,15 @@ class PayPerView {
 	 */
 	function handle_get_google_auth_url () {
 		header("Content-type: application/json");
-		
+
 		$this->openid->returnUrl = $_POST['url'];
-		
+
 		echo json_encode(array(
 			'url' => $this->openid->authUrl()
 		));
 		exit();
 	}
-	
+
 	/**
 	 * Login or create a new user using whatever data we get from Google.
 	 */
@@ -404,9 +408,9 @@ class PayPerView {
 		$resp = array(
 			"status" => 0,
 		);
-		
+
 		$cache = $this->openid->getAttributes();
-		
+
 		if (isset($cache['namePerson/first']) || isset($cache['namePerson/last']) || isset($cache['namePerson/friendly']) || isset($cache['contact/email'])) {
 			$this->_google_user_cache = $cache;
 		}
@@ -418,7 +422,7 @@ class PayPerView {
 			$username = $this->_google_user_cache['namePerson/first'];
 		$email = $this->_google_user_cache['contact/email'];
 		$wordp_user = get_user_by('email', $email);
-		
+
 		if (!$wordp_user) { // Not an existing user, let's create a new one
 			$password = wp_generate_password(12, false);
 			$count = 0;
@@ -426,57 +430,57 @@ class PayPerView {
 				$username .= rand(0,9);
 				if (++$count > 10) break;
 			}
-	
+
 			$wordp_user = wp_create_user($username, $password, $email);
-			if (is_wp_error($wordp_user)) 
+			if (is_wp_error($wordp_user))
 				die(json_encode($resp)); // Failure creating user
 			else {
 				update_user_meta($wordp_user, 'first_name', $this->_google_user_cache['namePerson/first']);
 				update_user_meta($wordp_user, 'last_name', $this->_google_user_cache['namePerson/last']);
 			}
-		} 
+		}
 		else {
 			$wordp_user = $wordp_user->ID;
 		}
-		
+
 		$user = get_userdata($wordp_user);
 		wp_set_current_user($user->ID, $user->user_login);
 		wp_set_auth_cookie($user->ID); // Logged in with Google, yay
 		do_action('wp_login', $user->user_login);
-		
+
 	// Check if user has already subscribed
 		$reveal = 0;
 		if ( get_user_meta( $user->ID, "ppw_subscribe", true) != '' OR $this->is_authorised() )
 			$reveal = 1;
-			
+
 		die(json_encode(array(
 			"status" => 1,
 			"user_id"=>$user->ID,
 			"reveal"=>$reveal
 		)));
 	}
-	
+
 	/**
 	 * Saves expiry date field on user profile
 	 */
 	function save_profile( $user_id ) {
-	
+
 		if ( !current_user_can('administrator') )
 			return;
-	
+
 		if ( isset( $_POST["ppw_expiry"] ) )
 			update_user_meta( $user_id, 'ppw_subscribe', trim( $_POST['ppw_expiry'] ) );
 		if ( isset( $_POST["ppw_days"] ) )
 			update_user_meta( $user_id, 'ppw_days', trim( $_POST['ppw_days'] ) );
 	}
-	
+
 	/**
-	 * Displays expiry date on the user profile 
+	 * Displays expiry date on the user profile
 	 */
 	function edit_profile( $current_user ) {
 	?>
 		<h3><?php _e("Pay Per View Subscription", "ppw"); ?></h3>
-	 
+
 		<table class="form-table">
 		<tr>
 		<th><label for="address"><?php _e("Expires at"); ?></label></th>
@@ -504,7 +508,7 @@ class PayPerView {
 	function install() {
 
 		global $wpdb;
-	
+
 		$sql = "CREATE TABLE IF NOT EXISTS `" . $wpdb->prefix . "pay_per_view" . "` (
 		`transaction_ID` bigint(20) unsigned NOT NULL auto_increment,
 		`transaction_post_ID` bigint(20) NOT NULL default '0',
@@ -527,7 +531,7 @@ class PayPerView {
 
 		$wpdb->query($sql);
 	}
-	
+
 	/**
      * Localize the plugin
      */
@@ -536,57 +540,57 @@ class PayPerView {
 		// Place it in this plugin's "languages" folder and name it "ppw-[value in wp-config].mo"
 		load_plugin_textdomain( 'ppw', false, '/pay-per-view/languages/' );
 	}
-	
+
 	/**
      * Provide options if asked outside the class
      */
 	function get_options() {
 		return $this->options;
 	}
-	
+
 	/**
 	 * Save a message to the log file
-	 */	
+	 */
 	function log( $message='' ) {
 		// Don't give warning if folder is not writable
-		@file_put_contents( WP_PLUGIN_DIR . "/pay-per-view/log.txt", $message . chr(10). chr(13), FILE_APPEND ); 
+		@file_put_contents( WP_PLUGIN_DIR . "/pay-per-view/log.txt", $message . chr(10). chr(13), FILE_APPEND );
 	}
 
 	/**
 	 * Checks if user is authorised by the admin
-	 */	
+	 */
 	function is_authorised() {
-	
+
 		if ( $this->options['authorized'] == 'true' && is_user_logged_in() && !current_user_can('administrator') ) {
 			if ( $this->options['level'] == 'subscriber' && current_user_can( 'read' ) )
 				return true;
 			else if ( $this->options['level'] == 'contributor' && current_user_can( 'edit_posts' ) )
 				return true;
 			else if ( $this->options['level'] == 'author' && current_user_can( 'edit_published_posts' ) )
-				return true;		
+				return true;
 			else if ( $this->options['level'] == 'editor' && current_user_can( 'edit_others_posts' ) )
-				return true;		
+				return true;
 		}
 		return false;
 	}
 
 	/**
 	 * Check if page can be cached or not
-	 *	
+	 *
 	 */
 	function cachable() {
-		
+
 		global $post;
-		
+
 		// If plugin is enabled for this post/page, it is not cachable
 		if ( is_object( $post ) && is_singular() ) {
 			$post_meta = get_post_meta( $post->ID, 'ppw_enable', true );
-			
-			if ( $post->post_type == 'page' ) 
+
+			if ( $post->post_type == 'page' )
 				$default = $this->options["page_default"];
-			else if ( $post->post_type == 'post' ) 
+			else if ( $post->post_type == 'post' )
 				$default = $this->options["post_default"];
-			else if ( $post->post_type != 'attachment' ) 
+			else if ( $post->post_type != 'attachment' )
 				$default = $this->options["custom_default"]; // New in V1.2
 			else
 				$default = '';
@@ -595,10 +599,10 @@ class PayPerView {
 		}
 		else if ( $this->options["multi"] && !is_home() )
 			$this->is_cachable = false;
-			
+
 		if ( is_home() && $this->options["home"] )
 			$this->is_cachable = false;
-		
+
 		// Load css files and scripts when they are neccesary
 		if ( !$this->is_cachable ) {
 			$this->load_scripts_styles( );
@@ -607,31 +611,31 @@ class PayPerView {
 
 	/**
 	 * Changes the content according to selected settings
-	 *	
+	 *
 	 */
 	function content( $content, $force=false, $method='' ) {
-		
+
 		global $post;
 		// Unsupported post type. Maybe a temporary page, like checkout of MarketPress
 		if ( !is_object( $post ) && !$content )
 			return;
-	
+
 		// If caching is allowed no need to continue
 		if ( $this->is_cachable && !$force )
 			return $this->clear($content);
-				
+
 		// Display the admin full content, if selected so
 		if ( $this->options["admin"] == 'true' && current_user_can('administrator') )
 			return $this->clear($content);
-			
+
 		// Display the bot full content, if selected so
 		if ( $this->options["bot"] == 'true' && $this->is_bot() )
 			return $this->clear($content);
-		
+
 		// Check if current user has been authorized to see full content
 		if ( $this->is_authorised() )
 			return $this->clear($content);
-		
+
 		// If user subscribed, show content
 		if ( is_user_logged_in() && trim( get_user_meta( get_current_user_id(), "ppw_subscribe", true) ) != '' )
 			return $this->clear($content);
@@ -641,7 +645,7 @@ class PayPerView {
 			$method = get_post_meta( $post->ID, 'ppw_method', true );
 		if ( !$method )
 			$method = $this->options["method"]; // Apply default method, if there is none
-			
+
 		// If user paid, show content. 'Tool' option has its own logic
 		if ( isset( $_COOKIE["pay_per_view"] ) && $method != 'tool' ) {
 			// On some installations slashes are added while serializing. So get rid of them.
@@ -655,19 +659,32 @@ class PayPerView {
 						break;
 					}
 				}
-				// If $found:true, user has a cookie which matches to the post. 
+				// If $found:true, user has a cookie which matches to the post.
 				// But we have to be sure that visitor did not play with it.
 				if ( $found ) {
 					global $wpdb;
 					$query = '';
 					foreach ( $orders as $order ) {
-						$query .= " SELECT * FROM " . $this->table . 
-						" WHERE transaction_post_ID=".$order['post_id']." 
-						AND transaction_paypal_ID='".$order['order_id']."' AND ( transaction_status='Paid' OR transaction_status='Pending' )
-						AND ". (time()-7200) . "<transaction_stamp UNION"; // Give another 1 hour grace time
+
+						//Escape everything
+						$query .= $wpdb->prepare(" SELECT * FROM " . $this->table .
+						" WHERE transaction_post_ID=%d 
+						AND transaction_paypal_ID=%s 
+						AND ( transaction_status='Paid' OR transaction_status='Pending' )
+						AND %d < transaction_stamp UNION", 
+						$order['post_id'], 
+						$order['order_id'],
+						(time()-7200) ); // Give another 1 hour grace time
+						
+//						$query .= " SELECT * FROM " . $this->table .
+//						" WHERE transaction_post_ID=".$order['post_id']."
+//						AND transaction_paypal_ID='".$order['order_id']."' AND ( transaction_status='Paid' OR transaction_status='Pending' )
+//						AND ". (time()-7200) . "<transaction_stamp UNION"; // Give another 1 hour grace time
 					}
+					
 					$query = rtrim( $query, "UNION" ); // Get rid of the last UNION
 					$result = $wpdb->get_results( $query );
+
 					if ( $result ) // Visitor did paid for this content!
 						return $this->clear($content);
 				}
@@ -678,16 +695,16 @@ class PayPerView {
 		if ( $method == "automatic" ) {
 			$content = preg_replace( '%\[ppw(.*?)\](.*?)\[( *)\/ppw( *)\]%is', '$2', $content ); // Clean shortcode
 			$temp_arr = explode( " ", $content );
-			
+
 			// If the article is shorter than excerpt, show full content
 			if ( !$excerpt_len = get_post_meta( $post->ID, 'ppw_excerpt', true ) )
 				$excerpt_len = $this->options["excerpt"];
-			
+
 			if ( count( $temp_arr ) <= $excerpt_len )
 				return $this->clear($content);
-				
+
 			// Otherwise prepare excerpt
-			$e = ""; 
+			$e = "";
 			for ( $n=0; $n<$excerpt_len; $n++ ) {
 				$e .= $temp_arr[$n] . " ";
 			}
@@ -709,17 +726,17 @@ class PayPerView {
 				if ( !$found )
 					$e = $e_saved;
 			}
-			
+
 			// Find the price
 			if ( !$price = get_post_meta( $post->ID, "ppw_price", true ) )
 				$price = $this->options["price"]; // Apply default price if it is not set for the post/page
-				
+
 			return $e . $this->mask( $price );
 		}
 		else if ( $method == "manual" ) {
 			// Find the price
 			if ( !$price = get_post_meta( $post->ID, "ppw_price", true ) )
-				$price = $this->options["price"];			
+				$price = $this->options["price"];
 			return $post->post_excerpt . $this->mask( $price );
 		}
 		else if ( $method == "tool" ) {
@@ -748,8 +765,8 @@ class PayPerView {
 	}
 
 	/**
-	 * Try to clear remaining shortcodes 
-	 *	
+	 * Try to clear remaining shortcodes
+	 *
 	 */
 	function clear( $content ) {
 		// Don't even try to touch an object, just in case
@@ -764,7 +781,7 @@ class PayPerView {
 
 	/**
 	 *	Initiates an instance of the Paypal gateway
-	 */	
+	 */
 	function call_gateway() {
 		include_once( WP_PLUGIN_DIR. "/pay-per-view/includes/paypal-express.php" );
 		$P = new PPW_Gateway_Paypal_Express($_SESSION["ppw_post_id"]);
@@ -773,7 +790,7 @@ class PayPerView {
 
 	/**
 	 *	This just makes error call compatible to gateway class
-	 */	
+	 */
 	function error( $text ) {
 		$this->error = $text;
 	}
@@ -781,10 +798,10 @@ class PayPerView {
 	/**
 	 *	Prepare the mask/template which includes payment form(s)
 	 *
-	 */	
+	 */
 	function mask( $price, $id=0, $description='') {
 		global $post;
-		
+
 		$content = '';
 
 		// User submitted to Paypal and connection OK. Let user confirm
@@ -805,18 +822,18 @@ class PayPerView {
 		// display error, if there is
 		if ( isset( $_POST["ppw_final_payment"] ) && $this->error != '' )
 			return $content . $this->error;
-			
+
 		// Count how many payment options we have
 		$n = 0;
-		if ( $this->options["one_time"] ) 
+		if ( $this->options["one_time"] )
 			$n++;
-		if ( $this->options["daily_pass"] ) 
+		if ( $this->options["daily_pass"] )
 			$n++;
-		if ( $this->options["subscription"] ) 
+		if ( $this->options["subscription"] )
 			$n++;
-		if ( $n == 0 ) 
+		if ( $n == 0 )
 			return $content; // No payment channels selected
-		
+
 		$content .= '<div class="ppw_form_container">';
 		// One time view option. Redirection will be handled by Paypal Express gateway
 		if ( $this->options["one_time"] ) {
@@ -858,7 +875,7 @@ class PayPerView {
 	 *  @subs: bool Means recurring
 	 */
 	function single_sub_button( $subs=false ) {
-		
+
 		// Let's be on the safe side and select a currency
 		if(empty($this->options['currency']))
 			$this->options['currency'] = 'USD';
@@ -893,10 +910,10 @@ class PayPerView {
 			// Force login if user not logged in
 			if ( !is_user_logged_in() )
 				$form .= ' ppw_not_loggedin'; // Add a class to which javascipt is bound
-			$form .= '" type="submit" name="submit_btn" value="'. str_replace( 
-				array("PRICE","DAY"), array($this->options["daily_pass_price"],$this->options["daily_pass_days"]), 
+			$form .= '" type="submit" name="submit_btn" value="'. str_replace(
+				array("PRICE","DAY"), array($this->options["daily_pass_price"],$this->options["daily_pass_days"]),
 				$this->options["daily_pass_description"]).'" />';
-		
+
 		}
 		else {
 			$form .= '<input type="hidden" name="a3" value="' . number_format($this->options['subscription_price'], 2) . '" />';
@@ -906,8 +923,8 @@ class PayPerView {
 			$form .= '<input class="ppw_submit_btn ';
 			if ( !is_user_logged_in() )
 				$form .= ' ppw_not_loggedin';
-			$form .= '" type="submit" name="submit_btn" value="'. str_replace( 
-				array("PRICE","DAY"), array($this->options["subscription_price"],$this->options["subscription_days"]), 
+			$form .= '" type="submit" name="submit_btn" value="'. str_replace(
+				array("PRICE","DAY"), array($this->options["subscription_price"],$this->options["subscription_days"]),
 				$this->options["subscription_description"]).'" />';
 		}
 		// They say Paypal uses this for tracking. I would prefer to remove it if it is not mandatory.
@@ -916,10 +933,10 @@ class PayPerView {
 
 		return $form;
 	}
-	
+
 	/**
 	 *	Initiate Paypal Express Gateway upon click on the form
-	 */	
+	 */
 	function initiate() {
 		// Initial submit of the purchase
 		if ( isset( $_POST["ppw_otw_submit"] ) ) {
@@ -927,7 +944,7 @@ class PayPerView {
 			$_SESSION["ppw_content_id"] = $_POST["ppw_content_id"];
 			$_SESSION["ppw_post_id"] = $_POST["ppw_post_id"];
 			$_SESSION["ppw_total_amt"] = $_POST["ppw_total_amt"];
-			
+
 			// Now start paypal API Call
 			$pp = $this->call_gateway();
 			$pp->process_payment_form( array() );
@@ -936,11 +953,11 @@ class PayPerView {
 			$pp = $this->call_gateway();
 			$pp->process_payment( array() );
 		}
-	}	
+	}
 
 	/**
 	 *	IPN handling for daily pass and subscription selections
-	 */	
+	 */
 	function handle_paypal_return() {
 		// PayPal IPN handling code
 		$this->options = get_option( 'ppw_options' );
@@ -1009,7 +1026,7 @@ class PayPerView {
 
 			// We are using server time. Not Paypal time.
 			$timestamp = time();
-			
+
 			$new_status = false;
 			// process PayPal response
 			switch ($_POST['payment_status']) {
@@ -1024,11 +1041,11 @@ class PayPerView {
 					// case: successful payment
 					$amount = $_POST['mc_gross'];
 					$currency = $_POST['mc_currency'];
-					
+
 					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
 
 					$this->record_transaction($user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], '');
-					
+
 					// Check if user already subscribed before. Practically this is impossible, but who knows?
 					$expiry = get_user_meta( $user_id, "ppw_subscribe", true );
 					// Let's be safe. Do not save user meta if new subscription points an earlier date
@@ -1036,10 +1053,10 @@ class PayPerView {
 					}
 					else
 						update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} day", strtotime( "now" ) ) ) );
-					
+
 					if ( $recurring )
 						update_user_meta( $user_id, "ppw_days", $days );
-					
+
 					update_user_meta( $user_id, "ppw_recurring", $recurring );
 					break;
 
@@ -1100,7 +1117,7 @@ class PayPerView {
 					$amount = $_POST['mc_gross'];
 					$currency = $_POST['mc_currency'];
 					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
-					
+
 					// Save transaction, but do not subscribe user.
 					$this->record_transaction($user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note);
 
@@ -1125,7 +1142,7 @@ class PayPerView {
 					delete_user_meta( $user_id, "ppw_days" );
 
 				  break;
-				  
+
 				default:
 			}
 		} else {
@@ -1144,13 +1161,13 @@ class PayPerView {
 		$ppw_name = __('Pay Per View', 'ppw'); // For translation compatibility
 		add_meta_box( 'ppw_metabox', $ppw_name, array( &$this, 'custom_box' ), 'post', 'side', 'high' );
 		add_meta_box( 'ppw_metabox', __('Pay Per View', 'ppw'), array( &$this, 'custom_box' ), 'page', 'side', 'high' );
-		
+
 		// New in V1.2: Custom post type support
 		$args = array(
 			'public'   => true,
 			'_builtin' => false
-		); 
-	
+		);
+
 		$post_types = get_post_types( $args );
 		if ( is_array( $post_types ) ) {
 			foreach ($post_types as $post_type ) {
@@ -1164,7 +1181,7 @@ class PayPerView {
 	 *
 	 */
 	function custom_box(  ) {
-		
+
 		global $post;
 
 		// Some wordings and vars that will be used
@@ -1176,23 +1193,23 @@ class PayPerView {
 
 		if ( is_page() )
 			$pp = __('page','ppw');
-		else 
+		else
 			$pp = __('post','ppw');
-			
-		if ( $post->post_type == 'page' ) 
+
+		if ( $post->post_type == 'page' )
 			$default = $this->options["page_default"];
-		else if ( $post->post_type == 'post' ) 
+		else if ( $post->post_type == 'post' )
 			$default = $this->options["post_default"];
-		else if ( $post->post_type != 'attachment' ) 
+		else if ( $post->post_type != 'attachment' )
 			$default = $this->options["custom_default"];
 		else
 			$default = '';
-			
+
 		$e = get_post_meta( $post->ID, 'ppw_enable', true );
 		$eselect = $dselect = '';
-		if ( $e == 'enable' ) 
+		if ( $e == 'enable' )
 			$eselect = ' selected="selected"';
-		else if ( $e == 'disable' ) 
+		else if ( $e == 'disable' )
 			$dselect = ' selected="selected"';
 
 		$saved_method = get_post_meta( $post->ID, 'ppw_method', true );
@@ -1212,12 +1229,12 @@ class PayPerView {
 			case 'manual':		$eff_method = $manual_wording; break;
 			case 'tool':		$eff_method = $tool_wording; break;
 		}
-			
+
 		if ( $e == 'enable' || ( $default == 'enable' && $e != 'disable' ) )
 			$eff_status = "<span class='ppw_span green' id='ppw_eff_status'>&nbsp;" . $enabled_wording . "</span>";
 		else
 			$eff_status = "<span class='ppw_span red' id='ppw_eff_status'>&nbsp;" . $disabled_wording . "</span>";
-		
+
 		// Use nonce for verification
 		wp_nonce_field( plugin_basename(__FILE__), 'ppw_nonce' );
 		?>
@@ -1249,7 +1266,7 @@ class PayPerView {
 		.red{color:red}
 		.green{color:green}
 		.ppw_border{border-top-color:white;border-bottom-color: #DFDFDF;border-style:solid;border-width:1px 0;}
-		
+
 		-->
 		<?php if ( 'automatic' != $method ) echo '#ppw_excerpt{opacity:0.2}';?>
 		</style>
@@ -1276,7 +1293,7 @@ class PayPerView {
 		echo $this->tips->add_tip(sprintf(__('Effective status dynamically shows the final result of the setting that will be applied to this %s. Disabled means Pay With a Like will not work for this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save.','ppw'),$pp,$pp));
 		echo '</div>';
 		echo '<div class="ppw_clear ppw_border"></div>';
-		
+
 		echo '<select name="ppw_method" id="ppw_method">';
 		echo '<option value="" >'. __("Follow global setting","ppw"). '</option>';
 		echo '<option value="automatic" '.$aselect.'>'. $automatic_wording . '</option>';
@@ -1288,7 +1305,7 @@ class PayPerView {
 		echo '</label>';
 		echo '<div class="ppw_info">';
 		/* translators: First %s refer to post or page. Second %s is the url address of the icon */
-		echo $this->tips->add_tip(sprintf(__('Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page.','ppw'),$pp,"<img src='".$this->plugin_url."/images/menu_icon.png"."' />" ) );
+		echo $this->tips->add_tip(sprintf(__('Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page.','ppw'),$pp,"<img src='".$this->plugin_url."/images/menu_icon.png"."' />" ) );				 			 			 		 
 		echo '</div>';
 		echo '<div class="ppw_clear"></div>';
 
@@ -1299,7 +1316,7 @@ class PayPerView {
 		echo $this->tips->add_tip(sprintf(__('Effective method dynamically shows the final result of the setting that will be applied to this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save.','ppw'),$pp));
 		echo '</div>';
 		echo '<div class="ppw_clear ppw_border"></div>';
-		
+
 		echo '<input type="text" name="ppw_excerpt" id="ppw_excerpt" value="'.get_post_meta( $post->ID, 'ppw_excerpt', true ).'" />';
 		echo '<label for="ppw_excerpt">';
 		_e('Excerpt length', 'ppw');
@@ -1335,8 +1352,8 @@ class PayPerView {
 				}
 				else { $('#ppw_eff_status').html('&nbsp;<?php echo $disabled_wording?>').addClass('red').removeClass('green'); }
 			});
-			
-			
+
+
 			$("select#ppw_method").change(function() {
 				var m = $('select#ppw_method').val();
 				if ( m == '' ) {m = def_method;}
@@ -1349,7 +1366,7 @@ class PayPerView {
 
 		});
 		</script>
-		<?php		
+		<?php
 	}
 
 	/**
@@ -1363,10 +1380,10 @@ class PayPerView {
 
 		// Check permissions
 		if ( 'page' == $_POST['post_type'] ) {
-			if ( !current_user_can( 'edit_page', $post_id ) ) 
+			if ( !current_user_can( 'edit_page', $post_id ) )
 				return $post_id;
 		}
-		elseif ( !current_user_can( 'edit_post', $post_id ) ) 
+		elseif ( !current_user_can( 'edit_post', $post_id ) )
 			return $post_id;
 
 		// Auth ok
@@ -1395,18 +1412,18 @@ class PayPerView {
 				delete_post_meta( $post_id, 'ppw_price' );
 		}
 	}
-	
+
   //enqeue js on product settings screen
 	function admin_scripts() {
 		wp_enqueue_script('jquery');
 		wp_enqueue_script( 'jquery-colorpicker', $this->plugin_url . '/js/colorpicker.js', array('jquery'), $this->version);
 	}
-	
+
 	//enqeue css on product settings screen
 	function admin_css() {
 		wp_enqueue_style( 'jquery-colorpicker-css', $this->plugin_url . '/css/colorpicker.css', false, $this->version);
 	}
-	
+
 	/**
 	 *	Add initial settings
 	 *
@@ -1414,7 +1431,7 @@ class PayPerView {
 	function init() {
 		// Since wp-cron is not reliable, use this instead
 		add_option( "ppw_last_update", time() );
-		
+
 		add_option( 'ppw_options', array(
 										'post_default'				=> 'enable',
 										'page_default'				=> '',
@@ -1450,9 +1467,9 @@ class PayPerView {
 										'twitter-app_secret'		=> ''
 										)
 		);
-		
+
 		//  Run this code not before 30 min
-		if ( ( time( ) - get_option( "ppw_last_update" ) ) < 1800 ) 
+		if ( ( time( ) - get_option( "ppw_last_update" ) ) < 1800 )
 			return;
 		$this->clear_subscriptions();
 	}
@@ -1460,17 +1477,17 @@ class PayPerView {
 	/**
 	 *	If a subscription method is selected, but API login not, warn admin
 	 *
-	 */	
+	 */
 	function admin_notices() {
 		if ( ( $this->options["daily_pass"] OR $this->options["subscription"] ) && !$this->options["accept_api_logins"] ) {
 			echo '<div class="error fade"><p>' .
 				__("<b>[Pay Per View]</b> If you are using Daily Pass or Recurring Subscriptions, you need to enable and set API logins.", "ppw") .
 			'</p></div>';
 		}
-		
-		// Warn admin in case of default permalink.	
+
+		// Warn admin in case of default permalink.
 		if ( !get_option( 'permalink_structure' ) )
-			echo '<div class="error fade"><p>' . 
+			echo '<div class="error fade"><p>' .
 				__("<b>[Pay Per View]</b> Plugin will not function correctly with default permalink structure. You need to use a pretty permalink structure.", "ppw") .
 				'</p></div>';
 
@@ -1487,42 +1504,42 @@ class PayPerView {
 		$wpdb->query("
 			DELETE subs FROM $wpdb->usermeta subs, $wpdb->usermeta recur
 			WHERE subs.user_id = recur.user_id
-			AND subs.meta_key='ppw_subscribe' && NOW() > subs.meta_value 
+			AND subs.meta_key='ppw_subscribe' && NOW() > subs.meta_value
 			AND recur.meta_key='ppw_recurring' && recur.meta_value <> '1'
 		" );
 		// Adjust recurring subscriptions' expiry date
 		$results = $wpdb->get_results("
-			SELECT subs.user_id 
+			SELECT subs.user_id
 			FROM $wpdb->usermeta subs, $wpdb->usermeta recur, $wpdb->usermeta days
 			WHERE subs.user_id = recur.user_id
 			AND subs.user_id = days.user_id
-			AND subs.meta_key='ppw_subscribe' && NOW() > subs.meta_value 
+			AND subs.meta_key='ppw_subscribe' && NOW() > subs.meta_value
 			AND recur.meta_key='ppw_recurring' && recur.meta_value = '1'
 			AND days.meta_key='ppw_days' && days.meta_value <> ''
 		" );
-		
+
 		if ( $results ) {
 			foreach ( $results as $result ) {
 				$days = get_user_meta( $result->user_id, "ppw_days", true );
 				$date = get_user_meta( $result->user_id, "ppw_subscribe", true );
 				// Write new expiry date
 				if ( $days && $date )
-					update_user_meta( $result->user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} day", strtotime( $date ) ) ) ); 
+					update_user_meta( $result->user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} day", strtotime( $date ) ) ) );
 			}
 		}
 	}
-	
+
 	/**
 	 *	Handles settings form data
 	 *
 	 */
 	function admin_init() {
-	
-		if (!class_exists('WpmuDev_HelpTooltips')) 
+
+		if (!class_exists('WpmuDev_HelpTooltips'))
 			require_once dirname(__FILE__) . '/includes/class_wd_help_tooltips.php';
 		$this->tips = new WpmuDev_HelpTooltips();
 		$this->tips->set_icon_url(plugins_url('pay-per-view/images/information.png'));
-	
+
 		add_menu_page(__('Pay Per View','ppw'), __('Pay Per View','ppw'), 'manage_options',  $this->plugin_name, array(&$this,'settings'),$this->plugin_url."/images/menu_icon.png");
 		add_submenu_page($this->plugin_name, __('Transactions','ppw'), __('Transactions','ppw'), 'manage_options', "ppw_transactions", array(&$this,'transactions'));
 		add_submenu_page($this->plugin_name, __('Customization','ppw'), __('Customization Help','ppw'), 'manage_options', "ppw_customization", array(&$this,'customization'));
@@ -1531,7 +1548,7 @@ class PayPerView {
 			add_action( 'admin_notices', array( &$this, 'warning' ) );
 			return;
 		}
-		
+
 		if ( isset($_POST["action_ppw"]) ) {
 			$this->options["post_default"]			= $_POST["post_default"];
 			$this->options["page_default"]			= $_POST["page_default"];
@@ -1556,13 +1573,13 @@ class PayPerView {
 			$this->options["subscription_price"]	= $_POST["subscription_price"];
 			$this->options["subscription_days"] 	= $_POST["subscription_days"];
 			$this->options["subscription_description"]	= $_POST["subscription_description"];
-			
+
 			$this->options["accept_api_logins"]		= isset( $_POST["accept_api_logins"] );
 			$this->options["facebook-no_init"]		= isset( $_POST["facebook-no_init"] );
 			$this->options['facebook-app_id']		= trim( $_POST['facebook-app_id'] );
 			$this->options['twitter-app_id']		= trim( $_POST['twitter-app_id'] );
 			$this->options['twitter-app_secret']	= trim( $_POST['twitter-app_secret'] );
-			
+
 			// TODO: Shorten these
 			$this->options['gateways']['paypal-express']['api_user'] = $_POST["ppw"]['gateways']['paypal-express']['api_user'];
 			$this->options['gateways']['paypal-express']['api_pass'] = $_POST["ppw"]['gateways']['paypal-express']['api_pass'];
@@ -1575,30 +1592,30 @@ class PayPerView {
 			$this->options['gateways']['paypal-express']['header_border'] = $_POST["ppw"]['gateways']['paypal-express']['header_border'];
 			$this->options['gateways']['paypal-express']['header_back'] = $_POST["ppw"]['gateways']['paypal-express']['header_back'];
 			$this->options['gateways']['paypal-express']['page_back'] = $_POST["ppw"]['gateways']['paypal-express']['page_back'];
-			
+
 			$this->options['currency'] = $this->options['gateways']['paypal-express']['currency'];
-			
+
 			if ( update_option( 'ppw_options', $this->options ) )
 				add_action( 'admin_notices', array ( &$this, 'saved' ) );
 		}
 	}
-	
+
 	/**
-	 *	Prints "saved" message on top of Admin page 
+	 *	Prints "saved" message on top of Admin page
 	 */
 	function saved( ) {
 		echo '<div class="updated fade"><p><b>[Pay Per View]</b> Settings saved.</p></div>';
 	}
 
 	/**
-	 *	Prints warning message on top of Admin page 
+	 *	Prints warning message on top of Admin page
 	 */
 	function warning( ) {
 		echo '<div class="updated fade"><p><b>[Pay Per View] You are not authorised to do this.</b></p></div>';
 	}
 
 	/**
-	 *	Admin settings HTML code 
+	 *	Admin settings HTML code
 	 */
 	function settings() {
 
@@ -1610,17 +1627,17 @@ class PayPerView {
 		<div class="icon32" style="margin:8px 0 0 8px"><img src="<?php echo $this->plugin_url . '/images/general.png'; ?>" /></div>
         <h2><?php _e('General Settings', 'ppw'); ?></h2>
         <div id="poststuff" class="metabox-holder ppw-settings">
-				
+
 		<form method="post" action="" >
 		<?php wp_nonce_field( 'update_ppw_settings', 'ppw_nonce' ); ?>
-		
+
 		<div class="postbox" id="ppw_global_postbox">
             <h3 class='hndle'><span><?php _e('Global Settings', 'ppw') ?></span></h3>
             <div class="inside">
               <span class="description"><?php _e('Pay Per View allows protecting posts/page content or parts of post/page content until visitor pays a nominal fee or subscribes to the website. These settings provide a quick way to set Pay Per View for your posts and pages. They can be overridden per post basis using post editor page.', 'ppw') ?></span>
-				
+
 				<table class="form-table">
-				
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Protection for posts', 'ppw')?></th>
 						<td colspan="2">
@@ -1630,7 +1647,7 @@ class PayPerView {
 						</select>
 						</td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Protection for pages', 'ppw')?></th>
 						<td colspan="2">
@@ -1644,7 +1661,7 @@ class PayPerView {
 					$args = array(
 						'public'   => true,
 						'_builtin' => false
-					); 
+					);
 					$post_types = get_post_types( $args, 'objects' );
 
 					if ( is_array( $post_types ) && count( $post_types ) > 0 ) {
@@ -1656,7 +1673,7 @@ class PayPerView {
 					}
 					else $note = __("You don't have any custom post types. Changing this setting will have no effect.","ppw");
 					?>
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Protection for custom post types', 'ppw')?></th>
 						<td colspan="2">
@@ -1667,7 +1684,7 @@ class PayPerView {
 						<span class="description"><?php echo $note ?></span>
 						</td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Public content selection method', 'ppw')?></th>
 						<td colspan="2">
@@ -1676,34 +1693,34 @@ class PayPerView {
 						<option value="manual" <?php if ( $this->options['method'] == 'manual' ) echo "selected='selected'"?>><?php _e('Manual excerpt from post excerpt field', 'ppw')?></option>
 						<option value="tool" <?php if ( $this->options['method'] == 'tool' ) echo "selected='selected'"?>><?php _e('Use selection tool', 'ppw')?></option>
 						</select>
-						<span class="description"><?php 
-							printf(__('Automatic excerpt selects the first %d words, number being adjustable from "excerpt length" field. Manual excerpt displays whatever included in the post excerpt field of the post. With selection tool, you can freely select part(s) of the content to be protected. Using the latter one may be a little bit sophisticated, but enables more than one part of the content to be protected.', 'ppw'),$this->options["excerpt"]); 
+						<span class="description"><?php
+							printf(__('Automatic excerpt selects the first %d words, number being adjustable from "excerpt length" field. Manual excerpt displays whatever included in the post excerpt field of the post. With selection tool, you can freely select part(s) of the content to be protected. Using the latter one may be a little bit sophisticated, but enables more than one part of the content to be protected.', 'ppw'),$this->options["excerpt"]);
 						?></span>
 						</td>
 					</tr>
-										
+
 					<tr valign="top" id="excerpt_length" <?php if ( $this->options['method'] != 'automatic' ) echo 'style="display:none"'?>>
 						<th scope="row" ><?php _e('Excerpt length (words)', 'ppw')?></th>
 						<td colspan="2"><input type="text" style="width:50px" name="excerpt" value="<?php echo $this->options["excerpt"] ?>" />
 						<span class="description"><?php _e('Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected.', 'ppw') ?></span></td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php printf(__('Unit price (%s)', 'ppw'),$this->options["currency"])?></th>
 						<td colspan="2"><input type="text" style="width:50px" name="price" value="<?php echo $this->options["price"] ?>" />
 						<span class="description"><?php _e('Default price per protected content.', 'ppw') ?></span></td>
 					</tr>
-					
+
 				</table>
 			</div>
 			</div>
-				
+
 		<div class="postbox" id="ppw_accessibility_postbox">
             <h3 class='hndle'><span><?php _e('Accessibility Settings', 'ppw'); ?></span></h3>
             <div class="inside">
-			
+
 				<table class="form-table">
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Enable on the home page', 'ppw') ?></th>
 						<td colspan="2">
@@ -1713,7 +1730,7 @@ class PayPerView {
 						</select>
 						</td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Enable for multiple post pages', 'ppw') ?></th>
 						<td colspan="2">
@@ -1724,7 +1741,7 @@ class PayPerView {
 						<span class="description"><?php _e('Enables the plugin for pages (except the home page) which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. ', 'ppw')?></span>
 						</td>
 					</tr>
-					
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Admin sees full content','ppw')?></th>
 						<td colspan="2">
@@ -1746,7 +1763,7 @@ class PayPerView {
 						<span class="description"><?php _e('If Yes, authorized users will see the full content without the need to pay or subscribe. Admin setting is independent of this one.','ppw')?></span>
 						</td>
 					</tr>
-										
+
 					<tr valign="top" id="level" <?php if ( $this->options['authorized'] != 'true' ) echo 'style="display:none"'?>>
 						<th scope="row" ><?php _e('User level where authorization starts','ppw')?></th>
 						<td colspan="2">
@@ -1779,14 +1796,14 @@ class PayPerView {
 
 				</table>
 			</div>
-			</div>					
+			</div>
 
 		<div class="postbox" id="ppw_payment_postbox">
             <h3 class='hndle'><span><?php _e('Payment Options', 'ppw') ?></span></h3>
             <div class="inside">
-			
+
 				<table class="form-table">
-				
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('One time view','ppw')?></th>
 						<td colspan="2">
@@ -1798,15 +1815,15 @@ class PayPerView {
 					if (!$this->options["one_time"]) $style='style="display:none"';
 					else $style = '';
 					?>
-										
+
 
 					<tr valign="top" class="one_time_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('One time view description', 'ppw')?></th>
 						<td colspan="2"><input type="text" style="width:400px" name="one_time_description" value="<?php echo stripslashes($this->options["one_time_description"]) ?>" />
-						<br /><span class="description"><?php _e('This text will be shown on the button. PRICE (case sensitive) will be replaced by its real value. 
+						<br /><span class="description"><?php _e('This text will be shown on the button. PRICE (case sensitive) will be replaced by its real value.
 						DESCRIPTION (case sensitive) will be replaced by description field defined in Selection Tool, or the word "content" if it is not given.', 'ppw') ?></span></td>
 					</tr>
-					
+
 					<tr valign="top" style="border-top:1px solid lightgrey">
 						<th scope="row" ><?php _e('Daily Pass','ppw')?></th>
 						<td colspan="2">
@@ -1818,25 +1835,25 @@ class PayPerView {
 					if (!$this->options["daily_pass"]) $style='style="display:none"';
 					else $style = '';
 					?>
-										
+
 					<tr valign="top" class="daily_pass_detail" <?php echo $style?>>
 						<th scope="row" ><?php printf(__('Daily pass price (%s)', 'ppw'),$this->options["currency"])?></th>
 						<td colspan="2"><input type="text" style="width:50px" name="daily_pass_price" value="<?php echo $this->options["daily_pass_price"] ?>" />
 						<span class="description"><?php _e('Price that will be paid once which lets the visitor see full content during validity period.', 'ppw') ?></span></td>
 					</tr>
-					
+
 					<tr valign="top" class="daily_pass_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Daily pass validity (days)', 'ppw')?></th>
 						<td colspan="2"><input type="text" style="width:50px" name="daily_pass_days" value="<?php echo $this->options["daily_pass_days"] ?>" />
 						<span class="description"><?php _e('Daily pass will be valid for this period.', 'ppw') ?></span></td>
 					</tr>
-					
+
 					<tr valign="top" class="daily_pass_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Daily pass description', 'ppw')?></th>
 						<td colspan="2"><input type="text" style="width:400px" name="daily_pass_description" value="<?php echo stripslashes($this->options["daily_pass_description"]) ?>" />
 						<br /><span class="description"><?php _e('This text will be shown on the button. PRICE and DAY (case sensitive) will be replaced by their real values.', 'ppw') ?></span></td>
 					</tr>
-					
+
 					<tr valign="top" style="border-top:1px solid lightgrey">
 						<th scope="row" >
 						<?php _e('Recurring subscription','ppw')?>
@@ -1850,14 +1867,14 @@ class PayPerView {
 					if (!$this->options["subscription"]) $style='style="display:none"';
 					else $style = '';
 					?>
-											
+
 					<tr valign="top" class="subscription_detail" <?php echo $style?>>
 						<th scope="row" ><?php printf(__('Subscription price (%s)', 'ppw'),$this->options["currency"])?></th>
 						<td colspan="2">
 							<input type="text" style="width:50px" id="subscription_price" name="subscription_price" value="<?php echo $this->options["subscription_price"] ?>" />
 						</td>
 					</tr>
-					
+
 					<tr valign="top" class="subscription_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Subscription period (days)', 'ppw')?></th>
 						<td colspan="2">
@@ -1865,7 +1882,7 @@ class PayPerView {
 							<span class="description"><?php _e('Price is valid for this period and it will be renewed after it expires.', 'ppw') ?></span>
 						</td>
 					</tr>
-					
+
 					<tr valign="top" class="subscription_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Subscription description', 'ppw')?></th>
 						<td colspan="2">
@@ -1878,14 +1895,14 @@ class PayPerView {
 				</table>
 			</div>
 			</div>
-			
-			
+
+
 		<div class="postbox" id="ppw_api_postbox">
             <h3 class='hndle'><span><?php _e('API Settings', 'ppw') ?></span></h3>
             <div class="inside">
-			
+
 				<table class="form-table">
-				
+
 					<tr valign="top">
 						<th scope="row" ><?php _e('Accept API Logins','ppw')?></th>
 						<td colspan="2">
@@ -1897,7 +1914,7 @@ class PayPerView {
 					if (!$this->options["accept_api_logins"]) $style='style="display:none"';
 					else $style='';
 					?>
-											
+
 					<tr valign="top" class="api_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('My website already uses Facebook','ppw')?></th>
 						<td colspan="2">
@@ -1905,7 +1922,7 @@ class PayPerView {
 						<span class="description"><?php _e('By default, Facebook script will be loaded by the plugin. If you are already running Facebook scripts, to prevent any conflict, check this option.','ppw')?></span>
 						</td>
 					</tr>
-					
+
 					<tr valign="top" class="api_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Facebook App ID','ppw')?></th>
 						<td colspan="2">
@@ -1913,7 +1930,7 @@ class PayPerView {
 						<br /><span class="description"><?php printf(__("Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s'>here</a>", 'ppw'), 'https://developers.facebook.com/apps')?></span>
 						</td>
 					</tr>
-					
+
 					<tr valign="top" class="api_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Twitter Consumer Key','ppw')?></th>
 						<td colspan="2">
@@ -1921,7 +1938,7 @@ class PayPerView {
 						<br /><span class="description"><?php printf(__('Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s">here</a>', 'ppw'), 'https://dev.twitter.com/apps/new')?></span>
 						</td>
 					</tr>
-					
+
 					<tr valign="top" class="api_detail" <?php echo $style?>>
 						<th scope="row" ><?php _e('Twitter Consumer Secret','ppw')?></th>
 						<td colspan="2">
@@ -1929,12 +1946,12 @@ class PayPerView {
 						<br /><span class="description"><?php _e('Enter your Twitter App ID Secret here.', 'ppw')?></span>
 						</td>
 					</tr>
-					
+
 				</table>
 			</div>
 			</div>
 
-					
+
 			<?php
 			// Add Paypal Express Gateway Settings
 			include_once( WP_PLUGIN_DIR. "/pay-per-view/includes/paypal-express.php" );
@@ -1946,7 +1963,7 @@ class PayPerView {
 					<input type="submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
 					</p>
 			</form>
-		
+
 		</div>
 		</div>
 		<script type="text/javascript">
@@ -1982,17 +1999,17 @@ class PayPerView {
 
 	/**
 	 *	Customization Instructions
-	 *  @since 1.4.0 
+	 *  @since 1.4.0
 	 */
 	function customization() {
-		
+
 		?>
 		<div class="wrap">
 		<div class="icon32" style="margin:8px 0 0 8px"><img src="<?php echo $this->plugin_url . '/images/general.png'; ?>" /></div>
         <h2><?php _e('Customization', 'ppw'); ?></h2>
         <div id="poststuff" class="metabox-holder ppw-settings">
 
-		
+
 			<div class="postbox" id="ppw_instructions">
 				<h3 class='hndle'><span><?php _e('Customization Examples', 'ppw'); ?></span></h3>
 				<div class="inside">
@@ -2001,7 +2018,7 @@ class PayPerView {
 					?>
 					<br />
 					<code>
-					&lt;?php<br /> 
+					&lt;?php<br />
 					if ( function_exists( 'wpmudev_ppw_html' ) ) {<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$html = '&lt;iframe width="560" height="315" src="http://www.youtube.com/embed/-uiN9z5tqhg" frameborder="0" allowfullscreen&gt;&lt;/iframe&gt;'; // html code to be protected (required)<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$id = 1; // An optional unique id if you are using the function more than once on a single page<br />
@@ -2026,7 +2043,7 @@ class PayPerView {
 					?>
 					<br />
 					<code>
-					&lt;?php<br /> 
+					&lt;?php<br />
 					if ( function_exists( 'wpmudev_ppw' ) )<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;echo wpmudev_ppw( custom_description() );<br />
 					else<br />
@@ -2040,7 +2057,7 @@ class PayPerView {
 					?>
 					<br />
 					<code>
-					&lt;?php<br /> 
+					&lt;?php<br />
 					function my_ppv_customization( ) {<br />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;global $ppw, $post; <br />
 					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if ( !is_object( $ppw ) || !is_object( $post ) ) return;<br />
@@ -2054,11 +2071,11 @@ class PayPerView {
 					</code>
 					<br />
 					<br />
-					<?php 
+					<?php
 					$uploads = wp_upload_dir();
 					$default_css = "/wp-content/plugins/pay-per-view/css/front.css";
 					$custom_css = "/wp-content/uploads/pay-per-view.css";
-					printf(__('If you want to apply your own styles copy contents of front.css to your theme css file and add this code inside functions.php of your theme:<code>add_theme_support( "pay_per_view_style" )</code> OR copy and rename the default css file <b>%s</b> as <b>%s</b> and edit this latter file. Then, your edited styles will not be affected from plugin updates.', 'ppw'), $default_css, $custom_css); 
+					printf(__('If you want to apply your own styles copy contents of front.css to your theme css file and add this code inside functions.php of your theme:<code>add_theme_support( "pay_per_view_style" )</code> OR copy and rename the default css file <b>%s</b> as <b>%s</b> and edit this latter file. Then, your edited styles will not be affected from plugin updates.', 'ppw'), $default_css, $custom_css);
 					?>
 					<br />
 				</div>
@@ -2069,10 +2086,10 @@ class PayPerView {
 
 	<?php
 	}
-	
+
 	/**
 	 *	Get transaction records
-	 *  Modified from Membership plugin by Barry 
+	 *  Modified from Membership plugin by Barry
 	 */
 	function get_transactions($type, $startat, $num) {
 
@@ -2168,7 +2185,7 @@ class PayPerView {
 		<?php
 
 	}
-	
+
 	function mytransactions($type = 'past') {
 
 		if(empty($_GET['paged'])) {
@@ -2186,7 +2203,7 @@ class PayPerView {
 
 		$columns['subscription'] = __('Post','ppw');
 		$columns['user'] = __('User','ppw');
-		$columns['date'] = __('Date','ppw');
+		$columns['date'] = __('Date/Time','ppw');
 		$columns['expiry'] = __('Expiry Date','ppw');
 		$columns['amount'] = __('Amount','ppw');
 		$columns['transid'] = __('Transaction id','ppw');
@@ -2252,12 +2269,12 @@ class PayPerView {
 								</td>
 								<td class="column-date">
 									<?php
-										echo mysql2date("d-m-Y", $transaction->transaction_stamp);
+										echo date( $this->datetime_format, $transaction->transaction_stamp );
 
 									?>
 								</td>
 								<td class="column-expiry">
-								<?php								
+								<?php
 								echo get_user_meta( $transaction->transaction_user_ID, 'ppw_subscribe', true );
 								?>
 								</td>
@@ -2306,7 +2323,7 @@ class PayPerView {
 	}
 	/**
 	 *	Adds tinyMCE editor to the post editor
-	 *  Modified from Password Protect Selected Content by Aaron Edwards 
+	 *  Modified from Password Protect Selected Content by Aaron Edwards
 	 */
 	function load_tinymce() {
     if ( (current_user_can('edit_posts') || current_user_can('edit_pages')) && get_user_option('rich_editing') == 'true') {
@@ -2315,7 +2332,7 @@ class PayPerView {
 			add_filter( 'mce_external_languages', array(&$this,'tinymce_load_langs') );
 		}
 	}
-	
+
 	/**
 	 * TinyMCE dialog content
 	 */
@@ -2332,10 +2349,10 @@ class PayPerView {
 				<script type="text/javascript" src="../wp-includes/js/jquery/jquery.js"></script>
 
 				<script type="text/javascript">
-				
+
 
           tinyMCEPopup.storeSelection();
-          
+
 					var insertPayperview = function (ed) {
 						var description = jQuery.trim(jQuery('#ppw-description').val());
 						var price = jQuery.trim(jQuery('#ppw-price').val());
@@ -2366,7 +2383,7 @@ class PayPerView {
 				<title><?php _e("Pay Per View", 'ppw'); ?></title>
 			</head>
 			<body style="display: none">
-			
+
 				<form onsubmit="insertPayperview();return false;" action="#">
 
 					<div id="general_panel" class="panel current">
@@ -2430,9 +2447,9 @@ class PayPerView {
 		$plugin_array['payperview'] = plugins_url('pay-per-view/tinymce/editor_plugin.js');
 		return $plugin_array;
 	}
-	
+
 	/**
-	 *	check if visitor is a bot 
+	 *	check if visitor is a bot
 	 *
 	 */
 	function is_bot(){
@@ -2444,12 +2461,12 @@ class PayPerView {
 		"Baiduspider", "Feedfetcher-Google", "TechnoratiSnoop", "Rankivabot",
 		"Mediapartners-Google", "Sogou web spider", "WebAlta Crawler","TweetmemeBot",
 		"Butterfly","Twitturls","Me.dium","Twiceler");
-	 
+
 		foreach($botlist as $bot){
 			if( strpos($_SERVER['HTTP_USER_AGENT'],$bot)!== false )
 			return true;	// Is a bot
 		}
-	 
+
 		return false;	// Not a bot
 	}
 }
@@ -2462,7 +2479,7 @@ global $ppw;
 if ( !function_exists( 'wpmudev_ppw' ) ) {
 	function wpmudev_ppw( $content='', $force=false ) {
 		global $ppw, $post;
-		if ( $content ) 
+		if ( $content )
 			return $ppw->content( $content, $force );
 		else
 			return $ppw->content( $post->post_content, $force );
@@ -2473,20 +2490,20 @@ if ( !function_exists( 'wpmudev_ppw_html' ) ) {
 	// since 1.4.0
 	function wpmudev_ppw_html( $html, $id=1, $description='', $price=0 ) {
 		global $ppw, $post;
-		
+
 		if ( $html )
 			$content = $html;
 		else if ( is_object( $post ) )
 			$content = $post->content;
 		else
 			return 'No html code or post content found';
-			
+
 		// Find the price
 		if ( !$price && is_object( $post ) )
 			$price = get_post_meta( $post->ID, "ppw_price", true );
 		if ( !$price )
 			$price = $ppw->options["price"]; // Apply default price if it is not set for the post/page
-			
+
 		return $ppw->content( '[ppw id="'.$id.'" description="'.$description.'" price="'.$price.'"]'. $content . '[/ppw]', true, 'tool' );
 	}
 }
@@ -2495,13 +2512,13 @@ if ( !function_exists( 'wpmudev_ppw_html' ) ) {
 /* -------------------- WPMU DEV Dashboard Notice -------------------- */
 if ( !class_exists('WPMUDEV_Dashboard_Notice') ) {
 	class WPMUDEV_Dashboard_Notice {
-		
+
 		var $version = '2.0';
-		
+
 		function WPMUDEV_Dashboard_Notice() {
-			add_action( 'plugins_loaded', array( &$this, 'init' ) ); 
+			add_action( 'plugins_loaded', array( &$this, 'init' ) );
 		}
-		
+
 		function init() {
 			if ( !class_exists( 'WPMUDEV_Update_Notifications' ) && current_user_can( 'install_plugins' ) && is_admin() ) {
 				remove_action( 'admin_notices', 'wdp_un_check', 5 );
@@ -2514,11 +2531,11 @@ if ( !class_exists('WPMUDEV_Dashboard_Notice') ) {
 				}
 			}
 		}
-		
+
 		function filter_plugin_info($res, $action, $args) {
 			global $wp_version;
 			$cur_wp_version = preg_replace('/-.*$/', '', $wp_version);
-		
+
 			if ( $action == 'plugin_information' && strpos($args->slug, 'install_wpmudev_dash') !== false ) {
 				$res = new stdClass;
 				$res->name = 'WPMU DEV Dashboard';
@@ -2528,31 +2545,31 @@ if ( !class_exists('WPMUDEV_Dashboard_Notice') ) {
 				$res->homepage = 'http://premium.wpmudev.org/project/wpmu-dev-dashboard/';
 				$res->download_link = "http://premium.wpmudev.org/wdp-un.php?action=install_wpmudev_dash";
 				$res->tested = $cur_wp_version;
-				
+
 				return $res;
 			}
-	
+
 			return false;
 		}
-	
+
 		function auto_install_url() {
 			$function = is_multisite() ? 'network_admin_url' : 'admin_url';
 			return wp_nonce_url($function("update.php?action=install-plugin&plugin=install_wpmudev_dash"), "install-plugin_install_wpmudev_dash");
 		}
-		
+
 		function activate_url() {
 			$function = is_multisite() ? 'network_admin_url' : 'admin_url';
 			return wp_nonce_url($function('plugins.php?action=activate&plugin=wpmudev-updates%2Fupdate-notifications.php'), 'activate-plugin_wpmudev-updates/update-notifications.php');
 		}
-		
+
 		function install_notice() {
 			echo '<div class="error fade"><p>' . sprintf(__('Easily get updates, support, and one-click WPMU DEV plugin/theme installations right from in your dashboard - <strong><a href="%s" title="Install Now &raquo;">install the free WPMU DEV Dashboard plugin</a></strong>. &nbsp;&nbsp;&nbsp;<small><a href="http://premium.wpmudev.org/wpmu-dev/update-notifications-plugin-information/">(find out more)</a></small>', 'wpmudev'), $this->auto_install_url()) . '</a></p></div>';
 		}
-		
+
 		function activate_notice() {
 			echo '<div class="updated fade"><p>' . sprintf(__('Updates, Support, Premium Plugins, Community - <strong><a href="%s" title="Activate Now &raquo;">activate the WPMU DEV Dashboard plugin now</a></strong>.', 'wpmudev'), $this->activate_url()) . '</a></p></div>';
 		}
-	
+
 	}
 	new WPMUDEV_Dashboard_Notice();
 }

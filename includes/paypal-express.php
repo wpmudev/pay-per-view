@@ -48,7 +48,7 @@ class PPW_Gateway_Paypal_Express {
   function __construct($post_id=0) {
     global $ppw;
     $settings = get_option('ppw_options');
-	
+
 
     //set names here to be able to translate
     $this->admin_name = __('PayPal Express Checkout', 'ppw');
@@ -69,9 +69,9 @@ class PPW_Gateway_Paypal_Express {
     $this->returnURL = get_permalink($post_id) . "?ppw_confirm=1";
   	$this->cancelURL = get_permalink($post_id) . "?cancel=1";
     $this->version = "69.0"; //api version
-	
+
 	$this->cookie = $settings["cookie"]; // Cookie validity time
-	
+
 	$this->post_id = $post_id;
 
     //set api urls
@@ -246,7 +246,7 @@ class PPW_Gateway_Paypal_Express {
       $this->cart_checkout_error( __('There was a problem connecting to PayPal to setup your purchase. Please try again.', 'ppw') . $error );
     }
   }
-  
+
   function cart_checkout_error($msg, $context = 'checkout') {
     $msg = str_replace('"', '\"', $msg); //prevent double quotes from causing errors.
     $content = 'return "<div class=\"ppw_checkout_error\">' . $msg . '</div>";';
@@ -343,7 +343,7 @@ class PPW_Gateway_Paypal_Express {
 
 		  // We use servers timestamp
 		  $timestamp = time();
-		  
+
 		  //setup status
 		  switch ($result["PAYMENTINFO_{$i}_PAYMENTSTATUS"]) {
 			case 'Canceled-Reversal':
@@ -425,7 +425,7 @@ class PPW_Gateway_Paypal_Express {
 		  $status = $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] . ': '. $status;
 
 		  $currency = $result["PAYMENTINFO_{$i}_CURRENCYCODE"];
-		  
+
 		  if ( $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] == "Processed" OR $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] == "Completed" )
 			$db_status = "Paid";
 		else if ( $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] == "Pending" ) {
@@ -436,20 +436,20 @@ class PPW_Gateway_Paypal_Express {
 			if ( !$admin_email )
 				$admin_email = 'admin@' . $current_site->domain;
 			wp_mail( $admin_email, __('Pending Pay Per View order','ppw'),  __('A Pay Per View order has arrived, and content revealed to the client, but payment is kept in pending state by PayPal. Please check your PayPal account.','ppw') );
-		}	
-			
+		}
+
 		  $amount = $result["PAYMENTINFO_{$i}_AMT"];
 
 		  $note = @$result["NOTE"]; //optional, only shown if gateway supports it
 
 		//figure out blog_id of this payment to put the order into it
           $order_id = $result["PAYMENTINFO_{$i}_TRANSACTIONID"];
-			
+
 
 			//succesful payment, create our order now
 			if( !$ppw->duplicate_transaction( 0, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, '', $_SESSION["ppw_content_id"] ) )
 				$ppw->record_transaction(0, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, $note, $_SESSION["ppw_content_id"]);
-				
+
 			// Set a cookie
 			$new_order = array(
 				'content_id' => $_SESSION["ppw_content_id"],
@@ -462,25 +462,25 @@ class PPW_Gateway_Paypal_Express {
 			// Double check
 			if ( !is_array( $orders ) )
 				$orders = array();
-	
+
 			$orders[] = $new_order;
 
 			// Let admin set cookie expire at the end of session
 			if ( !isset($this->cookie) )
 				$expire = time() + 3600;
 			else if ( '' == trim( $this->cookie ) || !is_numeric( $this->cookie ) || !$this->cookie )
-				$expire = 0; 
+				$expire = 0;
 			else
-				$expire = time() + 3600 * $this->cookie; 
-			
+				$expire = time() + 3600 * $this->cookie;
+
 			if ( defined('COOKIEPATH') ) $cookiepath = COOKIEPATH;
 			else $cookiepath = "/";
 			if ( defined('COOKIEDOMAIN') ) $cookiedomain = COOKIEDOMAIN;
 			else $cookiedomain = '';
 			setcookie("pay_per_view", serialize($orders), $expire, $cookiepath, $cookiedomain);
-			
+
 			wp_redirect( $_SESSION["ppw_post_id"] );
-		}	
+		}
       } else { //whoops, error
 
 				for ($i = 0; $i <= 5; $i++) { //print the first 5 errors
@@ -529,7 +529,7 @@ class PPW_Gateway_Paypal_Express {
 	      $timestamp = key($statuses);
 	      $content .= '<p><strong>' . date(get_option('date_format') . ' - ' . get_option('time_format'), $timestamp) . ':</strong> ' . esc_html($status) . '</p>';
 	    } else {
-	      $content .= '<p>' . sprintf(__('Your PayPal payment for this order totaling %s is complete. The PayPal transaction number is <strong>%s</strong>.', 'ppw'), $mp->format_currency($order->ppw_payment_info['currency'], $order->ppw_payment_info['total']), $order->ppw_payment_info['transaction_id']) . '</p>';
+	      $content .= '<p>' . sprintf(__('Your PayPal payment for this order totaling %s is complete. The PayPal transaction number is <strong>%s</strong>.', 'ppw'), $mp->format_currency($order->ppw_payment_info['currency'], $order->ppw_payment_info['total']), $order->ppw_payment_info['transaction_id']) . '</p>';				 			 			 		 
 	    }
    return $content;
   }
@@ -701,7 +701,7 @@ class PPW_Gateway_Paypal_Express {
 	          </label></p>
 	        </td>
 	        </tr>
-			
+
 			<tr>
 				<th></th>
 				<td>
@@ -763,7 +763,7 @@ class PPW_Gateway_Paypal_Express {
     <?php
   }
 
-  
+
   /**
    * Filters posted data from your settings form. Do anything you need to the $settings['gateways']['plugin_name']
    *  array. Don't forget to return!
@@ -920,7 +920,7 @@ class PPW_Gateway_Paypal_Express {
 
 	//Purpose: 	Prepares the parameters for the SetExpressCheckout API Call.
   function SetExpressCheckout($global_cart)	{
-	  
+
 	$settings = get_option('ppw_options');
 
     $nvpstr = "";
@@ -936,21 +936,21 @@ class PPW_Gateway_Paypal_Express {
     $nvpstr .= "&HDRBORDERCOLOR=" . urlencode($settings['gateways']['paypal-express']['header_border']);
     $nvpstr .= "&HDRBACKCOLOR=" . urlencode($settings['gateways']['paypal-express']['header_back']);
     $nvpstr .= "&PAYFLOWCOLOR=" . urlencode($settings['gateways']['paypal-express']['page_back']);
- 
+
  	$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
 	$nvpstr .= "&PAYMENTREQUEST_0_CURRENCYCODE=" . $this->currencyCode; // Fix in V1.2.1
 	$post = get_post( $this->post_id );
-	$nvpstr .= "&PAYMENTREQUEST_0_DESC=" . sprintf(__('%s Purchase - A content from: %s', 'ppw'), get_bloginfo('name'), $post->post_title); //cart name
+	$nvpstr .= "&PAYMENTREQUEST_0_DESC=" . urlencode( substr( wp_trim_words( remove_accents( $post->post_title) , 10, ''), 0, 120 ) );
 	// Item details
-	$nvpstr .= "&L_PAYMENTREQUEST_0_NAME0=" . sprintf(__('%s Purchase - A content from: %s', 'ppw'), get_bloginfo('name'), $post->post_title); //cart name
-	$nvpstr .= "&L_PAYMENTREQUEST_0_AMT0=". $_SESSION["ppw_total_amt"]; 
+	$nvpstr .= "&L_PAYMENTREQUEST_0_NAME0=" . urlencode( substr( wp_trim_words( remove_accents( $post->post_title) , 10, ''), 0, 120 ) );
+	$nvpstr .= "&L_PAYMENTREQUEST_0_AMT0=". $_SESSION["ppw_total_amt"];
 	$nvpstr .= "&L_PAYMENTREQUEST_0_QTY0=1";
 	// Item Total
-	$nvpstr .= "&PAYMENTREQUEST_ITEMAMT=" . $_SESSION["ppw_total_amt"]; 
+	$nvpstr .= "&PAYMENTREQUEST_ITEMAMT=" . $_SESSION["ppw_total_amt"];
 	// Grand Total
-	$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $_SESSION["ppw_total_amt"]; 
+	$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $_SESSION["ppw_total_amt"];
 	$nvpstr .= "&PAYMENTREQUEST_0_QTY=1";
-	
+
     //'---------------------------------------------------------------------------------------------------------------
     //' Make the API call to PayPal
     //' If the API call succeded, then redirect the buyer to PayPal to begin to authorize payment.
@@ -1001,7 +1001,7 @@ class PPW_Gateway_Paypal_Express {
 	function DoExpressCheckoutPayment($token, $payer_id, $final_amts, $seller_paypal_accounts, $ipns, $prs) {
 		$nvpstr  = '&TOKEN=' . urlencode($token);
 		$nvpstr .= '&PAYERID=' . urlencode($payer_id);
-		  
+
 		$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $final_amts[0];
 		$nvpstr .= "&PAYMENTREQUEST_0_CURRENCYCODE=" . $this->currencyCode;
 		$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTACTION=" . $this->payment_action;
@@ -1090,12 +1090,12 @@ class PPW_Gateway_Paypal_Express {
 		parse_str($nvpstr, $nvpArray);
 		return $nvpArray;
 	}
-	
+
 	function trim_name($name, $length = 127) {
 		while (strlen(urlencode($name)) > $length)
 			$name = substr($name, 0, -1);
-		
-		return urlencode($name);	
+
+		return urlencode($name);
 	}
-	
+
 }
