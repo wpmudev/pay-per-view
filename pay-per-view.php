@@ -3,7 +3,7 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.1.2
+Version: 1.4.1.3
 Author: Hakan Evin (Incsub), Arnold Bailey (Incsub)
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
@@ -36,7 +36,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 class PayPerView {
 
-	var $version="1.4.1.2";
+	var $version="1.4.1.3";
 
 	/**
      * Constructor
@@ -668,11 +668,11 @@ class PayPerView {
 
 						//Escape everything
 						$query .= $wpdb->prepare(" SELECT * FROM " . $this->table .
-						" WHERE transaction_post_ID=%d 
-						AND transaction_paypal_ID=%s 
+						" WHERE transaction_post_ID=%d
+						AND transaction_paypal_ID=%s
 						AND ( transaction_status='Paid' OR transaction_status='Pending' )
-						AND %d < transaction_stamp UNION", 
-						$order['post_id'], 
+						AND %d < transaction_stamp UNION",
+						$order['post_id'],
 						$order['order_id'],
 						(time()-7200) ); // Give another 1 hour grace time
 						
@@ -751,6 +751,7 @@ class PayPerView {
 						}
 					}
 				}
+
 				// Prepare the content
 				foreach ( $matches as $m ) {
 					if ( in_array( $m[2], $contents ) ) // This is paid
@@ -805,9 +806,11 @@ class PayPerView {
 		$content = '';
 
 		// User submitted to Paypal and connection OK. Let user confirm
-		if ( isset( $_GET["ppw_confirm"] ) && ( $id == $_SESSION["ppw_content_id"] OR $id == 0) ) {
+		if ( isset( $_GET["ppw_confirm"] )
+		&& ( $id == $_SESSION["ppw_content_id"] OR $id == 0)
+		) {
 			$content .= '<div class="ppw_inner">';
-			$content .= '<form method="post" action="">';
+			$content .= '<form method="post" action="#">';
 			$content .= '<input type="hidden" name="ppw_content_id" value="'.$_SESSION["ppw_content_id"].'" />';
 			$content .= '<input type="hidden" name="ppw_post_id" value="'.$_SESSION["ppw_post_id"].'" />';
 			$content .= '<input type="hidden" name="ppw_total_amt" value="'.$_SESSION["ppw_total_amt"].'" />';
@@ -838,7 +841,7 @@ class PayPerView {
 		// One time view option. Redirection will be handled by Paypal Express gateway
 		if ( $this->options["one_time"] ) {
 			$content .= '<div class="ppw_inner ppw_inner'.$n.'">';
-			$content .= '<form method="post" action="">';
+			$content .= '<form method="post" action="#">';
 			$content .= '<input type="hidden" name="ppw_content_id" value="'.$id.'" />';
 			$content .= '<input type="hidden" name="ppw_post_id" value="'.$post->ID.'" />';
 			$content .= '<input type="hidden" name="ppw_total_amt" value="'.$price.'" />';
@@ -1305,7 +1308,7 @@ class PayPerView {
 		echo '</label>';
 		echo '<div class="ppw_info">';
 		/* translators: First %s refer to post or page. Second %s is the url address of the icon */
-		echo $this->tips->add_tip(sprintf(__('Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page.','ppw'),$pp,"<img src='".$this->plugin_url."/images/menu_icon.png"."' />" ) );				 			 			 		 
+		echo $this->tips->add_tip(sprintf(__('Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page.','ppw'),$pp,"<img src='".$this->plugin_url."/images/menu_icon.png"."' />" ) );
 		echo '</div>';
 		echo '<div class="ppw_clear"></div>';
 
