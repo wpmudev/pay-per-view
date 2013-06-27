@@ -802,7 +802,6 @@ class PayPerView {
 	 */
 	function mask( $price, $id=0, $description='') {
 		global $post;
-var_dump($_SESSION["ppw_post_id"]);
 		$content = '';
 
 		// User submitted to Paypal and connection OK. Let user confirm
