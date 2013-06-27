@@ -477,7 +477,7 @@ class PPW_Gateway_Paypal_Express {
 					if ( defined('COOKIEDOMAIN') ) $cookiedomain = COOKIEDOMAIN;
 					else $cookiedomain = '';
 					setcookie("pay_per_view", serialize($orders), $expire, $cookiepath, $cookiedomain);
-					wp_redirect( $_SESSION["ppw_post_id"] );
+					wp_redirect( get_permalink($_SESSION["ppw_post_id"]) );
 					exit;
 				}
 			} else { //whoops, error
