@@ -1,3 +1,7 @@
+V1.4.1.6:
+- For subscriptions the Wordpress login is always enabled now even if API is unchecked.
+
+
 V1.4.1.5:
 - Damaged zip in 1.4.1.4
 
