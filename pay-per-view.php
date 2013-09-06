@@ -3,7 +3,7 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.1.6
+Version: 1.4.1.7
 Author: Hakan Evin (Incsub), Arnold Bailey (Incsub)
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
@@ -36,7 +36,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
-		var $version="1.4.1.6";
+		var $version="1.4.1.7";
 
 		/**
 		* Constructor
@@ -94,13 +94,14 @@ if ( !class_exists( 'PayPerView' ) ) {
 			add_action('wp_ajax_nopriv_ppw_ajax_login', array(&$this, 'ajax_login'));
 
 			// API login after the options have been initialized
-			if (@$this->options['accept_api_logins']) {
+			//			if (@$this->options['accept_api_logins'])
+			{
 				add_action('wp_ajax_nopriv_ppw_facebook_login', array(&$this, 'handle_facebook_login'));
 				add_action('wp_ajax_nopriv_ppw_get_twitter_auth_url', array(&$this, 'handle_get_twitter_auth_url'));
 				add_action('wp_ajax_nopriv_ppw_twitter_login', array(&$this, 'handle_twitter_login'));
 				add_action('wp_ajax_nopriv_ppw_get_google_auth_url', array(&$this, 'handle_get_google_auth_url'));
 				add_action('wp_ajax_nopriv_ppw_google_login', array(&$this, 'handle_google_login'));
-			
+
 
 				// Google login stuff. New in V1.3
 				if (!class_exists('LightOpenID'))
@@ -175,6 +176,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			'wordpress' => __('Login with WordPress', 'ppw'),
 			'submit' => __('Submit', 'ppw'),
 			'cancel' => __('Cancel', 'ppw'),
+			'register' => __('Register', 'ppw'),
 			'please_wait' => __('Please, wait...', 'ppw'),
 			));
 			if (!$this->options['facebook-no_init']) {
@@ -209,8 +211,8 @@ if ( !class_exists( 'PayPerView' ) ) {
 		*/
 		function wp_head( ) {
 			printf(
-			'<script type="text/javascript">var _ppw_data={"ajax_url": "%s", "root_url": "%s"};</script>',
-			admin_url('admin-ajax.php'), plugins_url('pay-per-view/images/')
+			'<script type="text/javascript">var _ppw_data={"ajax_url": "%s", "root_url": "%s","register_url": "%s"};</script>',
+			admin_url('admin-ajax.php'), plugins_url('pay-per-view/images/'), wp_registration_url()
 			);
 		}
 
@@ -321,12 +323,13 @@ if ( !class_exists( 'PayPerView' ) ) {
 		function handle_get_twitter_auth_url () {
 			header("Content-type: application/json");
 			$twitter = $this->_get_twitter_object();
-			$request_token = $twitter->getRequestToken($_POST['url']);
-			echo json_encode(array(
-			'url' => $twitter->getAuthorizeURL($request_token['oauth_token']),
+			$request_token = $twitter->getRequestToken($_REQUEST['url']);
+			//echo $request_token;
+			$response = array(
+			'url' => $twitter->getAuthorizeURL($request_token['oauth_token'] ),
 			'secret' => $request_token['oauth_token_secret']
-			));
-			die;
+			);
+			exit( json_encode($response) );
 		}
 
 		/**
@@ -1487,11 +1490,11 @@ if ( !class_exists( 'PayPerView' ) ) {
 			*
 			*/
 			function admin_notices() {
-//				if ( ( $this->options["daily_pass"] OR $this->options["subscription"] ) && !$this->options["accept_api_logins"] ) {
-//					echo '<div class="error fade"><p>' .
-//					__("<b>[Pay Per View]</b> If you are using Daily Pass or Recurring Subscriptions, you need to enable and set API logins or be limited to WordPress login.", "ppw") .
-//					'</p></div>';
-//				}
+				//				if ( ( $this->options["daily_pass"] OR $this->options["subscription"] ) && !$this->options["accept_api_logins"] ) {
+				//					echo '<div class="error fade"><p>' .
+				//					__("<b>[Pay Per View]</b> If you are using Daily Pass or Recurring Subscriptions, you need to enable and set API logins or be limited to WordPress login.", "ppw") .
+				//					'</p></div>';
+				//				}
 
 				// Warn admin in case of default permalink.
 				if ( !get_option( 'permalink_structure' ) )

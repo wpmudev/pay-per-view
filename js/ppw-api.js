@@ -17,10 +17,11 @@
 		}
 		login_html +=
 		'<li><a href="#" class="payperview-login_link payperview-login_link-wordpress">' + l10nPpwApi.wordpress + '</a></li>' +
-		'<li class="ppw_login_submit"><input type="text" class="ppw_username" value="Username" onfocus="ppw_checkclear(this)" />' + 
-		'<input type="password" class="ppw_password" value="Password" onfocus="ppw_checkclear(this)" />' + 
+		'<li class="ppw_login_submit"><input type="text" class="ppw_username" value="Username" onfocus="ppw_checkclear(this)" />' +
+		'<input type="password" class="ppw_password" value="Password" onfocus="ppw_checkclear(this)" />' +
 		'<a href="javascript:void(0)" class="payperview-login_link payperview-login_link-submit">' + l10nPpwApi.submit + '</a></li>' +
-		'<li><a href="#" class="payperview-login_link payperview-login_link-cancel">' + l10nPpwApi.cancel + '</a></li>' +
+		'<li><a href="' + _ppw_data.register_url + '" class="payperview-login_link payperview-login_link-register">' + l10nPpwApi.register + '</a>' +
+		' <a href="#" class="payperview-login_link payperview-login_link-cancel">' + l10nPpwApi.cancel + '</a></li>' +
 		'</ul>';
 
 		$root.html( login_html );
@@ -68,11 +69,10 @@
 				};
 			} else if ($lnk.is(".payperview-login_link-twitter")) {
 				callback = function () {
-					var init_url = $.browser.opera ? '' : 'https://api.twitter.com/';
-					var twLogin = window.open(init_url, "twitter_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=400,width=600");
+					var twLogin = window.open('', "twitter_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=800,width=600");
 					$.post(_ppw_data.ajax_url, {
 						"action": "ppw_get_twitter_auth_url",
-						"url": window.location.toString()
+						"url": window.location.toString(),
 					},
 					function (data) {
 						try {
@@ -119,12 +119,12 @@
 							} catch (e)
 							{}
 						}, 300);
-					})
+					},'json')
 					return false;
 				};
 			} else if ($lnk.is(".payperview-login_link-google")) {
 				callback = function () {
-					var googleLogin = window.open('https://www.google.com/accounts', "google_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=400,width=800");
+					var googleLogin = window.open('https://www.google.com/accounts', "google_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=600,width=900");
 					$.post(_ppw_data.ajax_url, {
 						"action": "ppw_get_google_auth_url",
 						"url": window.location.href
@@ -185,7 +185,7 @@
 						"log": $lnk.parents(".ppw_login_submit").find(".ppw_username").val(),
 						"pwd": $lnk.parents(".ppw_login_submit").find(".ppw_password").val(),
 						"rememberme": 1
-					}, 
+					},
 					function (data) {
 						$(".ppw_wait_img").remove();
 						var status = 0;

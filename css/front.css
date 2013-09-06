@@ -8,70 +8,74 @@
 .ppw_login_submit input{margin-right:10px;width:100px;}
 .ppw_wait_img img{border:none;}
 .ppw_login_submit input[type="password"]{
-padding: 0.5em;
-background: white;
-border: 1px solid #EEE;
--moz-border-radius: 5px;
--khtml-border-radius: 5px;
--webkit-border-radius: 5px;
-border-radius: 5px;
+	padding: 0.5em;
+	background: white;
+	border: 1px solid #EEE;
+	-moz-border-radius: 5px;
+	-khtml-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 5px;
 }
 
 /* PAY-PER-VIEW Buttons
-	 ====================  */
+====================  */
 
 .ppw_submit_btn{
 	width:320px;
 }
 
-a.payperview-login_link-cancel, .ppw_submit_btn {
+a.payperview-login_link-cancel, a.payperview-login_link-register, .ppw_submit_btn {
 	color: #4e4d4d;
 	font-size: 13px;
-  cursor: pointer;
-  display: inline-block;
-  background-color: #f6f6f6;
-  background-repeat: no-repeat;
-  font-family: Lucida Grande, Helvetica Neue, Helvetica, Arial;
-  text-shadow: 0 1px 0 #ffffff;
-  background: #f8f8f8; /* Old browsers */
+	cursor: pointer;
+	display: inline-block;
+	background-color: #f6f6f6;
+	background-repeat: no-repeat;
+	font-family: Lucida Grande, Helvetica Neue, Helvetica, Arial;
+	text-shadow: 0 1px 0 #ffffff;
+	background: #f8f8f8; /* Old browsers */
 	background: -moz-linear-gradient(top,  #f8f8f8 0%, #eae9e9 100%); /* FF3.6+ */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#eae9e9)); /* Chrome,Safari4+ */				 			 			 		 
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#eae9e9)); /* Chrome,Safari4+ */
 	background: -webkit-linear-gradient(top,  #f8f8f8 0%,#eae9e9 100%); /* Chrome10+,Safari5.1+ */
 	background: -o-linear-gradient(top,  #f8f8f8 0%,#eae9e9 100%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #f8f8f8 0%,#eae9e9 100%); /* IE10+ */
 	background: linear-gradient(top,  #f8f8f8 0%,#eae9e9 100%); /* W3C */
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#eae9e9',GradientType=0 ); /* IE6-9 */
-  padding: 6px 14px 6px;
-  line-height: normal;
-  border: 1px solid #e3e3e3;
-  border-bottom-color: #d1d1d1;
-  border-radius: 3px;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#f8f8f8', endColorstr='#eae9e9',GradientType=0 ); /* IE6-9 */
+	padding: 6px 14px 6px;
+	line-height: normal;
+	border: 1px solid #e3e3e3;
+	border-bottom-color: #d1d1d1;
+	border-radius: 3px;
 
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
-  	 -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
-  				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1);
 
-  -webkit-transition: 0.1s linear all;
-  	 -moz-transition: 0.1s linear all;
-  		-ms-transition: 0.1s linear all;
-  		 -o-transition: 0.1s linear all;
-  				transition: 0.1s linear all;
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
 
 	text-decoration:none;
 }
 
-a.payperview-login_link-cancel:hover,  .ppw_submit_btn:hover {
+a.payperview-login_link-cancel:hover,
+a.payperview-login_link-register:hover,
+.ppw_submit_btn:hover {
 	border: 1px solid #c9c9c9;
 	color: #1a1a1a;
 
-  -webkit-transition: 0.1s linear all;
-  	 -moz-transition: 0.1s linear all;
-  		-ms-transition: 0.1s linear all;
-  		 -o-transition: 0.1s linear all;
-  				transition: 0.1s linear all;
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
 }
 
-a.payperview-login_link-cancel:active,  .ppw_submit_btn:active {
+a.payperview-login_link-cancel:active,
+a.payperview-login_link-register:active,
+.ppw_submit_btn:active {
 	border: 1px solid #b1b1b1;
 	color: #7f7f7f;
 	background: #d0d0d0; /* Old browsers */
@@ -81,17 +85,17 @@ a.payperview-login_link-cancel:active,  .ppw_submit_btn:active {
 	background: -o-linear-gradient(top,  #d0d0d0 0%,#dfdfdf 60%); /* Opera 11.10+ */
 	background: -ms-linear-gradient(top,  #d0d0d0 0%,#dfdfdf 60%); /* IE10+ */
 	background: linear-gradient(top,  #d0d0d0 0%,#dfdfdf 60%); /* W3C */
-			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d0d0d0', endColorstr='#dfdfdf',GradientType=0 ); /* IE6-9 */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d0d0d0', endColorstr='#dfdfdf',GradientType=0 ); /* IE6-9 */
 
 	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  	 -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
-  				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3);
 
-  -webkit-transition: 0s linear all;
-     -moz-transition: 0s linear all;
-  		-ms-transition: 0s linear all;
-  		 -o-transition: 0s linear all;
-  				transition: 0s linear all;
+	-webkit-transition: 0s linear all;
+	-moz-transition: 0s linear all;
+	-ms-transition: 0s linear all;
+	-o-transition: 0s linear all;
+	transition: 0s linear all;
 }
 
 .ppw_form_container {
@@ -113,118 +117,118 @@ ul.payperview-login_links li {
 
 
 a.payperview-login_link-facebook {
-  cursor: pointer;
-  display: inline-block;
-  background: #3B5998 url(ppw-sprite01.png) 5px 5px no-repeat !important;
-  padding: 5px 14px 6px 30px;
-  text-shadow: 0 1px 1px #333;
-  color: #fff;
-  font-size: 13px;
-  line-height: normal;
-  border: 1px solid #2a406d;
-  -webkit-border-radius: 4px;
-  	 -moz-border-radius: 4px;
-  				border-radius: 4px;
+	cursor: pointer;
+	display: inline-block;
+	background: #3B5998 url(ppw-sprite01.png) 5px 5px no-repeat !important;
+	padding: 5px 14px 6px 30px;
+	text-shadow: 0 1px 1px #333;
+	color: #fff;
+	font-size: 13px;
+	line-height: normal;
+	border: 1px solid #2a406d;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
 
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  	 -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 
-  -webkit-transition: 0.1s linear all;
-  	 -moz-transition: 0.1s linear all;
-  		-ms-transition: 0.1s linear all;
-  		 -o-transition: 0.1s linear all;
-  				transition: 0.1s linear all;
-  margin-top: 20px;
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
+	margin-top: 20px;
 }
 a.payperview-login_link-facebook:hover, a.payperview-login_link-facebook.active {
-  background: #2a406d url(ppw-sprite01.png) 5px 5px no-repeat !important;
-  color: #fff;
-  text-decoration: none;
+	background: #2a406d url(ppw-sprite01.png) 5px 5px no-repeat !important;
+	color: #fff;
+	text-decoration: none;
 }
 
 a.payperview-login_link-twitter {
-  cursor: pointer;
-  display: inline-block;
-  background: #439eb8 url(ppw-sprite01.png) 5px -17px no-repeat !important;
-  padding: 5px 14px 6px 30px;
-  text-shadow: 0 1px 1px #333;
-  color: #fff;
-  font-size: 13px;
-  line-height: normal;
-  border: 1px solid #39859b;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  	 -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
- 	 				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+	display: inline-block;
+	background: #439eb8 url(ppw-sprite01.png) 5px -17px no-repeat !important;
+	padding: 5px 14px 6px 30px;
+	text-shadow: 0 1px 1px #333;
+	color: #fff;
+	font-size: 13px;
+	line-height: normal;
+	border: 1px solid #39859b;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 
-  -webkit-transition: 0.1s linear all;
-  	 -moz-transition: 0.1s linear all;
-  		-ms-transition: 0.1s linear all;
-  		 -o-transition: 0.1s linear all;
-  				transition: 0.1s linear all;
-  margin-top: 10px;
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
+	margin-top: 10px;
 }
 a.payperview-login_link-twitter:hover, a.payperview-login_link-twitter.active {
-  color: #fff;
-  text-decoration: none;
-  background: #338ba4 url(ppw-sprite01.png) 5px -17px no-repeat !important;
+	color: #fff;
+	text-decoration: none;
+	background: #338ba4 url(ppw-sprite01.png) 5px -17px no-repeat !important;
 }
 
 a.payperview-login_link-google {
-  cursor: pointer;
-  display: inline-block;
-  background: #94E3F9 url(../images/google.png) 5px 5px no-repeat;
-  padding: 5px 14px 6px 30px;
-  text-shadow: 0 1px 1px #333;
-  color: #fff;
-  font-size: 13px;
-  line-height: normal;
-  border: 1px solid #39859b;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  	 -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
- 	 				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+	display: inline-block;
+	background: #94E3F9 url(../images/google.png) 5px 5px no-repeat;
+	padding: 5px 14px 6px 30px;
+	text-shadow: 0 1px 1px #333;
+	color: #fff;
+	font-size: 13px;
+	line-height: normal;
+	border: 1px solid #39859b;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 
-  -webkit-transition: 0.1s linear all;
-  	 -moz-transition: 0.1s linear all;
-  		-ms-transition: 0.1s linear all;
-  		 -o-transition: 0.1s linear all;
-  				transition: 0.1s linear all;
-  margin-top: 10px;
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
+	margin-top: 10px;
 }
 a.payperview-login_link-google:hover, a.payperview-login_link-google.active {
-  color: #fff;
-  text-decoration: none;
-  background: #439eb8 url(../images/google.png) 5px 5px no-repeat;
+	color: #fff;
+	text-decoration: none;
+	background: #439eb8 url(../images/google.png) 5px 5px no-repeat;
 }
 
 a.payperview-login_link-wordpress {
-  cursor: pointer;
-  display: inline-block;
-  background: #777 url(ppw-sprite01.png) 5px -38px no-repeat !important;
-  padding: 5px 14px 6px 30px;
-  text-shadow: 0 1px 1px #111;
-  color: #fff;
-  font-size: 13px;
-  line-height: normal;
-  border: 1px solid #444;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
- 		 -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  				box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	cursor: pointer;
+	display: inline-block;
+	background: #777 url(ppw-sprite01.png) 5px -38px no-repeat !important;
+	padding: 5px 14px 6px 30px;
+	text-shadow: 0 1px 1px #111;
+	color: #fff;
+	font-size: 13px;
+	line-height: normal;
+	border: 1px solid #444;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 
-  -webkit-transition: 0.1s linear all;
- 		 -moz-transition: 0.1s linear all;
-  		-ms-transition: 0.1s linear all;
-  		 -o-transition: 0.1s linear all;
-  				transition: 0.1s linear all;
-  margin: 10px 0 20px 0;
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
+	margin: 10px 0 20px 0;
 }
 a.payperview-login_link-wordpress:hover, a.payperview-login_link-wordpress.active {
-  background: #444 url(ppw-sprite01.png) 5px -38px no-repeat !important;
-  color: #fff;
-  text-decoration: none;
+	background: #444 url(ppw-sprite01.png) 5px -38px no-repeat !important;
+	color: #fff;
+	text-decoration: none;
 }
 
 a.payperview-login_link-facebook, a.payperview-login_link-twitter, a.payperview-login_link-wordpress {
@@ -234,31 +238,31 @@ a.payperview-login_link-facebook, a.payperview-login_link-twitter, a.payperview-
 }
 
 a.payperview-login_link-submit {
-  width: 50px;
-  cursor: pointer;
-  display: inline-block;
-  background: #999;
-  padding: 5px 14px 6px 20px;
-  text-shadow: 0 1px 1px #111;
-  color: #fff;
-  font-size: 13px;
-  line-height: normal;
-  border: 1px solid #444;
-  -webkit-border-radius: 4px;
-  -moz-border-radius: 4px;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  -moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
-  -webkit-transition: 0.1s linear all;
-  -moz-transition: 0.1s linear all;
-  -ms-transition: 0.1s linear all;
-  -o-transition: 0.1s linear all;
-  transition: 0.1s linear all;
-  margin-bottom: 5px;
+	min-width: 50px;
+	cursor: pointer;
+	display: inline-block;
+	background: #999;
+	padding: 5px 14px 6px 20px;
+	text-shadow: 0 1px 1px #111;
+	color: #fff;
+	font-size: 13px;
+	line-height: normal;
+	border: 1px solid #444;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-moz-box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
+	-webkit-transition: 0.1s linear all;
+	-moz-transition: 0.1s linear all;
+	-ms-transition: 0.1s linear all;
+	-o-transition: 0.1s linear all;
+	transition: 0.1s linear all;
+	margin-bottom: 5px;
 }
 a.payperview-login_link-submit:hover, a.payperview-login_link-submit.active {
-  background: #444 ;
-  color: #fff;
-  text-decoration: none;
+	background: #444 ;
+	color: #fff;
+	text-decoration: none;
 }

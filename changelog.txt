@@ -1,3 +1,8 @@
+V1.4.1.7:
+- Added Registration linnkfor Wordpress login
+- Fixed problems with Twitter API 1.1 changes.
+- New version of twitteroauth library
+
 V1.4.1.6:
 - For subscriptions the Wordpress login is always enabled now even if API is unchecked.
 
