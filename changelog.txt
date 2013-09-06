@@ -1,5 +1,5 @@
 V1.4.1.7:
-- Added Registration linnkfor Wordpress login
+- Added Registration link for Wordpress login
 - Fixed problems with Twitter API 1.1 changes.
 - New version of twitteroauth library
 
