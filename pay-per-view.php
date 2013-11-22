@@ -12,7 +12,7 @@ WDP ID: 261
 */
 
 /*
-Copyright 2007-2012 Incsub (http://incsub.com)
+Copyright 2007-2014 Incsub (http://incsub.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License (Version 2 - GPLv2) as published by
@@ -1966,7 +1966,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 															<?php
 															// Add Paypal Express Gateway Settings
 															include_once( WP_PLUGIN_DIR. "/pay-per-view/includes/paypal-express.php" );
-															$PPWPaypal = &new PPW_Gateway_Paypal_Express();
+															$PPWPaypal = new PPW_Gateway_Paypal_Express();
 															$PPWPaypal->gateway_settings_box($this->options);
 															?>
 															<input type="hidden" name="action_ppw" value="update_per" />
