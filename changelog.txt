@@ -1,3 +1,7 @@
+V1.4.1.8:
+- Record user id if logged in for one time payments.
+- Added new WPMUDEV dashboard.
+
 V1.4.1.7:
 - Added Registration link for Wordpress login
 - Fixed problems with Twitter API 1.1 changes.
@@ -27,7 +31,7 @@ V1.4.1.1:
 
 V1.4.1:
 - New admin warning if default permalink structure is used
-- In automatic mode, pending transactions are also accepted now. In this case admin is noticed with an email				 			 			 		 
+- In automatic mode, pending transactions are also accepted now. In this case admin is noticed with an email
 - Fixed an issue when cookie validity time is set as zero
 - Translation base file is now presented as ppw.pot
 

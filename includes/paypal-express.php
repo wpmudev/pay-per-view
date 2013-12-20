@@ -446,8 +446,9 @@ class PPW_Gateway_Paypal_Express {
 
 
 					//succesful payment, create our order now
-					if( !$ppw->duplicate_transaction( 0, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, '', $_SESSION["ppw_content_id"] ) )
-					$ppw->record_transaction(0, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, $note, $_SESSION["ppw_content_id"]);
+					$user_id = get_current_user_id();
+					if( !$ppw->duplicate_transaction( $user_id, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, '', $_SESSION["ppw_content_id"] ) )
+					$ppw->record_transaction($user_id, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, $note, $_SESSION["ppw_content_id"]);
 
 					// Set a cookie
 					$new_order = array(

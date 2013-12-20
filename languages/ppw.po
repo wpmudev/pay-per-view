@@ -2,8 +2,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Pay Per View 1.4.1.6\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2013-07-02 11:15-0500\n"
-"PO-Revision-Date: 2013-07-02 11:15-0500\n"
+"POT-Creation-Date: 2013-12-19 16:14-0500\n"
+"PO-Revision-Date: 2013-12-19 16:15-0500\n"
 "Last-Translator: Arnold Bailey <arnold@incsub.com>\n"
 "Language-Team: incsub\n"
 "Language: en\n"
@@ -13,50 +13,54 @@ msgstr ""
 "X-Poedit-KeywordsList: __;_e;_n;_x;_ex;_nx;esc_attr__;esc_attr_e;esc_attr_x;"
 "esc_html__;esc_html_e;esc_html_x\n"
 "X-Poedit-Basepath: .\n"
-"X-Generator: Poedit 1.5.5\n"
+"X-Generator: Poedit 1.6.2\n"
 "X-Poedit-SearchPath-0: ..\n"
 
-#: ../pay-per-view.php:146
+#: ../pay-per-view.php:145
 msgid "Settings"
 msgstr ""
 
-#: ../pay-per-view.php:172
+#: ../pay-per-view.php:171
 msgid "Login with Facebook"
 msgstr ""
 
-#: ../pay-per-view.php:173
+#: ../pay-per-view.php:172
 msgid "Login with Twitter"
 msgstr ""
 
-#: ../pay-per-view.php:174
+#: ../pay-per-view.php:173
 msgid "Login with Google"
 msgstr ""
 
-#: ../pay-per-view.php:175
+#: ../pay-per-view.php:174
 msgid "Login with WordPress"
 msgstr ""
 
-#: ../pay-per-view.php:176
+#: ../pay-per-view.php:175
 msgid "Submit"
 msgstr ""
 
-#: ../pay-per-view.php:177 ../pay-per-view.php:2421
+#: ../pay-per-view.php:176 ../pay-per-view.php:2469
 msgid "Cancel"
+msgstr ""
+
+#: ../pay-per-view.php:177
+msgid "Register"
 msgstr ""
 
 #: ../pay-per-view.php:178
 msgid "Please, wait..."
 msgstr ""
 
-#: ../pay-per-view.php:482
+#: ../pay-per-view.php:483
 msgid "Pay Per View Subscription"
 msgstr ""
 
-#: ../pay-per-view.php:486
+#: ../pay-per-view.php:487
 msgid "Expires at"
 msgstr ""
 
-#: ../pay-per-view.php:496
+#: ../pay-per-view.php:497
 msgid "Recurring days"
 msgstr ""
 
@@ -65,115 +69,115 @@ msgstr ""
 msgid "Confirm %s %s payment to see this content"
 msgstr ""
 
-#: ../pay-per-view.php:897
+#: ../pay-per-view.php:899
 #, php-format
 msgid "Subscription for %s"
 msgstr ""
 
-#: ../pay-per-view.php:898
+#: ../pay-per-view.php:900
 msgid "Special offer"
 msgstr ""
 
-#: ../pay-per-view.php:1073
+#: ../pay-per-view.php:1079
 msgid ""
 "Last transaction has been reversed. Reason: Payment has been reversed "
 "(charge back)"
 msgstr ""
 
-#: ../pay-per-view.php:1087
+#: ../pay-per-view.php:1093
 msgid "Last transaction has been reversed. Reason: Payment has been refunded"
 msgstr ""
 
-#: ../pay-per-view.php:1101
+#: ../pay-per-view.php:1107
 msgid "Last transaction has been reversed. Reason: Payment Denied"
 msgstr ""
 
-#: ../pay-per-view.php:1113
+#: ../pay-per-view.php:1119
 msgid "Customer did not include a confirmed shipping address"
 msgstr ""
 
-#: ../pay-per-view.php:1114
+#: ../pay-per-view.php:1120
 msgid "Funds not captured yet"
 msgstr ""
 
-#: ../pay-per-view.php:1115
+#: ../pay-per-view.php:1121
 msgid "eCheck that has not cleared yet"
 msgstr ""
 
-#: ../pay-per-view.php:1116
+#: ../pay-per-view.php:1122
 msgid "Payment waiting for aproval by service provider"
 msgstr ""
 
-#: ../pay-per-view.php:1117
+#: ../pay-per-view.php:1123
 msgid "Payment waiting for service provider to handle multi-currency process"
 msgstr ""
 
-#: ../pay-per-view.php:1118
+#: ../pay-per-view.php:1124
 msgid "Customer did not register or confirm his/her email yet"
 msgstr ""
 
-#: ../pay-per-view.php:1119
+#: ../pay-per-view.php:1125
 msgid "Waiting for service provider to upgrade the PayPal account"
 msgstr ""
 
-#: ../pay-per-view.php:1120
+#: ../pay-per-view.php:1126
 msgid "Waiting for service provider to verify his/her PayPal account"
 msgstr ""
 
-#: ../pay-per-view.php:1124
+#: ../pay-per-view.php:1130
 msgid "Last transaction is pending. Reason: "
 msgstr ""
 
-#: ../pay-per-view.php:1169 ../pay-per-view.php:1171 ../pay-per-view.php:1551
-#: ../pay-per-view.php:2391
+#: ../pay-per-view.php:1175 ../pay-per-view.php:1177 ../pay-per-view.php:1558
+#: ../pay-per-view.php:2439
 msgid "Pay Per View"
 msgstr ""
 
-#: ../pay-per-view.php:1196
+#: ../pay-per-view.php:1202
 msgid "Enabled"
 msgstr ""
 
-#: ../pay-per-view.php:1197
+#: ../pay-per-view.php:1203
 msgid "Disabled"
 msgstr ""
 
-#: ../pay-per-view.php:1198
+#: ../pay-per-view.php:1204
 msgid "Automatic excerpt"
 msgstr ""
 
-#: ../pay-per-view.php:1199
+#: ../pay-per-view.php:1205
 msgid "Manual excerpt"
 msgstr ""
 
-#: ../pay-per-view.php:1200 ../pay-per-view.php:1702
+#: ../pay-per-view.php:1206 ../pay-per-view.php:1709
 msgid "Use selection tool"
 msgstr ""
 
-#: ../pay-per-view.php:1203
+#: ../pay-per-view.php:1209
 msgid "page"
 msgstr ""
 
-#: ../pay-per-view.php:1205
+#: ../pay-per-view.php:1211
 msgid "post"
 msgstr ""
 
-#: ../pay-per-view.php:1283 ../pay-per-view.php:1306
+#: ../pay-per-view.php:1289 ../pay-per-view.php:1312
 msgid "Follow global setting"
 msgstr ""
 
-#: ../pay-per-view.php:1284
+#: ../pay-per-view.php:1290
 msgid "Always enabled"
 msgstr ""
 
-#: ../pay-per-view.php:1285
+#: ../pay-per-view.php:1291
 msgid "Always disabled"
 msgstr ""
 
-#: ../pay-per-view.php:1289
+#: ../pay-per-view.php:1295
 msgid "Enabled?"
 msgstr ""
 
-#: ../pay-per-view.php:1293
+#: ../pay-per-view.php:1299
 #, php-format
 msgid ""
 "Selects if Pay With a Like is enabled for this %s or not. If Follow global "
@@ -182,11 +186,11 @@ msgid ""
 "Like for this %s, respectively, overriding general setting."
 msgstr ""
 
-#: ../pay-per-view.php:1297
+#: ../pay-per-view.php:1303
 msgid "Effective status"
 msgstr ""
 
-#: ../pay-per-view.php:1301
+#: ../pay-per-view.php:1307
 #, php-format
 msgid ""
 "Effective status dynamically shows the final result of the setting that will "
@@ -195,11 +199,11 @@ msgid ""
 "intention will be correctly reflected to the settings after you save."
 msgstr ""
 
-#: ../pay-per-view.php:1312
+#: ../pay-per-view.php:1318
 msgid "Method"
 msgstr ""
 
-#: ../pay-per-view.php:1316
+#: ../pay-per-view.php:1322
 #, php-format
 msgid ""
 "Selects the content protection method for this %s. If Follow Global Setting "
@@ -209,11 +213,11 @@ msgid ""
 "editor tool bar. For other methods refer to the settings page."
 msgstr ""
 
-#: ../pay-per-view.php:1320
+#: ../pay-per-view.php:1326
 msgid "Effective method"
 msgstr ""
 
-#: ../pay-per-view.php:1324
+#: ../pay-per-view.php:1330
 #, php-format
 msgid ""
 "Effective method dynamically shows the final result of the setting that will "
@@ -222,11 +226,11 @@ msgid ""
 "you save."
 msgstr ""
 
-#: ../pay-per-view.php:1330
+#: ../pay-per-view.php:1336
 msgid "Excerpt length"
 msgstr ""
 
-#: ../pay-per-view.php:1334
+#: ../pay-per-view.php:1340
 #, php-format
 msgid ""
 "If you want to override the number of words that will be used as an excerpt "
@@ -234,49 +238,49 @@ msgid ""
 "only used when Automatic Excerpt method is applied to the %s."
 msgstr ""
 
-#: ../pay-per-view.php:1340
+#: ../pay-per-view.php:1346
 #, php-format
 msgid "Price (%s)"
 msgstr ""
 
-#: ../pay-per-view.php:1344
+#: ../pay-per-view.php:1350
 #, php-format
 msgid ""
 "If you want to override the default price to reveal this %s, enter it here. "
 "This value is NOT used when Selection Tool method is applied to the %s."
 msgstr ""
 
-#: ../pay-per-view.php:1499
+#: ../pay-per-view.php:1506
 msgid ""
 "<b>[Pay Per View]</b> Plugin will not function correctly with default "
 "permalink structure. You need to use a pretty permalink structure."
 msgstr ""
 
-#: ../pay-per-view.php:1552
+#: ../pay-per-view.php:1559
 msgid "Transactions"
 msgstr ""
 
-#: ../pay-per-view.php:1553 ../pay-per-view.php:2017
+#: ../pay-per-view.php:1560 ../pay-per-view.php:2065
 msgid "Customization"
 msgstr ""
 
-#: ../pay-per-view.php:1553
+#: ../pay-per-view.php:1560
 msgid "Customization Help"
 msgstr ""
 
-#: ../pay-per-view.php:1631
+#: ../pay-per-view.php:1638
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: ../pay-per-view.php:1636
+#: ../pay-per-view.php:1643
 msgid "General Settings"
 msgstr ""
 
-#: ../pay-per-view.php:1643
+#: ../pay-per-view.php:1650
 msgid "Global Settings"
 msgstr ""
 
-#: ../pay-per-view.php:1645
+#: ../pay-per-view.php:1652
 msgid ""
 "Pay Per View allows protecting posts/page content or parts of post/page "
 "content until visitor pays a nominal fee or subscribes to the website. These "
@@ -284,69 +288,69 @@ msgid ""
 "They can be overridden per post basis using post editor page."
 msgstr ""
 
-#: ../pay-per-view.php:1650
+#: ../pay-per-view.php:1657
 msgid "Protection for posts"
 msgstr ""
 
-#: ../pay-per-view.php:1653
+#: ../pay-per-view.php:1660
 msgid "Disabled for all posts"
 msgstr ""
 
-#: ../pay-per-view.php:1654
+#: ../pay-per-view.php:1661
 msgid "Enabled for all posts"
 msgstr ""
 
-#: ../pay-per-view.php:1660
+#: ../pay-per-view.php:1667
 msgid "Protection for pages"
 msgstr ""
 
-#: ../pay-per-view.php:1663
+#: ../pay-per-view.php:1670
 msgid "Disabled for all pages"
 msgstr ""
 
-#: ../pay-per-view.php:1664
+#: ../pay-per-view.php:1671
 msgid "Enabled for all pages"
 msgstr ""
 
-#: ../pay-per-view.php:1676
+#: ../pay-per-view.php:1683
 msgid "You have the following custom post type(s): "
 msgstr ""
 
-#: ../pay-per-view.php:1680
+#: ../pay-per-view.php:1687
 msgid " Note: See the below customization section for details."
 msgstr ""
 
-#: ../pay-per-view.php:1682
+#: ../pay-per-view.php:1689
 msgid ""
 "You don't have any custom post types. Changing this setting will have no "
 "effect."
 msgstr ""
 
-#: ../pay-per-view.php:1686
+#: ../pay-per-view.php:1693
 msgid "Protection for custom post types"
 msgstr ""
 
-#: ../pay-per-view.php:1689
+#: ../pay-per-view.php:1696
 msgid "Disabled for all custom post types"
 msgstr ""
 
-#: ../pay-per-view.php:1690
+#: ../pay-per-view.php:1697
 msgid "Enabled for all custom post types"
 msgstr ""
 
-#: ../pay-per-view.php:1697
+#: ../pay-per-view.php:1704
 msgid "Public content selection method"
 msgstr ""
 
-#: ../pay-per-view.php:1700
+#: ../pay-per-view.php:1707
 msgid "Automatic excerpt from the content"
 msgstr ""
 
-#: ../pay-per-view.php:1701
+#: ../pay-per-view.php:1708
 msgid "Manual excerpt from post excerpt field"
 msgstr ""
 
-#: ../pay-per-view.php:1705
+#: ../pay-per-view.php:1712
 #, php-format
 msgid ""
 "Automatic excerpt selects the first %d words, number being adjustable from "
@@ -357,274 +361,274 @@ msgid ""
 "protected."
 msgstr ""
 
-#: ../pay-per-view.php:1711
+#: ../pay-per-view.php:1718
 msgid "Excerpt length (words)"
 msgstr ""
 
-#: ../pay-per-view.php:1713
+#: ../pay-per-view.php:1720
 msgid ""
 "Number of words of the post content that will be displayed publicly. Only "
 "effective if Automatic excerpt is selected."
 msgstr ""
 
-#: ../pay-per-view.php:1717
+#: ../pay-per-view.php:1725
 #, php-format
 msgid "Unit price (%s)"
 msgstr ""
 
-#: ../pay-per-view.php:1719
+#: ../pay-per-view.php:1727
 msgid "Default price per protected content."
 msgstr ""
 
-#: ../pay-per-view.php:1727
+#: ../pay-per-view.php:1736
 msgid "Accessibility Settings"
 msgstr ""
 
-#: ../pay-per-view.php:1733
+#: ../pay-per-view.php:1742
 msgid "Enable on the home page"
 msgstr ""
 
-#: ../pay-per-view.php:1736 ../pay-per-view.php:1746 ../pay-per-view.php:1757
-#: ../pay-per-view.php:1768 ../pay-per-view.php:1792
+#: ../pay-per-view.php:1745 ../pay-per-view.php:1755 ../pay-per-view.php:1766
+#: ../pay-per-view.php:1777 ../pay-per-view.php:1801
 msgid "Yes"
 msgstr ""
 
-#: ../pay-per-view.php:1737 ../pay-per-view.php:1747 ../pay-per-view.php:1758
-#: ../pay-per-view.php:1769 ../pay-per-view.php:1793
+#: ../pay-per-view.php:1746 ../pay-per-view.php:1756 ../pay-per-view.php:1767
+#: ../pay-per-view.php:1778 ../pay-per-view.php:1802
 msgid "No"
 msgstr ""
 
-#: ../pay-per-view.php:1743
+#: ../pay-per-view.php:1752
 msgid "Enable for multiple post pages"
 msgstr ""
 
-#: ../pay-per-view.php:1749
+#: ../pay-per-view.php:1758
 msgid ""
 "Enables the plugin for pages (except the home page) which contain content "
 "for more that one post/page, e.g. archive, category pages. Some themes use "
 "excerpts here so enabling plugin for these pages may cause strange output. "
 msgstr ""
 
-#: ../pay-per-view.php:1754
+#: ../pay-per-view.php:1763
 msgid "Admin sees full content"
 msgstr ""
 
-#: ../pay-per-view.php:1760
+#: ../pay-per-view.php:1769
 msgid "You may want to select No for test purposes."
 msgstr ""
 
-#: ../pay-per-view.php:1765
+#: ../pay-per-view.php:1774
 msgid "Authorized users see full content"
 msgstr ""
 
-#: ../pay-per-view.php:1771
+#: ../pay-per-view.php:1780
 msgid ""
 "If Yes, authorized users will see the full content without the need to pay "
 "or subscribe. Admin setting is independent of this one."
 msgstr ""
 
-#: ../pay-per-view.php:1776
+#: ../pay-per-view.php:1785
 msgid "User level where authorization starts"
 msgstr ""
 
-#: ../pay-per-view.php:1779
+#: ../pay-per-view.php:1788
 msgid "Editor"
 msgstr ""
 
-#: ../pay-per-view.php:1780
+#: ../pay-per-view.php:1789
 msgid "Author"
 msgstr ""
 
-#: ../pay-per-view.php:1781
+#: ../pay-per-view.php:1790
 msgid "Contributor"
 msgstr ""
 
-#: ../pay-per-view.php:1782
+#: ../pay-per-view.php:1791
 msgid "Subscriber"
 msgstr ""
 
-#: ../pay-per-view.php:1784
+#: ../pay-per-view.php:1793
 msgid ""
 "If the above field is selected as yes, users having a higher level than this "
 "selection will see the full content."
 msgstr ""
 
-#: ../pay-per-view.php:1789
+#: ../pay-per-view.php:1798
 msgid "Search bots see full content"
 msgstr ""
 
-#: ../pay-per-view.php:1795
+#: ../pay-per-view.php:1804
 msgid ""
 "You may want to enable this for SEO purposes. Warning: Your full content may "
 "be visible in search engine results."
 msgstr ""
 
-#: ../pay-per-view.php:1800
+#: ../pay-per-view.php:1809
 msgid "Cookie validity time (hours)"
 msgstr ""
 
-#: ../pay-per-view.php:1802
+#: ../pay-per-view.php:1811
 msgid ""
 "Validity time of the cookie which lets visitor to be exempt from the "
 "protection after he/she liked. Tip: If you want the cookie to expire at the "
 "end of the session (when the browser closes), enter zero here."
 msgstr ""
 
-#: ../pay-per-view.php:1810
+#: ../pay-per-view.php:1820
 msgid "Payment Options"
 msgstr ""
 
-#: ../pay-per-view.php:1816
+#: ../pay-per-view.php:1826
 msgid "One time view"
 msgstr ""
 
-#: ../pay-per-view.php:1819
+#: ../pay-per-view.php:1829
 msgid ""
 "Visitors pay per content they want to reveal. Price can be set globally from "
 "the above \"unit price\" field, or per post basis using the post editor. "
 "Does not require registration of the visitor."
 msgstr ""
 
-#: ../pay-per-view.php:1829
+#: ../pay-per-view.php:1839
 msgid "One time view description"
 msgstr ""
 
-#: ../pay-per-view.php:1831
+#: ../pay-per-view.php:1842
 msgid ""
 "This text will be shown on the button. PRICE (case sensitive) will be "
 "replaced by its real value.\n"
-"\t\t\t\t\t\t\t\t\t\t\t\t\t\t\t\tDESCRIPTION (case sensitive) will be "
-"replaced by description field defined in Selection Tool, or the word "
-"\"content\" if it is not given."
+"\t\t\t\t\t\t\t\t\t\t\t\tDESCRIPTION (case sensitive) will be replaced by "
+"description field defined in Selection Tool, or the word \"content\" if it "
+"is not given."
 msgstr ""
 
-#: ../pay-per-view.php:1836
+#: ../pay-per-view.php:1849
 msgid "Daily Pass"
 msgstr ""
 
-#: ../pay-per-view.php:1839
+#: ../pay-per-view.php:1852
 msgid ""
 "Visitor pays a lumpsum fee and then he/she can view all the content on the "
 "website. Visitor is required to register to the website."
 msgstr ""
 
-#: ../pay-per-view.php:1848
+#: ../pay-per-view.php:1861
 #, php-format
 msgid "Daily pass price (%s)"
 msgstr ""
 
-#: ../pay-per-view.php:1850
+#: ../pay-per-view.php:1863
 msgid ""
 "Price that will be paid once which lets the visitor see full content during "
 "validity period."
 msgstr ""
 
-#: ../pay-per-view.php:1854
+#: ../pay-per-view.php:1868
 msgid "Daily pass validity (days)"
 msgstr ""
 
-#: ../pay-per-view.php:1856
+#: ../pay-per-view.php:1870
 msgid "Daily pass will be valid for this period."
 msgstr ""
 
-#: ../pay-per-view.php:1860
+#: ../pay-per-view.php:1875
 msgid "Daily pass description"
 msgstr ""
 
-#: ../pay-per-view.php:1862 ../pay-per-view.php:1898
+#: ../pay-per-view.php:1877 ../pay-per-view.php:1914
 msgid ""
 "This text will be shown on the button. PRICE and DAY (case sensitive) will "
 "be replaced by their real values."
 msgstr ""
 
-#: ../pay-per-view.php:1867
+#: ../pay-per-view.php:1883
 msgid "Recurring subscription"
 msgstr ""
 
-#: ../pay-per-view.php:1871
+#: ../pay-per-view.php:1887
 msgid ""
 "Visitor subscribes to view all the content on the website. Visitor is "
 "required to register to the website."
 msgstr ""
 
-#: ../pay-per-view.php:1880
+#: ../pay-per-view.php:1896
 #, php-format
 msgid "Subscription price (%s)"
 msgstr ""
 
-#: ../pay-per-view.php:1887
+#: ../pay-per-view.php:1903
 msgid "Subscription period (days)"
 msgstr ""
 
-#: ../pay-per-view.php:1890
+#: ../pay-per-view.php:1906
 msgid "Price is valid for this period and it will be renewed after it expires."
 msgstr ""
 
-#: ../pay-per-view.php:1895
+#: ../pay-per-view.php:1911
 msgid "Subscription description"
 msgstr ""
 
-#: ../pay-per-view.php:1909
+#: ../pay-per-view.php:1925
 msgid "API Settings"
 msgstr ""
 
-#: ../pay-per-view.php:1915
+#: ../pay-per-view.php:1931
 msgid "Accept API Logins"
 msgstr ""
 
-#: ../pay-per-view.php:1918
+#: ../pay-per-view.php:1934
 msgid "Enables login to website using Facebook and Twitter."
 msgstr ""
 
-#: ../pay-per-view.php:1927
+#: ../pay-per-view.php:1943
 msgid "My website already uses Facebook"
 msgstr ""
 
-#: ../pay-per-view.php:1930
+#: ../pay-per-view.php:1946
 msgid ""
 "By default, Facebook script will be loaded by the plugin. If you are already "
 "running Facebook scripts, to prevent any conflict, check this option."
 msgstr ""
 
-#: ../pay-per-view.php:1935
+#: ../pay-per-view.php:1951
 msgid "Facebook App ID"
 msgstr ""
 
-#: ../pay-per-view.php:1938
+#: ../pay-per-view.php:1954
 #, php-format
 msgid ""
 "Enter your App ID number here. If you don't have a Facebook App yet, you "
 "will need to create one <a href='%s'>here</a>"
 msgstr ""
 
-#: ../pay-per-view.php:1943
+#: ../pay-per-view.php:1959
 msgid "Twitter Consumer Key"
 msgstr ""
 
-#: ../pay-per-view.php:1946
+#: ../pay-per-view.php:1962
 #, php-format
 msgid ""
 "Enter your Twitter App ID number here. If you don't have a Twitter App yet, "
 "you will need to create one <a href=\"%s\">here</a>"
 msgstr ""
 
-#: ../pay-per-view.php:1951
+#: ../pay-per-view.php:1967
 msgid "Twitter Consumer Secret"
 msgstr ""
 
-#: ../pay-per-view.php:1954
+#: ../pay-per-view.php:1970
 msgid "Enter your Twitter App ID Secret here."
 msgstr ""
 
-#: ../pay-per-view.php:1971
+#: ../pay-per-view.php:1988 ../pay-per-view.php:2000
 msgid "Save Changes"
 msgstr ""
 
-#: ../pay-per-view.php:2022
+#: ../pay-per-view.php:2070
 msgid "Customization Examples"
 msgstr ""
 
-#: ../pay-per-view.php:2025
+#: ../pay-per-view.php:2073
 msgid ""
 "For protecting html codes that you cannot add to post content, there is a "
 "template function <b>wpmudev_ppw_html</b>. This function replace all such "
@@ -634,34 +638,34 @@ msgid ""
 "function."
 msgstr ""
 
-#: ../pay-per-view.php:2041
+#: ../pay-per-view.php:2089
 msgid ""
 "Note: In this usage, enabled/disabled and method settings of the post has no "
 "significance. Such an html code will be fully protected. However, "
 "Accessibility Settings will be applied."
 msgstr ""
 
-#: ../pay-per-view.php:2046
+#: ../pay-per-view.php:2094
 msgid ""
 "Some custom post types use templates which take the post content directly "
 "from the database. For such applications you may need to use <b>wpmudev_ppw</"
 "b> function to manage the content."
 msgstr ""
 
-#: ../pay-per-view.php:2050
+#: ../pay-per-view.php:2098
 msgid ""
 "Example: Suppose that the content of a post type is displayed like this: "
 "<code>&lt;?php echo custom_description(); ?&gt;</code>. Then edit that part "
 "of the template like this:"
 msgstr ""
 
-#: ../pay-per-view.php:2064
+#: ../pay-per-view.php:2112
 msgid ""
 "For both of the above usages you <b>must</b> create a function in your "
 "functions.php to call necessary css and js files. Here is an example:"
 msgstr ""
 
-#: ../pay-per-view.php:2086
+#: ../pay-per-view.php:2134
 #, php-format
 msgid ""
 "If you want to apply your own styles copy contents of front.css to your "
@@ -671,102 +675,80 @@ msgid ""
 "your edited styles will not be affected from plugin updates."
 msgstr ""
 
-#: ../pay-per-view.php:2180
+#: ../pay-per-view.php:2228
 msgid " Pay Per View Transactions"
 msgstr ""
 
-#: ../pay-per-view.php:2183
+#: ../pay-per-view.php:2231
 msgid "Recent transactions"
 msgstr ""
 
-#: ../pay-per-view.php:2184
+#: ../pay-per-view.php:2232
 msgid "Pending transactions"
 msgstr ""
 
-#: ../pay-per-view.php:2185
+#: ../pay-per-view.php:2233
 msgid "Future transactions"
 msgstr ""
 
-#: ../pay-per-view.php:2212
+#: ../pay-per-view.php:2260
 msgid "Post"
 msgstr ""
 
-#: ../pay-per-view.php:2213
+#: ../pay-per-view.php:2261
 msgid "User"
 msgstr ""
 
-#: ../pay-per-view.php:2214
+#: ../pay-per-view.php:2262
 msgid "Date/Time"
 msgstr ""
 
-#: ../pay-per-view.php:2215
+#: ../pay-per-view.php:2263
 msgid "Expiry Date"
 msgstr ""
 
-#: ../pay-per-view.php:2216
+#: ../pay-per-view.php:2264
 msgid "Amount"
 msgstr ""
 
-#: ../pay-per-view.php:2217
+#: ../pay-per-view.php:2265
 msgid "Transaction id"
 msgstr ""
 
-#: ../pay-per-view.php:2218
+#: ../pay-per-view.php:2266
 msgid "Status"
 msgstr ""
 
-#: ../pay-per-view.php:2302 ../pay-per-view.php:2311
+#: ../pay-per-view.php:2350 ../pay-per-view.php:2359
 msgid "None yet"
 msgstr ""
 
-#: ../pay-per-view.php:2322
+#: ../pay-per-view.php:2370
 msgid "No Transactions have been found, patience is a virtue."
 msgstr ""
 
-#: ../pay-per-view.php:2398
+#: ../pay-per-view.php:2446
 msgid "Please enter a value!"
 msgstr ""
 
-#: ../pay-per-view.php:2402
+#: ../pay-per-view.php:2450
 msgid "Description"
 msgstr ""
 
-#: ../pay-per-view.php:2406
+#: ../pay-per-view.php:2454
 msgid "Description for this selection."
 msgstr ""
 
-#: ../pay-per-view.php:2409
+#: ../pay-per-view.php:2457
 msgid "Price"
 msgstr ""
 
-#: ../pay-per-view.php:2413
+#: ../pay-per-view.php:2461
 msgid "Price for this selection."
 msgstr ""
 
-#: ../pay-per-view.php:2425
+#: ../pay-per-view.php:2473
 msgid "Insert"
-msgstr ""
-
-#: ../pay-per-view.php:2574
-#, php-format
-msgid ""
-"Easily get updates, support, and one-click WPMU DEV plugin/theme "
-"installations right from in your dashboard - <strong><a href=\"%s\" title="
-"\"Install Now &raquo;\">install the free WPMU DEV Dashboard plugin</a></"
-"strong>. &nbsp;&nbsp;&nbsp;<small><a href=\"http://premium.wpmudev.org/wpmu-"
-"dev/update-notifications-plugin-information/\">(find out more)</a></small>"
-msgstr ""
-
-#: ../pay-per-view.php:2578
-#, php-format
-msgid ""
-"Updates, Support, Premium Plugins, Community - <strong><a href=\"%s\" title="
-"\"Activate Now &raquo;\">activate the WPMU DEV Dashboard plugin now</a></"
-"strong>."
-msgstr ""
-
-#: ../includes/class_wd_help_tooltips.php:296
-msgid "Help"
 msgstr ""
 
 #: ../includes/paypal-express.php:54
@@ -782,105 +764,105 @@ msgid "Your PayPal transaction has been canceled."
 msgstr ""
 
 #: ../includes/paypal-express.php:115 ../includes/paypal-express.php:349
-#: ../includes/paypal-express.php:818
+#: ../includes/paypal-express.php:819
 msgid ""
 "A reversal has been canceled; for example, when you win a dispute and the "
 "funds for the reversal have been returned to you."
 msgstr ""
 
 #: ../includes/paypal-express.php:119 ../includes/paypal-express.php:353
-#: ../includes/paypal-express.php:823
+#: ../includes/paypal-express.php:824
 msgid "The authorization period for this payment has been reached."
 msgstr ""
 
 #: ../includes/paypal-express.php:123 ../includes/paypal-express.php:357
-#: ../includes/paypal-express.php:828
+#: ../includes/paypal-express.php:829
 msgid "An authorization for this transaction has been voided."
 msgstr ""
 
 #: ../includes/paypal-express.php:127 ../includes/paypal-express.php:361
-#: ../includes/paypal-express.php:833
+#: ../includes/paypal-express.php:834
 msgid ""
 "The payment has failed. This happens only if the payment was made from your "
 "customer's bank account."
 msgstr ""
 
 #: ../includes/paypal-express.php:131 ../includes/paypal-express.php:365
-#: ../includes/paypal-express.php:838
+#: ../includes/paypal-express.php:839
 msgid "The payment has been partially refunded."
 msgstr ""
 
 #: ../includes/paypal-express.php:135 ../includes/paypal-express.php:369
-#: ../includes/paypal-express.php:843
+#: ../includes/paypal-express.php:844
 msgid ""
 "The transaction has not terminated, e.g. an authorization may be awaiting "
 "completion."
 msgstr ""
 
 #: ../includes/paypal-express.php:139 ../includes/paypal-express.php:373
-#: ../includes/paypal-express.php:848
+#: ../includes/paypal-express.php:849
 msgid ""
 "The payment has been completed, and the funds have been added successfully "
 "to your account balance."
 msgstr ""
 
 #: ../includes/paypal-express.php:143 ../includes/paypal-express.php:377
-#: ../includes/paypal-express.php:853
+#: ../includes/paypal-express.php:854
 msgid "A payment has been accepted."
 msgstr ""
 
 #: ../includes/paypal-express.php:147 ../includes/paypal-express.php:381
-#: ../includes/paypal-express.php:858
+#: ../includes/paypal-express.php:859
 msgid ""
 "A payment was reversed due to a chargeback or other type of reversal. The "
 "funds have been removed from your account balance and returned to the buyer:"
 msgstr ""
 
 #: ../includes/paypal-express.php:150 ../includes/paypal-express.php:384
-#: ../includes/paypal-express.php:861
+#: ../includes/paypal-express.php:862
 msgid ""
 "A reversal has occurred on this transaction due to a chargeback by your "
 "customer."
 msgstr ""
 
 #: ../includes/paypal-express.php:151 ../includes/paypal-express.php:385
-#: ../includes/paypal-express.php:862
+#: ../includes/paypal-express.php:863
 msgid ""
 "A reversal has occurred on this transaction due to your customer triggering "
 "a money-back guarantee."
 msgstr ""
 
 #: ../includes/paypal-express.php:152 ../includes/paypal-express.php:386
-#: ../includes/paypal-express.php:863
+#: ../includes/paypal-express.php:864
 msgid ""
 "A reversal has occurred on this transaction due to a complaint about the "
 "transaction from your customer."
 msgstr ""
 
 #: ../includes/paypal-express.php:153 ../includes/paypal-express.php:387
-#: ../includes/paypal-express.php:864
+#: ../includes/paypal-express.php:865
 msgid ""
 "A reversal has occurred on this transaction because you have given the "
 "customer a refund."
 msgstr ""
 
 #: ../includes/paypal-express.php:154 ../includes/paypal-express.php:388
-#: ../includes/paypal-express.php:865
+#: ../includes/paypal-express.php:866
 msgid "A reversal has occurred on this transaction due to an unknown reason."
 msgstr ""
 
 #: ../includes/paypal-express.php:160 ../includes/paypal-express.php:394
-#: ../includes/paypal-express.php:872
+#: ../includes/paypal-express.php:873
 msgid "You refunded the payment."
 msgstr ""
 
 #: ../includes/paypal-express.php:164 ../includes/paypal-express.php:398
-#: ../includes/paypal-express.php:877
+#: ../includes/paypal-express.php:878
 msgid "You denied the payment when it was marked as pending."
 msgstr ""
 
 #: ../includes/paypal-express.php:169 ../includes/paypal-express.php:403
-#: ../includes/paypal-express.php:883
+#: ../includes/paypal-express.php:884
 msgid ""
 "The payment is pending because your customer did not include a confirmed "
 "shipping address and your Payment Receiving Preferences is set such that you "
@@ -889,21 +871,21 @@ msgid ""
 msgstr ""
 
 #: ../includes/paypal-express.php:170 ../includes/paypal-express.php:404
-#: ../includes/paypal-express.php:884
+#: ../includes/paypal-express.php:885
 msgid ""
 "The payment is pending because it has been authorized but not settled. You "
 "must capture the funds first."
 msgstr ""
 
 #: ../includes/paypal-express.php:171 ../includes/paypal-express.php:405
-#: ../includes/paypal-express.php:885
+#: ../includes/paypal-express.php:886
 msgid ""
 "The payment is pending because it was made by an eCheck that has not yet "
 "cleared."
 msgstr ""
 
 #: ../includes/paypal-express.php:172 ../includes/paypal-express.php:406
-#: ../includes/paypal-express.php:886
+#: ../includes/paypal-express.php:887
 msgid ""
 "The payment is pending because you hold a non-U.S. account and do not have a "
 "withdrawal mechanism. You must manually accept or deny this payment from "
@@ -911,7 +893,7 @@ msgid ""
 msgstr ""
 
 #: ../includes/paypal-express.php:173 ../includes/paypal-express.php:407
-#: ../includes/paypal-express.php:887
+#: ../includes/paypal-express.php:888
 msgid ""
 "You do not have a balance in the currency sent, and you do not have your "
 "Payment Receiving Preferences set to automatically convert and accept this "
@@ -919,26 +901,26 @@ msgid ""
 msgstr ""
 
 #: ../includes/paypal-express.php:174 ../includes/paypal-express.php:408
-#: ../includes/paypal-express.php:888
+#: ../includes/paypal-express.php:889
 msgid ""
 "The payment is pending because it is part of an order that has been "
 "authorized but not settled."
 msgstr ""
 
 #: ../includes/paypal-express.php:175 ../includes/paypal-express.php:409
-#: ../includes/paypal-express.php:889
+#: ../includes/paypal-express.php:890
 msgid "The payment is pending while it is being reviewed by PayPal for risk."
 msgstr ""
 
 #: ../includes/paypal-express.php:176 ../includes/paypal-express.php:410
-#: ../includes/paypal-express.php:890
+#: ../includes/paypal-express.php:891
 msgid ""
 "The payment is pending because it was made to an email address that is not "
 "yet registered or confirmed."
 msgstr ""
 
 #: ../includes/paypal-express.php:177 ../includes/paypal-express.php:411
-#: ../includes/paypal-express.php:891
+#: ../includes/paypal-express.php:892
 msgid ""
 "The payment is pending because it was made via credit card and you must "
 "upgrade your account to Business or Premier status in order to receive the "
@@ -947,21 +929,21 @@ msgid ""
 msgstr ""
 
 #: ../includes/paypal-express.php:178 ../includes/paypal-express.php:412
-#: ../includes/paypal-express.php:892
+#: ../includes/paypal-express.php:893
 msgid ""
 "The payment is pending because you are not yet verified. You must verify "
 "your account before you can accept this payment."
 msgstr ""
 
 #: ../includes/paypal-express.php:179 ../includes/paypal-express.php:413
-#: ../includes/paypal-express.php:893
+#: ../includes/paypal-express.php:894
 msgid ""
 "The payment is pending for an unknown reason. For more information, contact "
 "PayPal customer service."
 msgstr ""
 
 #: ../includes/paypal-express.php:182 ../includes/paypal-express.php:416
-#: ../includes/paypal-express.php:896
+#: ../includes/paypal-express.php:897
 msgid "The payment is pending."
 msgstr ""
 
@@ -997,31 +979,31 @@ msgid ""
 "payment is kept in pending state by PayPal. Please check your PayPal account."
 msgstr ""
 
-#: ../includes/paypal-express.php:490 ../includes/paypal-express.php:493
+#: ../includes/paypal-express.php:491 ../includes/paypal-express.php:494
 msgid ""
 "There was a problem finalizing your purchase with PayPal. Please try again</"
 "a>."
 msgstr ""
 
-#: ../includes/paypal-express.php:524
+#: ../includes/paypal-express.php:525
 #, php-format
 msgid ""
 "Your PayPal payment for this order totaling %s is not yet complete. Here is "
 "the latest status:"
 msgstr ""
 
-#: ../includes/paypal-express.php:531
+#: ../includes/paypal-express.php:532
 #, php-format
 msgid ""
 "Your PayPal payment for this order totaling %s is complete. The PayPal "
 "transaction number is <strong>%s</strong>."
 msgstr ""
 
-#: ../includes/paypal-express.php:594
+#: ../includes/paypal-express.php:595
 msgid "PayPal Express Checkout Settings"
 msgstr ""
 
-#: ../includes/paypal-express.php:596
+#: ../includes/paypal-express.php:597
 msgid ""
 "Express Checkout is PayPal's premier checkout solution, which streamlines "
 "the checkout process for buyers and keeps them on your site after making a "
@@ -1032,35 +1014,35 @@ msgid ""
 "</a>"
 msgstr ""
 
-#: ../includes/paypal-express.php:599
+#: ../includes/paypal-express.php:600
 msgid "PayPal Site"
 msgstr ""
 
-#: ../includes/paypal-express.php:634
+#: ../includes/paypal-express.php:635
 msgid "Paypal Currency"
 msgstr ""
 
-#: ../includes/paypal-express.php:674
+#: ../includes/paypal-express.php:675
 msgid "PayPal Mode"
 msgstr ""
 
-#: ../includes/paypal-express.php:677
+#: ../includes/paypal-express.php:678
 msgid "Sandbox"
 msgstr ""
 
-#: ../includes/paypal-express.php:678
+#: ../includes/paypal-express.php:679
 msgid "Live"
 msgstr ""
 
-#: ../includes/paypal-express.php:683
+#: ../includes/paypal-express.php:684
 msgid "PayPal Merchant E-mail"
 msgstr ""
 
-#: ../includes/paypal-express.php:689
+#: ../includes/paypal-express.php:690
 msgid "PayPal API Credentials"
 msgstr ""
 
-#: ../includes/paypal-express.php:691
+#: ../includes/paypal-express.php:692
 msgid ""
 "You must login to PayPal and create an API signature to get your "
 "credentials. <a target=\"_blank\" href=\"https://cms.paypal.com/us/cgi-bin/?"
@@ -1068,27 +1050,27 @@ msgid ""
 "\">Instructions &raquo;</a>"
 msgstr ""
 
-#: ../includes/paypal-express.php:692
+#: ../includes/paypal-express.php:693
 msgid "API Username"
 msgstr ""
 
-#: ../includes/paypal-express.php:695
+#: ../includes/paypal-express.php:696
 msgid "API Password"
 msgstr ""
 
-#: ../includes/paypal-express.php:698
+#: ../includes/paypal-express.php:699
 msgid "Signature"
 msgstr ""
 
-#: ../includes/paypal-express.php:707
+#: ../includes/paypal-express.php:708
 msgid "Click for Paypal Page Display Settings"
 msgstr ""
 
-#: ../includes/paypal-express.php:724
+#: ../includes/paypal-express.php:725
 msgid "PayPal Header Image (optional)"
 msgstr ""
 
-#: ../includes/paypal-express.php:726
+#: ../includes/paypal-express.php:727
 msgid ""
 "URL for an image you want to appear at the top left of the payment page. The "
 "image has a maximum size of 750 pixels wide by 90 pixels high. PayPal "
@@ -1096,42 +1078,46 @@ msgid ""
 "server. If you do not specify an image, the business name is displayed."
 msgstr ""
 
-#: ../includes/paypal-express.php:733
+#: ../includes/paypal-express.php:734
 msgid "PayPal Header Border Color (optional)"
 msgstr ""
 
-#: ../includes/paypal-express.php:735
+#: ../includes/paypal-express.php:736
 msgid ""
 "Sets the border color around the header of the payment page. The border is a "
 "2-pixel perimeter around the header space, which is 750 pixels wide by 90 "
 "pixels high. By default, the color is black."
 msgstr ""
 
-#: ../includes/paypal-express.php:742
+#: ../includes/paypal-express.php:743
 msgid "PayPal Header Background Color (optional)"
 msgstr ""
 
-#: ../includes/paypal-express.php:744
+#: ../includes/paypal-express.php:745
 msgid ""
 "Sets the background color for the header of the payment page. By default, "
 "the color is white."
 msgstr ""
 
-#: ../includes/paypal-express.php:751
+#: ../includes/paypal-express.php:752
 msgid "PayPal Page Background Color (optional)"
 msgstr ""
 
-#: ../includes/paypal-express.php:753
+#: ../includes/paypal-express.php:754
 msgid ""
 "Sets the background color for the payment page. By default, the color is "
 "white."
 msgstr ""
 
-#: ../includes/paypal-express.php:810
+#: ../includes/paypal-express.php:811
 msgid ""
 "There was a problem verifying the IPN string with PayPal. Please try again."
 msgstr ""
 
-#: ../includes/paypal-express.php:1064
+#: ../includes/paypal-express.php:1065
 msgid "There was a problem connecting to PayPal. Please try again."
+msgstr ""
+
+#: ../includes/class_wd_help_tooltips.php:296
+msgid "Help"
 msgstr ""
