@@ -1,3 +1,9 @@
+==Pay per View==
+
+V1.4.1.9:
+- Add day, month, year choices to Daily Pass. Changed name to Period Pass
+- Add day, month, year choices to Subscriptions.
+
 V1.4.1.8:
 - Record user id if logged in for one time payments.
 - Added new WPMUDEV dashboard.

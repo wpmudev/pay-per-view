@@ -26,6 +26,10 @@
 
 		$root.html( login_html );
 
+		$('.payperview-login_link-register').click(function(){
+			$.cookie('ppv-register-page', window.location.href, {path: "/"} );
+		});
+
 		$me.find(".not_loggedin").addClass("active");
 		$root.find(".payperview-login_link").each(function () {
 			var $lnk = $(this);
@@ -57,7 +61,7 @@
 									var custom = $me.find(".ppw_custom").val(); // Get existing custom value
 									if ( custom && user_id ) { // Make a double check
 										var c = custom.split(":");
-										$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]); // Modify
+										$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]+":"+c[4]); // Modify
 										$me.submit(); // Send form to Paypal
 									}
 								}
@@ -110,7 +114,7 @@
 											var custom = $me.find(".ppw_custom").val(); // Get existing custom value
 											if ( custom && user_id ) { // Make a double check
 												var c = custom.split(":");
-												$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]); // Modify
+												$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]+":"+c[4]); // Modify
 												$me.submit(); // Send form to Paypal
 											}
 										}
@@ -157,7 +161,7 @@
 											var custom = $me.find(".ppw_custom").val(); // Get existing custom value
 											if ( custom && user_id ) { // Make a double check
 												var c = custom.split(":");
-												$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]); // Modify
+												$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]+":"+c[4]); // Modify
 												$me.submit(); // Send form to Paypal
 											}
 										}
@@ -202,7 +206,7 @@
 							var custom = $me.find(".ppw_custom").val(); // Get existing custom value
 							if ( custom && user_id ) { // Make a double check
 								var c = custom.split(":");
-								$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]); // Modify
+								$me.find(".ppw_custom").val(c[0]+":"+user_id+":"+c[2]+":"+c[3]+":"+c[4]); // Modify
 								$me.submit(); // Send form to Paypal
 							}
 						}

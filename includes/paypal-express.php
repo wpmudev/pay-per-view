@@ -1058,6 +1058,7 @@ class PPW_Gateway_Paypal_Express {
 		$args['body'] = $query_string;
 		$args['sslverify'] = false;
 		$args['timeout'] = 60;
+		$args['httpversion'] = '1.1';
 
 		//use built in WP http class to work with most server setups
 		$response = wp_remote_post($this->API_Endpoint, $args);

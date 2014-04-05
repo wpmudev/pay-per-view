@@ -3,7 +3,7 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.1.8
+Version: 1.4.1.9
 Author: Hakan Evin (Incsub), Arnold Bailey (Incsub)
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
@@ -165,6 +165,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 				wp_enqueue_style( $this->plugin_name, $this->plugin_url. "/css/front.css", array(), $this->version );
 			}
 
+			wp_enqueue_script( 'jquery-cookie', $this->plugin_url . '/js/jquery.cookie-min.js', array('jquery'), $this->version);
 			wp_register_script('ppw_api_js', $this->plugin_url . '/js/ppw-api.js', array('jquery'), $this->version );
 			wp_enqueue_script('ppw_api_js');
 			wp_localize_script('ppw_api_js', 'l10nPpwApi', array(
@@ -471,8 +472,12 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 			if ( isset( $_POST["ppw_expiry"] ) )
 			update_user_meta( $user_id, 'ppw_subscribe', trim( $_POST['ppw_expiry'] ) );
+
 			if ( isset( $_POST["ppw_days"] ) )
 			update_user_meta( $user_id, 'ppw_days', trim( $_POST['ppw_days'] ) );
+
+			if ( isset( $_POST["ppw_period"] ) )
+			update_user_meta( $user_id, 'ppw_period', trim( $_POST['ppw_period'] ) );
 		}
 
 		/**
@@ -489,14 +494,20 @@ if ( !class_exists( 'PayPerView' ) ) {
 						<?php
 						$expiry = get_user_meta( $current_user->ID, 'ppw_subscribe', true );
 						$days = get_user_meta( $current_user->ID, 'ppw_days', true );
+						$period = get_user_meta( $current_user->ID, 'ppw_period', true );
+						$readonly =  (!current_user_can('administrator') ) ? "readonly" : "";
 						?>
-						<input type="text" name="ppw_expiry" value="<?php echo $expiry ?>" <?php if( !current_user_can('administrator') ) echo "readonly" ?> />
+						<input type="text" name="ppw_expiry" value="<?php echo $expiry ?>" <?php echo $readonly; ?> />
 					</td>
 				</tr>
 				<tr>
 					<th><label for="address"><?php _e("Recurring days"); ?></label></th>
 					<td>
-						<input type="text" name="ppw_days" value="<?php echo $days ?>" <?php if( !current_user_can('administrator') ) echo "readonly" ?> />
+						<input type="text" name="ppw_days" value="<?php echo $days ?>" <?php echo $readonly; ?> />
+						<input type="radio" name="ppw_period" value="D" <?php echo checked( $period == "D" || empty($period ) ); ?> <?php echo $readonly; ?> />Days&nbsp;&nbsp;
+						<input type="radio" name="ppw_period" value="W" <?php echo checked( $period == "W"); ?> <?php echo $readonly; ?> />Weeks&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="ppw_period" value="M" <?php echo checked( $period == "M"); ?> <?php echo $readonly; ?> />Months&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="ppw_period" value="Y" <?php echo checked( $period == "Y"); ?> <?php echo $readonly; ?> />Years&nbsp;&nbsp;&nbsp;
 					</td>
 				</tr>
 			</table>
@@ -900,16 +911,17 @@ if ( !class_exists( 'PayPerView' ) ) {
 			$form .= '<input type="hidden" name="item_number" value="' . __('Special offer','ppw') . '" />';
 			$form .= '<input type="hidden" name="no_shipping" value="1" />';
 			$form .= '<input type="hidden" name="currency_code" value="' . $this->options['currency'] .'" />';
-			$form .= '<input type="hidden" name="t3" value="D" />';
 			$form .= '<input type="hidden" name="return" value="' . get_permalink( $post->ID ) . '" />';
 			$form .= '<input type="hidden" name="cancel_return" value="' . get_option('home') . '" />';
 			$form .= '<input type="hidden" name="notify_url" value="' . admin_url('admin-ajax.php?action=ppw_paypal_ipn') . '" />';
-			// No recurring, i.e. daily pass
+			// No recurring, i.e. period pass
 			if ( !$subs ) {
+				$period = empty($this->options['daily_pass_period']) ? 'D' : $this->options['daily_pass_period'];
+				$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
 				$form .= '<input type="hidden" name="a3" value="' . number_format($this->options['daily_pass_price'], 2) . '" />';
 				$form .= '<input type="hidden" name="p3" value="' . $this->options['daily_pass_days'] . '" />';
 				$form .= '<input type="hidden" name="src" value="0" />';
-				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID .":".$current_user->ID . ":" . $this->options['daily_pass_days']. ":0" . '" />';
+				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID .":".$current_user->ID . ":" . $this->options['daily_pass_days']. ":0:" . $period . '" />';
 				$form .= '<input class="ppw_submit_btn';
 				// Force login if user not logged in
 				if ( !is_user_logged_in() ){
@@ -921,15 +933,17 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 				$form .= '" type="submit" name="submit_btn" value="';
 				$form .= str_replace(
-				array("PRICE","DAY"), array($this->options["daily_pass_price"],$this->options["daily_pass_days"]),
+				array("PRICE","DAY", "PERIOD"), array($this->options["daily_pass_price"],$this->options["daily_pass_days"], $this->get_interval( $period ) ),
 				$this->options["daily_pass_description"]).'" />';
 
 			}
 			else {
+				$period = empty($this->options['subscription_period']) ? 'D' : $this->options['subscription_period'];
+				$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
 				$form .= '<input type="hidden" name="a3" value="' . number_format($this->options['subscription_price'], 2) . '" />';
 				$form .= '<input type="hidden" name="p3" value="' . $this->options['subscription_days'] . '" />';
 				$form .= '<input type="hidden" name="src" value="1" />';
-				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID .":".$current_user->ID . ":" . $this->options['subscription_days']. ":1" . '" />';
+				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID .":".$current_user->ID . ":" . $this->options['subscription_days']. ":1:" . $period . '" />';
 				$form .= '<input class="ppw_submit_btn ';
 				if ( !is_user_logged_in() ){
 					$form .= ' ppw_not_loggedin'; // Add a class to which javascipt is bound
@@ -938,7 +952,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 				}
 				$form .= '" type="submit" name="submit_btn" value="';
 				$form .= str_replace(
-				array("PRICE","DAY"), array($this->options["subscription_price"],$this->options["subscription_days"]),
+				array("PRICE","DAY", "PERIOD" ), array($this->options["subscription_price"],$this->options["subscription_days"], $this->get_interval( $period ) ),
 				$this->options["subscription_description"]).'" />';
 			}
 			// They say Paypal uses this for tracking. I would prefer to remove it if it is not mandatory.
@@ -969,8 +983,17 @@ if ( !class_exists( 'PayPerView' ) ) {
 			}
 		}
 
+		function get_interval( $period = 'D' ){
+			if($period == 'Y') $interval = 'year';
+			elseif($period == 'M') $interval = 'month';
+			elseif($period == 'W') $interval = 'week';
+			else $interval = 'day';
+			return $interval;
+		}
+
+
 		/**
-		*	IPN handling for daily pass and subscription selections
+		*	IPN handling for period pass and subscription selections
 		*/
 		function handle_paypal_return() {
 			// PayPal IPN handling code
@@ -991,7 +1014,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 					$req .= '&' . $k . '=' . $v;
 				}
 
-				$header = 'POST /cgi-bin/webscr HTTP/1.0' . "\r\n"
+				$header = 'POST /cgi-bin/webscr HTTP/1.1' . "\r\n"
 				. 'Content-Type: application/x-www-form-urlencoded' . "\r\n"
 				. 'Content-Length: ' . strlen($req) . "\r\n"
 				. "\r\n";
@@ -1056,21 +1079,25 @@ if ( !class_exists( 'PayPerView' ) ) {
 					$amount = $_POST['mc_gross'];
 					$currency = $_POST['mc_currency'];
 
-					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
+					list($post_id, $user_id, $days, $recurring, $period) = explode(':', $_POST['custom']);
 
 					$this->record_transaction($user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], '');
 
 					// Check if user already subscribed before. Practically this is impossible, but who knows?
 					$expiry = get_user_meta( $user_id, "ppw_subscribe", true );
+
 					// Let's be safe. Do not save user meta if new subscription points an earlier date
-					if ( $expiry && strtotime( $expiry ) > time() + $days * 86400 ) {
+					$interval = $this->get_interval($period);
+
+					if ( $expiry && strtotime( $expiry ) > strtotime( "+{$days} {$interval}" ) ) {
+					} else {
+						update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} {$interval}" ) ) );
 					}
-					else
-					update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} day", strtotime( "now" ) ) ) );
 
-					if ( $recurring )
-					update_user_meta( $user_id, "ppw_days", $days );
-
+					if ( $recurring ) {
+						update_user_meta( $user_id, "ppw_days", $days );
+						update_user_meta( $user_id, "ppw_period", $period );
+					}
 					update_user_meta( $user_id, "ppw_recurring", $recurring );
 					break;
 
@@ -1079,13 +1106,14 @@ if ( !class_exists( 'PayPerView' ) ) {
 					$note = __('Last transaction has been reversed. Reason: Payment has been reversed (charge back)', 'ppw');
 					$amount = $_POST['mc_gross'];
 					$currency = $_POST['mc_currency'];
-					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
+					list($post_id, $user_id, $days, $recurring, $period) = explode(':', $_POST['custom']);
 
 					$this->record_transaction($user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note);
 					// User cancelled subscription. So delete user meta.
 					delete_user_meta( $user_id, "ppw_subscribe" );
 					delete_user_meta( $user_id, "ppw_recurring" );
 					delete_user_meta( $user_id, "ppw_days" );
+					delete_user_meta( $user_id, "ppw_period" );
 					break;
 
 					case 'Refunded':
@@ -1093,13 +1121,14 @@ if ( !class_exists( 'PayPerView' ) ) {
 					$note = __('Last transaction has been reversed. Reason: Payment has been refunded', 'ppw');
 					$amount = $_POST['mc_gross'];
 					$currency = $_POST['mc_currency'];
-					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
+					list($post_id, $user_id, $days, $recurring, $period) = explode(':', $_POST['custom']);
 
 					$this->record_transaction($user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note);
 					// User cancelled subscription. So delete user meta.
 					delete_user_meta( $user_id, "ppw_subscribe" );
 					delete_user_meta( $user_id, "ppw_recurring" );
 					delete_user_meta( $user_id, "ppw_days" );
+					delete_user_meta( $user_id, "ppw_period" );
 					break;
 
 					case 'Denied':
@@ -1130,7 +1159,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 					$note = __('Last transaction is pending. Reason: ', 'ppw') . (isset($pending_str[$reason]) ? $pending_str[$reason] : $pending_str['*']);
 					$amount = $_POST['mc_gross'];
 					$currency = $_POST['mc_currency'];
-					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
+					list($post_id, $user_id, $days, $recurring, $period) = explode(':', $_POST['custom']);
 
 					// Save transaction, but do not subscribe user.
 					$this->record_transaction($user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note);
@@ -1144,16 +1173,17 @@ if ( !class_exists( 'PayPerView' ) ) {
 				//check for subscription details
 				switch ($_POST['txn_type']) {
 					case 'subscr_signup':
-					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
+					list($post_id, $user_id, $days, $recurring, $period) = explode(':', $_POST['custom']);
 					// No need to do anything here
 					break;
 
 					case 'subscr_cancel':
 					// mark for removal
-					list($post_id, $user_id, $days, $recurring) = explode(':', $_POST['custom']);
+					list($post_id, $user_id, $days, $recurring, $period) = explode(':', $_POST['custom']);
 					// We just unmark recurring, sucription will end after ppw_subscribe expires
 					delete_user_meta( $user_id, "ppw_recurring" );
 					delete_user_meta( $user_id, "ppw_days" );
+					delete_user_meta( $user_id, "ppw_period" );
 
 					break;
 
@@ -1163,6 +1193,8 @@ if ( !class_exists( 'PayPerView' ) ) {
 				// Did not find expected POST variables. Possible access attempt from a non PayPal site.
 				// This is IPN response, so echoing will not help. Let's log it.
 				$this->log( 'Error: Missing POST variables. Identification is not possible.' );
+				$this.log( print_r($_REQUEST, true) );
+				print_r($_REQUEST);
 				exit;
 			}
 		}
@@ -1466,11 +1498,13 @@ if ( !class_exists( 'PayPerView' ) ) {
 			'daily_pass'				=> 'true',
 			'daily_pass_price'			=> '2.75',
 			'daily_pass_days'			=> '1',
-			'daily_pass_description'	=> 'Access all content for just $PRICE for DAY day',
+			'daily_pass_period'			=> 'D',
+			'daily_pass_description'	=> 'Access all content for just $PRICE for DAY PERIOD',
 			'subscription'				=> 'true',
 			'subscription_price'		=> '11.55',
 			'subscription_days'			=> '30',
-			'subscription_description'	=> 'Subscribe for just $PRICE for DAY days',
+			'subscription_period'			=> 'D',
+			'subscription_description'	=> 'Subscribe for just $PRICE for DAY PERIOD',
 			'currency'					=> 'USD',
 			'admin_email'				=> get_option("admin_email"),
 			'paypal_email'				=> '',
@@ -1482,6 +1516,8 @@ if ( !class_exists( 'PayPerView' ) ) {
 			'twitter-app_secret'		=> ''
 			)
 			);
+
+			add_post_type_support( 'page', 'excerpt' );
 
 			//  Run this code not before 30 min
 			if ( ( time( ) - get_option( "ppw_last_update" ) ) < 1800 )
@@ -1496,7 +1532,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 		function admin_notices() {
 			//				if ( ( $this->options["daily_pass"] OR $this->options["subscription"] ) && !$this->options["accept_api_logins"] ) {
 			//					echo '<div class="error fade"><p>' .
-			//					__("<b>[Pay Per View]</b> If you are using Daily Pass or Recurring Subscriptions, you need to enable and set API logins or be limited to WordPress login.", "ppw") .
+			//					__("<b>[Pay Per View]</b> If you are using Period Pass or Recurring Subscriptions, you need to enable and set API logins or be limited to WordPress login.", "ppw") .
 			//					'</p></div>';
 			//				}
 
@@ -1537,9 +1573,12 @@ if ( !class_exists( 'PayPerView' ) ) {
 				foreach ( $results as $result ) {
 					$days = get_user_meta( $result->user_id, "ppw_days", true );
 					$date = get_user_meta( $result->user_id, "ppw_subscribe", true );
+					$period = get_user_meta( $result->user_id, "ppw_period", true );
 					// Write new expiry date
-					if ( $days && $date )
-					update_user_meta( $result->user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} day", strtotime( $date ) ) ) );
+					if ( $days && $date ){
+						$interval = $this->get_interval( $period );
+						update_user_meta( $result->user_id, "ppw_subscribe", date( "Y-m-d H:i:s" , strtotime( "+{$days} {$interval}", strtotime( $date ) ) ) );
+					}
 				}
 			}
 		}
@@ -1583,10 +1622,12 @@ if ( !class_exists( 'PayPerView' ) ) {
 				$this->options["daily_pass"]			= isset( $_POST["daily_pass"] );
 				$this->options["daily_pass_price"]		= $_POST["daily_pass_price"];
 				$this->options["daily_pass_days"]		= $_POST["daily_pass_days"];
+				$this->options["daily_pass_period"]		= $_POST["daily_pass_period"];
 				$this->options["daily_pass_description"]= $_POST["daily_pass_description"];
 				$this->options["subscription"]			= $_POST["subscription"];
 				$this->options["subscription_price"]	= $_POST["subscription_price"];
 				$this->options["subscription_days"] 	= $_POST["subscription_days"];
+				$this->options["subscription_period"] 	= $_POST["subscription_period"];
 				$this->options["subscription_description"]	= $_POST["subscription_description"];
 
 				$this->options["accept_api_logins"]		= isset( $_POST["accept_api_logins"] );
@@ -1846,7 +1887,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 									</tr>
 
 									<tr valign="top" style="border-top:1px solid lightgrey">
-										<th scope="row" ><?php _e('Daily Pass','ppw')?></th>
+										<th scope="row" ><?php _e('Period Pass','ppw')?></th>
 										<td colspan="2">
 											<input type="checkbox" id="daily_pass" name="daily_pass" value="true" <?php if ($this->options["daily_pass"]) echo "checked='checked'"?> />
 											<span class="description"><?php _e('Visitor pays a lumpsum fee and then he/she can view all the content on the website. Visitor is required to register to the website.','ppw')?></span>
@@ -1858,23 +1899,28 @@ if ( !class_exists( 'PayPerView' ) ) {
 									?>
 
 									<tr valign="top" class="daily_pass_detail" <?php echo $style?>>
-										<th scope="row" ><?php printf(__('Daily pass price (%s)', 'ppw'),$this->options["currency"])?></th>
+										<th scope="row" ><?php printf(__('Period pass price (%s)', 'ppw'),$this->options["currency"])?></th>
 										<td colspan="2"><input type="text" style="width:50px" name="daily_pass_price" value="<?php echo $this->options["daily_pass_price"] ?>" />
 											<span class="description"><?php _e('Price that will be paid once which lets the visitor see full content during validity period.', 'ppw') ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="daily_pass_detail" <?php echo $style?>>
-										<th scope="row" ><?php _e('Daily pass validity (days)', 'ppw')?></th>
+										<th scope="row" ><?php _e('Period pass validity', 'ppw')?></th>
 										<td colspan="2"><input type="text" style="width:50px" name="daily_pass_days" value="<?php echo $this->options["daily_pass_days"] ?>" />
-											<span class="description"><?php _e('Daily pass will be valid for this period.', 'ppw') ?></span>
+											<input type="radio" name="daily_pass_period" value="D" <?php echo checked( $this->options["daily_pass_period"] == "D" || empty($this->options["daily_pass_period"]) ); ?> />Days&nbsp;&nbsp;
+											<input type="radio" name="daily_pass_period" value="W" <?php echo checked( $this->options["daily_pass_period"], "W"); ?> />Weeks&nbsp;&nbsp;&nbsp;
+											<input type="radio" name="daily_pass_period" value="M" <?php echo checked( $this->options["daily_pass_period"], "M"); ?> />Months&nbsp;&nbsp;&nbsp;
+											<input type="radio" name="daily_pass_period" value="Y" <?php echo checked( $this->options["daily_pass_period"], "Y"); ?> />Years&nbsp;&nbsp;&nbsp;
+
+											<span class="description"><?php _e('Period pass will be valid for this period.', 'ppw') ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="daily_pass_detail" <?php echo $style?>>
-										<th scope="row" ><?php _e('Daily pass description', 'ppw')?></th>
+										<th scope="row" ><?php _e('Period pass description', 'ppw')?></th>
 										<td colspan="2"><input type="text" style="width:400px" name="daily_pass_description" value="<?php echo stripslashes($this->options["daily_pass_description"]) ?>" />
-											<br /><span class="description"><?php _e('This text will be shown on the button. PRICE and DAY (case sensitive) will be replaced by their real values.', 'ppw') ?></span>
+											<br /><span class="description"><?php _e('This text will be shown on the button. PRICE, DAY and PERIOD (case sensitive) will be replaced by their real values.', 'ppw') ?></span>
 										</td>
 									</tr>
 
@@ -1903,6 +1949,10 @@ if ( !class_exists( 'PayPerView' ) ) {
 										<th scope="row" ><?php _e('Subscription period (days)', 'ppw')?></th>
 										<td colspan="2">
 											<input type="text" style="width:50px" id="subscription_days" name="subscription_days" value="<?php echo $this->options["subscription_days"] ?>" />
+											<input type="radio" id="subscription_period" name="subscription_period" value="D" <?php echo checked( $this->options["subscription_period"] == "D" || empty($this->options["subscription_period"]) ); ?> />Days&nbsp;&nbsp;
+											<input type="radio" id="subscription_period" name="subscription_period" value="W" <?php echo checked( $this->options["subscription_period"], "W"); ?> />Weeks&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="subscription_period" name="subscription_period" value="M" <?php echo checked( $this->options["subscription_period"], "M"); ?> />Months&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="subscription_period" name="subscription_period" value="Y" <?php echo checked( $this->options["subscription_period"], "Y"); ?> />Years&nbsp;&nbsp;&nbsp;
 											<span class="description"><?php _e('Price is valid for this period and it will be renewed after it expires.', 'ppw') ?></span>
 										</td>
 									</tr>
@@ -1911,7 +1961,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 										<th scope="row" ><?php _e('Subscription description', 'ppw')?></th>
 										<td colspan="2">
 											<input type="text" style="width:400px" name="subscription_description" value="<?php echo stripslashes($this->options["subscription_description"]) ?>" />
-											<br /><span class="description"><?php _e('This text will be shown on the button. PRICE and DAY (case sensitive) will be replaced by their real values.', 'ppw') ?></span>
+											<br /><span class="description"><?php _e('This text will be shown on the button. PRICE, DAY and PERIOD (case sensitive) will be replaced by their real values.', 'ppw') ?></span>
 										</td>
 									</tr>
 
