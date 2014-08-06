@@ -1001,6 +1001,7 @@ class PPW_Gateway_Paypal_Express {
 	function DoExpressCheckoutPayment($token, $payer_id, $final_amts, $seller_paypal_accounts, $ipns, $prs) {
 		$nvpstr  = '&TOKEN=' . urlencode($token);
 		$nvpstr .= '&PAYERID=' . urlencode($payer_id);
+		$nvpstr .= '&BUTTONSOURCE=incsub_SP';
 
 		$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $final_amts[0];
 		$nvpstr .= "&PAYMENTREQUEST_0_CURRENCYCODE=" . $this->currencyCode;
