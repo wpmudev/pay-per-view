@@ -94,7 +94,7 @@ class PPW_Gateway_Paypal_Express {
 	*/
 	function payment_form($global_cart) {
 		if (isset($_GET['cancel']))
-		echo '<div class="ppw_checkout_error">' . __('Your PayPal transaction has been canceled.', 'ppw') . '</div>';
+		{echo '<div class="ppw_checkout_error">' . __('Your PayPal transaction has been canceled.', 'ppw') . '</div>';}
 	}
 
 	/**
@@ -297,7 +297,7 @@ class PPW_Gateway_Paypal_Express {
 			} else { //whoops, error
 				for ($i = 0; $i <= 5; $i++) { //print the first 5 errors
 					if (isset($result["L_ERRORCODE$i"]))
-					$error .= "<li>{$result["L_ERRORCODE$i"]} - {$result["L_SHORTMESSAGE$i"]} - {$result["L_LONGMESSAGE$i"]}</li>";
+					{$error .= "<li>{$result["L_ERRORCODE$i"]} - {$result["L_SHORTMESSAGE$i"]} - {$result["L_LONGMESSAGE$i"]}</li>";}
 				}
 				$error = '<br /><ul>' . $error . '</ul>';
 				$content .= '<div class="ppw_checkout_error">' . sprintf(__('There was a problem with your PayPal transaction. Please try again</a>.', 'ppw')) . $error . '</div>';
@@ -426,14 +426,14 @@ class PPW_Gateway_Paypal_Express {
 					$currency = $result["PAYMENTINFO_{$i}_CURRENCYCODE"];
 
 					if ( $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] == "Processed" OR $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] == "Completed" )
-					$db_status = "Paid";
+					{$db_status = "Paid";}
 					else if ( $result["PAYMENTINFO_{$i}_PAYMENTSTATUS"] == "Pending" ) {
 						$db_status = "Pending";
 						// Warn admin
 						global $current_site;
 						$admin_email = get_option('admin_email');
 						if ( !$admin_email )
-						$admin_email = 'admin@' . $current_site->domain;
+						{$admin_email = 'admin@' . $current_site->domain;}
 						wp_mail( $admin_email, __('Pending Pay Per View order','ppw'),  __('A Pay Per View order has arrived, and content revealed to the client, but payment is kept in pending state by PayPal. Please check your PayPal account.','ppw') );
 					}
 
@@ -448,7 +448,7 @@ class PPW_Gateway_Paypal_Express {
 					//succesful payment, create our order now
 					$user_id = get_current_user_id();
 					if( !$ppw->duplicate_transaction( $user_id, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, '', $_SESSION["ppw_content_id"] ) )
-					$ppw->record_transaction($user_id, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, $note, $_SESSION["ppw_content_id"]);
+					{$ppw->record_transaction($user_id, $_SESSION["ppw_post_id"], $amount, $currency, $timestamp, $order_id, $db_status, $note, $_SESSION["ppw_content_id"]);}
 
 					// Set a cookie
 					$new_order = array(
@@ -458,25 +458,25 @@ class PPW_Gateway_Paypal_Express {
 					);
 					// Check if user had order from before
 					if ( isset( $_COOKIE["pay_per_view"] ) )
-					$orders = unserialize( stripslashes( $_COOKIE["pay_per_view"] ) );
+					{$orders = unserialize( stripslashes( $_COOKIE["pay_per_view"] ) );}
 					// Double check
 					if ( !is_array( $orders ) )
-					$orders = array();
+					{$orders = array();}
 
 					$orders[] = $new_order;
 
 					// Let admin set cookie expire at the end of session
 					if ( !isset($this->cookie) )
-					$expire = time() + 3600;
+					{$expire = time() + 3600;}
 					else if ( '' == trim( $this->cookie ) || !is_numeric( $this->cookie ) || !$this->cookie )
-					$expire = 0;
+					{$expire = 0;}
 					else
-					$expire = time() + 3600 * $this->cookie;
+					{$expire = time() + 3600 * $this->cookie;}
 
-					if ( defined('COOKIEPATH') ) $cookiepath = COOKIEPATH;
-					else $cookiepath = "/";
-					if ( defined('COOKIEDOMAIN') ) $cookiedomain = COOKIEDOMAIN;
-					else $cookiedomain = '';
+					if ( defined('COOKIEPATH') ) {$cookiepath = COOKIEPATH;}
+					else {$cookiepath = "/";}
+					if ( defined('COOKIEDOMAIN') ) {$cookiedomain = COOKIEDOMAIN;}
+					else {$cookiedomain = '';}
 					setcookie("pay_per_view", serialize($orders), $expire, $cookiepath, $cookiedomain);
 					wp_redirect( get_permalink($_SESSION["ppw_post_id"]) );
 					exit;
@@ -485,7 +485,7 @@ class PPW_Gateway_Paypal_Express {
 
 				for ($i = 0; $i <= 5; $i++) { //print the first 5 errors
 					if (isset($result["L_ERRORCODE$i"]))
-					$error .= "<li>{$result["L_ERRORCODE$i"]} - {$result["L_SHORTMESSAGE$i"]} - {$result["L_LONGMESSAGE$i"]}</li>";
+					{$error .= "<li>{$result["L_ERRORCODE$i"]} - {$result["L_SHORTMESSAGE$i"]} - {$result["L_LONGMESSAGE$i"]}</li>";}
 				}
 				$error = '<br /><ul>' . $error . '</ul>';
 				$ppw->error( __('There was a problem finalizing your purchase with PayPal. Please try again</a>.', 'ppw') . $error );
@@ -791,9 +791,9 @@ class PPW_Gateway_Paypal_Express {
 			}
 
 			$req = 'cmd=_notify-validate';
-			if (!isset($_POST)) $_POST = $HTTP_POST_VARS;
+			if (!isset($_POST)) {$_POST = $HTTP_POST_VARS;}
 			foreach ($_POST as $k => $v) {
-				if (get_magic_quotes_gpc()) $v = stripslashes($v);
+				if (get_magic_quotes_gpc()) {$v = stripslashes($v);}
 				$req .= '&' . $k . '=' . urlencode($v);
 			}
 
@@ -1042,12 +1042,12 @@ class PPW_Gateway_Paypal_Express {
 	}
 
 	/**
-	'-------------------------------------------------------------------------------------------------------------------------------------------
+	* '-------------------------------------------------------------------------------------------------------------------------------------------
 	* $this->api_call: Function to perform the API call to PayPal using API signature
 	* @methodName is name of API  method.
 	* @nvpStr is nvp string.
 	* returns an associtive array containing the response from the server.
-	'-------------------------------------------------------------------------------------------------------------------------------------------
+	* '-------------------------------------------------------------------------------------------------------------------------------------------
 	*/
 	function api_call($methodName, $nvpStr) {
 		global $ppw;
@@ -1095,7 +1095,7 @@ class PPW_Gateway_Paypal_Express {
 
 	function trim_name($name, $length = 127) {
 		while (strlen(urlencode($name)) > $length)
-		$name = substr($name, 0, -1);
+		{$name = substr($name, 0, -1);}
 
 		return urlencode($name);
 	}

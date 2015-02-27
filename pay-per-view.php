@@ -766,8 +766,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 						$query  = rtrim( $query, "UNION" ); // Get rid of the last UNION
 						$result = $wpdb->get_results( $query );
 
-						if ( $result ) // Visitor did paid for this content!
-						{
+						if ( $result ) {
+							// Visitor did paid for this content!
 							return $this->clear( $content );
 						}
 					}
@@ -842,8 +842,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 					// Prepare the content
 					foreach ( $matches as $m ) {
-						if ( in_array( $m[2], $contents ) ) // This is paid
-						{
+						if ( in_array( $m[2], $contents ) ) {
+							// This is paid
 							$content = str_replace( $m[0], $m[8], $content );
 						} else {
 							$content = str_replace( $m[0], $this->mask( $m[6], $m[2], $m[4] ), $content );
@@ -1119,7 +1119,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 				$req = 'cmd=_notify-validate';
 				if ( ! isset( $_POST ) ) {
-//					$_POST = $HTTP_POST_VARS;
+					$_POST = $HTTP_POST_VARS;
 				}
 				foreach ( $_POST as $k => $v ) {
 					if ( get_magic_quotes_gpc() ) {
@@ -1907,9 +1907,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="post_default">
 												<option value="" <?php if ( $this->options['post_default'] <> 'enable' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Disabled for all posts', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Disabled for all posts', 'ppw' ) ?></option>
 												<option value="enable" <?php if ( $this->options['post_default'] == 'enable' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Enabled for all posts', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Enabled for all posts', 'ppw' ) ?></option>
 											</select>
 										</td>
 									</tr>
@@ -1919,9 +1921,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="page_default">
 												<option value="" <?php if ( $this->options['page_default'] <> 'enable' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Disabled for all pages', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Disabled for all pages', 'ppw' ) ?></option>
 												<option value="enable" <?php if ( $this->options['page_default'] == 'enable' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Enabled for all pages', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Enabled for all pages', 'ppw' ) ?></option>
 											</select>
 										</td>
 									</tr>
@@ -1949,9 +1953,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="custom_default">
 												<option value="" <?php if ( $this->options['custom_default'] <> 'enable' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Disabled for all custom post types', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Disabled for all custom post types', 'ppw' ) ?></option>
 												<option value="enable" <?php if ( $this->options['custom_default'] == 'enable' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Enabled for all custom post types', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Enabled for all custom post types', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php echo $note ?></span>
 										</td>
@@ -1962,11 +1968,14 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="ppw_method" id="ppw_method">
 												<option value="automatic" <?php if ( $this->options['method'] == 'automatic' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Automatic excerpt from the content', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Automatic excerpt from the content', 'ppw' ) ?></option>
 												<option value="manual" <?php if ( $this->options['method'] == 'manual' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Manual excerpt from post excerpt field', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Manual excerpt from post excerpt field', 'ppw' ) ?></option>
 												<option value="tool" <?php if ( $this->options['method'] == 'tool' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Use selection tool', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Use selection tool', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php
 												printf( __( 'Automatic excerpt selects the first %d words, number being adjustable from "excerpt length" field. Manual excerpt displays whatever included in the post excerpt field of the post. With selection tool, you can freely select part(s) of the content to be protected. Using the latter one may be a little bit sophisticated, but enables more than one part of the content to be protected.', 'ppw' ), $this->options["excerpt"] );
@@ -1975,7 +1984,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									</tr>
 
 									<tr valign="top" id="excerpt_length" <?php if ( $this->options['method'] != 'automatic' ) {
-										echo 'style="display:none"'} ?>>
+										echo 'style="display:none"';
+									} ?>>
 										<th scope="row"><?php _e( 'Excerpt length (words)', 'ppw' ) ?></th>
 										<td colspan="2">
 											<input type="text" style="width:50px" name="excerpt" value="<?php echo $this->options["excerpt"] ?>"/>
@@ -2007,9 +2017,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="home">
 												<option value="true" <?php if ( $this->options['home'] == 'true' ) {
-													echo "selected='selected'"} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
 												<option value="" <?php if ( $this->options['home'] <> 'true' ) {
-													echo "selected='selected'"} ?>><?php _e( 'No', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
 										</td>
 									</tr>
@@ -2019,9 +2031,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="multi">
 												<option value="true" <?php if ( $this->options['multi'] == 'true' ) {
-													echo "selected='selected'"} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
 												<option value="" <?php if ( $this->options['multi'] <> 'true' ) {
-													echo "selected='selected'"} ?>><?php _e( 'No', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php _e( 'Enables the plugin for pages (except the home page) which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. ', 'ppw' ) ?></span>
 										</td>
@@ -2032,9 +2046,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="admin">
 												<option value="true" <?php if ( $this->options['admin'] == 'true' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Yes', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Yes', 'ppw' ) ?></option>
 												<option value="" <?php if ( $this->options['admin'] <> 'true' ) {
-													echo "selected='selected'"} ?> ><?php _e( 'No', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?> ><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php _e( 'You may want to select No for test purposes.', 'ppw' ) ?></span>
 										</td>
@@ -2045,27 +2061,34 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="authorized" id="authorized">
 												<option value="true" <?php if ( $this->options['authorized'] == 'true' ) {
-													echo "selected='selected'"} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
 												<option value="" <?php if ( $this->options['authorized'] <> 'true' ) {
-													echo "selected='selected'"} ?>><?php _e( 'No', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php _e( 'If Yes, authorized users will see the full content without the need to pay or subscribe. Admin setting is independent of this one.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" id="level" <?php if ( $this->options['authorized'] != 'true' ) {
-										echo 'style="display:none"'} ?>>
+										echo 'style="display:none"';
+									} ?>>
 										<th scope="row"><?php _e( 'User level where authorization starts', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="level">
 												<option value="editor" <?php if ( $this->options['level'] == 'editor' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Editor', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Editor', 'ppw' ) ?></option>
 												<option value="author" <?php if ( $this->options['level'] == 'author' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Author', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Author', 'ppw' ) ?></option>
 												<option value="contributor" <?php if ( $this->options['level'] == 'contributor' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Contributor', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Contributor', 'ppw' ) ?></option>
 												<option value="subscriber" <?php if ( $this->options['level'] == 'subscriber' ) {
-													echo "selected='selected'"} ?>><?php _e( 'Subscriber', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'Subscriber', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php _e( 'If the above field is selected as yes, users having a higher level than this selection will see the full content.', 'ppw' ) ?></span>
 										</td>
@@ -2076,9 +2099,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td colspan="2">
 											<select name="bot">
 												<option value="true" <?php if ( $this->options['bot'] == 'true' ) {
-													echo "selected='selected'"} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
 												<option value="" <?php if ( $this->options['bot'] <> 'true' ) {
-													echo "selected='selected'"} ?>><?php _e( 'No', 'ppw' ) ?></option>
+													echo "selected='selected'";
+												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
 											<span class="description"><?php _e( 'You may want to enable this for SEO purposes. Warning: Your full content may be visible in search engine results.', 'ppw' ) ?></span>
 										</td>
@@ -2107,7 +2132,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'One time view', 'ppw' ) ?></th>
 										<td colspan="2">
 											<input type="checkbox" id="one_time" name="one_time" value="true" <?php if ( $this->options["one_time"] ) {
-												echo "checked='checked'"} ?> />
+												echo "checked='checked'";
+											} ?> />
 											<span class="description"><?php _e( 'Visitors pay per content they want to reveal. Price can be set globally from the above "unit price" field, or per post basis using the post editor. Does not require registration of the visitor.', 'ppw' ) ?></span>
 										</td>
 									</tr>
@@ -2135,7 +2161,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Period Pass', 'ppw' ) ?></th>
 										<td colspan="2">
 											<input type="checkbox" id="daily_pass" name="daily_pass" value="true" <?php if ( $this->options["daily_pass"] ) {
-												echo "checked='checked'"} ?> />
+												echo "checked='checked'";
+											} ?> />
 											<span class="description"><?php _e( 'Visitor pays a lumpsum fee and then he/she can view all the content on the website. Visitor is required to register to the website.', 'ppw' ) ?></span>
 										</td>
 									</tr>
@@ -2182,7 +2209,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										</th>
 										<td colspan="2">
 											<input type="checkbox" id="subscription" name="subscription" value="true" <?php if ( $this->options["subscription"] ) {
-												echo "checked='checked'"} ?> />
+												echo "checked='checked'";
+											} ?> />
 											<span class="description"><?php _e( 'Visitor subscribes to view all the content on the website. Visitor is required to register to the website.', 'ppw' ) ?></span>
 										</td>
 									</tr>
@@ -2238,7 +2266,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Accept API Logins', 'ppw' ) ?></th>
 										<td colspan="2">
 											<input type="checkbox" id="accept_api_logins" name="accept_api_logins" value="true" <?php if ( $this->options["accept_api_logins"] ) {
-												echo "checked='checked'"} ?> />
+												echo "checked='checked'";
+											} ?> />
 											<span class="description"><?php _e( 'Enables login to website using Facebook and Twitter.', 'ppw' ) ?></span>
 										</td>
 									</tr>
@@ -2254,7 +2283,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'My website already uses Facebook', 'ppw' ) ?></th>
 										<td colspan="2">
 											<input type="checkbox" name="facebook-no_init" value="true" <?php if ( $this->options["facebook-no_init"] ) {
-												echo "checked='checked'"} ?> />
+												echo "checked='checked'";
+											} ?> />
 											<span class="description"><?php _e( 'By default, Facebook script will be loaded by the plugin. If you are already running Facebook scripts, to prevent any conflict, check this option.', 'ppw' ) ?></span>
 										</td>
 									</tr>
