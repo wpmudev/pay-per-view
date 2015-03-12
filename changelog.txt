@@ -1,5 +1,10 @@
 ==Pay per View==
 
+1.4.2 - 2015-03-4 - Umesh Kumar
+----------------------------------------------------------------------
+
+- Fixed: Show payment status for period pass and subscription selections
+
 V1.4.1.9:
 - Add day, month, year choices to Daily Pass. Changed name to Period Pass
 - Add day, month, year choices to Subscriptions.

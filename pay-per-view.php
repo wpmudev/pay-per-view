@@ -30,10 +30,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-include_once 'ppw-uninstall.php';
-register_uninstall_hook( __FILE__, "ppw_uninstall" );
-register_activation_hook( __FILE__, array( 'PayPerView', 'install' ) );
-
 if ( ! class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
@@ -59,27 +55,53 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				@session_start();
 			}
 
+			register_activation_hook( __FILE__, array( $this, 'install' ) );
+
 			// Read all options at once
 			$this->options = get_option( 'ppw_options' );
 
-			add_action( 'template_redirect', array( &$this, 'cachable' ), 1 );    // Check if page can be cached
-			add_action( 'plugins_loaded', array( &$this, 'localization' ) );        // Localize the plugin
-			add_action( 'init', array( &$this, 'init' ) );                        // Initial stuff
-			add_action( 'init', array( &$this, 'initiate' ) );                    // Initiate Paypal forms
+			// Check if page can be cached
+			add_action( 'template_redirect', array( &$this, 'cachable' ), 1 );
+
+			// Localize the plugin
+			add_action( 'plugins_loaded', array( &$this, 'localization' ) );
+
+			// Initial stuff
+			add_action( 'init', array( &$this, 'init' ) );
+
+			// Initiate Paypal forms
+			add_action( 'init', array( &$this, 'initiate' ) );
+
+			// Calls post meta addition function on each save
 			add_action( 'save_post', array(
 				&$this,
 				'add_postmeta'
-			) );        // Calls post meta addition function on each save
-			add_filter( 'the_content', array( &$this, 'content' ), 8 );        // Manipulate the content.
-			add_filter( 'the_content', array( $this, 'clear' ), 130 );            // Clear if a shortcode is left
+			) );
+
+			// Manipulate the content.
+			add_filter( 'the_content', array( &$this, 'content' ), 8 );
+
+			// Clear if a shortcode is left
+			add_filter( 'the_content', array( $this, 'clear' ), 130 );
+
+			// Send Paypal to IPN function
 			add_action( 'wp_ajax_ppw_paypal_ipn', array(
 				&$this,
 				'handle_paypal_return'
-			) ); // Send Paypal to IPN function
+			) );
+
+			// Send Paypal to IPN function
 			add_action( 'wp_ajax_nopriv_ppw_paypal_ipn', array(
 				&$this,
 				'handle_paypal_return'
-			) ); // Send Paypal to IPN function
+			) );
+
+			//Check Payment Status
+			add_action( 'wp_ajax_ppv_payment_status', array(
+				&$this,
+				'ppv_payment_status'
+			) );
+
 			add_action( 'wp_head', array( &$this, 'wp_head' ) );                    //Print admin ajax on head
 
 			// Admin side actions
@@ -107,8 +129,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_action( 'wp_ajax_nopriv_ppw_ajax_login', array( &$this, 'ajax_login' ) );
 
 			// API login after the options have been initialized
-			//			if (@$this->options['accept_api_logins'])
-			{
+			if ( @$this->options['accept_api_logins'] ) {
 				add_action( 'wp_ajax_nopriv_ppw_facebook_login', array( &$this, 'handle_facebook_login' ) );
 				add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array( &$this, 'handle_get_twitter_auth_url' ) );
 				add_action( 'wp_ajax_nopriv_ppw_twitter_login', array( &$this, 'handle_twitter_login' ) );
@@ -593,10 +614,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			`transaction_expires` datetime default NULL,
 			PRIMARY KEY  (`transaction_ID`),
 			KEY `transaction_gateway` (`transaction_gateway`),
-			KEY `transaction_post_ID` (`transaction_post_ID`)
+			KEY `transaction_post_ID` (`transaction_post_ID`),
+			KEY `transaction_user_ID` (`transaction_user_ID`)
 			);";
 
-			$wpdb->query( $sql );
+			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			dbDelta( $sql );
 		}
 
 		/**
@@ -683,50 +706,15 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		}
 
 		/**
-		 * Changes the content according to selected settings
+		 * Checks if user can see the content, if chosen method is not tool
 		 *
+		 * @param $post
+		 * @param $content
+		 * @param $method
+		 *
+		 * @return mixed
 		 */
-		function content( $content, $force = false, $method = '' ) {
-
-			global $post;
-			// Unsupported post type. Maybe a temporary page, like checkout of MarketPress
-			if ( ! is_object( $post ) && ! $content ) {
-				return;
-			}
-
-			// If caching is allowed no need to continue
-			if ( $this->is_cachable && ! $force ) {
-				return $this->clear( $content );
-			}
-
-			// Display the admin full content, if selected so
-			if ( $this->options["admin"] == 'true' && current_user_can( 'administrator' ) ) {
-				return $this->clear( $content );
-			}
-
-			// Display the bot full content, if selected so
-			if ( $this->options["bot"] == 'true' && $this->is_bot() ) {
-				return $this->clear( $content );
-			}
-
-			// Check if current user has been authorized to see full content
-			if ( $this->is_authorised() ) {
-				return $this->clear( $content );
-			}
-
-			// If user subscribed, show content
-			if ( is_user_logged_in() && trim( get_user_meta( get_current_user_id(), "ppw_subscribe", true ) ) != '' ) {
-				return $this->clear( $content );
-			}
-
-			// Find method if it is not forced
-			if ( ! $method && is_object( $post ) ) {
-				$method = get_post_meta( $post->ID, 'ppw_method', true );
-			}
-			if ( ! $method ) {
-				$method = $this->options["method"];
-			} // Apply default method, if there is none
-
+		function subscription_status( $post, $method ) {
 			// If user paid, show content. 'Tool' option has its own logic
 			if ( isset( $_COOKIE["pay_per_view"] ) && $method != 'tool' ) {
 				// On some installations slashes are added while serializing. So get rid of them.
@@ -765,14 +753,78 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 						$query  = rtrim( $query, "UNION" ); // Get rid of the last UNION
 						$result = $wpdb->get_results( $query );
+						echo "<pre>";
+						print_r( $result );
+						echo "</pre>";
 
-						if ( $result ) {
-							// Visitor did paid for this content!
-							return $this->clear( $content );
-						}
+						return $result;
 					}
 				}
 			}
+		}
+
+		/**
+		 * Changes the content according to selected settings
+		 *
+		 */
+		function content( $content, $force = false, $method = '' ) {
+
+			global $post;
+			// Unsupported post type. Maybe a temporary page, like checkout of MarketPress
+			if ( ! is_object( $post ) && ! $content ) {
+				return;
+			}
+
+			// If caching is allowed no need to continue
+			if ( $this->is_cachable && ! $force ) {
+				return $this->clear( $content );
+			}
+
+			// Display the admin full content, if selected so
+			if ( $this->options["admin"] == 'true' && current_user_can( 'administrator' ) ) {
+				return $this->clear( $content );
+			}
+
+			// Display the bot full content, if selected so
+			if ( $this->options["bot"] == 'true' && $this->is_bot() ) {
+				return $this->clear( $content );
+			}
+
+			// Check if current user has been authorized to see full content
+			if ( $this->is_authorised() ) {
+				return $this->clear( $content );
+			}
+
+			if( !empty( $_GET['auth'] ) ) {
+				$pp = $this->call_gateway();
+				$response = $pp->GetExpressCheckoutDetails( $_GET['auth']);
+//				echo "<pre>";
+//				print_r( $response );
+//				echo "</pre>";
+			}
+
+		// If user has already subscribed content
+			if ( is_user_logged_in() && trim( get_user_meta( get_current_user_id(), "pw_subscribe", true ) ) != '' ) {
+				return $this->clear( $content );
+			}
+
+			// Find method if it is not forced
+			if ( ! $method && is_object( $post ) ) {
+				$method = get_post_meta( $post->ID, 'ppw_method', true );
+			}
+
+			// Apply default method, if there is none
+			if ( ! $method ) {
+				$method = $this->options["method"];
+			}
+
+			//Get content as per the method and permissions
+			$result = $this->subscription_status( $post, $method );
+			if ( $result ) {
+				// Visitor did paid for this content!
+				return $this->clear( $content );
+			}
+
 			// If we are here, it means content will be restricted.
 			// Now prepare the restricted output
 			if ( $method == "automatic" ) {
@@ -854,7 +906,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				return $this->clear( $content );
 			}
 
-			return $this->clear( $content ); // Script cannot come to this point, but just in case.
+			// Script cannot come to this point, but just in case.
+			return $this->clear( $content );
 		}
 
 		/**
@@ -895,7 +948,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 *
 		 */
 		function mask( $price, $id = 0, $description = '' ) {
-			global $post;
+			global $post, $current_user;
 			$content = '';
 			// User submitted to Paypal and connection OK. Let user confirm
 			if ( isset( $_GET["ppw_confirm"] )
@@ -936,42 +989,67 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			} // No payment channels selected
 
 			$content .= '<div class="ppw_form_container">';
-			// One time view option. Redirection will be handled by Paypal Express gateway
-			if ( $this->options["one_time"] ) {
-				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
-				$content .= '<form method="post" action="#">';
-				$content .= '<input type="hidden" name="ppw_content_id" value="' . $id . '" />';
-				$content .= '<input type="hidden" name="ppw_post_id" value="' . $post->ID . '" />';
-				$content .= '<input type="hidden" name="ppw_total_amt" value="' . $price . '" />';
-				if ( trim( $description ) == '' ) {
-					$description = 'content';
-				}
-				$content .= '<input type="submit" class="ppw_submit_btn" name="ppw_otw_submit" value="' . str_replace( array(
-						"PRICE",
-						"DESCRIPTION"
-					), array( $price, $description ), $this->options["one_time_description"] ) . '" />';
-				$content .= '</form>';
-				$content .= '</div>';
+
+			//Check post meta for paypal payment, in order to show a waiting message if it was ever made
+			if ( ! empty( $post->ID ) && ! empty( $current_user->ID ) ) {
+				$ppv_user = get_post_meta( $post->ID, 'ppv_user_' . $current_user->ID, true );
+				$ppv_subscribe = trim( get_user_meta( $current_user->ID, "ppw_subscribe", true ) );
 			}
-			// For subscription options redirection will be handled by javascript or by the forms themselves
-			if ( $this->options["daily_pass"] ) {
-				if ( $this->options["one_time"] ) {
-					$content .= '<div class="ppw_or">OR</div>';
+
+			if ( ! empty( $ppv_user ) && empty( $ppv_subscribe ) ) {
+				//Show the waiting status
+				$content .= "<p>" . apply_filters( 'ppv_wait_message', __( "Give us a moment to update the content for you, while we get the payment confirmation from Paypal,", 'ppw' ) ) . "</p>";
+				$content .= '<span id="payment_processing"><img src="' . $this->plugin_url . 'images / waiting . gif" /> ' . __( 'Processing...', 'ppw' ) . '</span>';
+				$content .= " < script type = 'text/javascript' >
+				                              ppv_subscription_status();
+				function ppv_subscription_status() {
+					jQuery.post('" . admin_url( 'admin-ajax.php' ) . "', { action: 'ppv_payment_status', post_id: " . $post->ID . ", user_id:" . $current_user->ID . "}, function( res ) {
+						if( res.data.reload ) {
+							location.reload();
+						}else{
+							 setTimeout(ppv_subscription_status, 3000);
+						}
+					});
 				}
-				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
-				$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden" >&nbsp;</a></div>';
-				$content .= $this->single_sub_button(); // No recurring
-				$content .= '</div>';
-			}
-			if ( $this->options["subscription"] ) {
-				if ( $this->options["one_time"] OR $this->options["daily_pass"] ) {
-					$content .= '<div class="ppw_or">OR</div>';
-				}
-				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
-				$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden">&nbsp;</a></div>';
-				$content .= $this->single_sub_button( true ); // Recurring
-				$content .= '</div>';
-			}
+				</script>";
+			} else {
+						// One time view option. Redirection will be handled by Paypal Express gateway
+						if ( $this->options["one_time"] ) {
+							$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
+							$content .= '<form method="post" action="#">';
+							$content .= '<input type="hidden" name="ppw_content_id" value="' . $id . '" />';
+							$content .= '<input type="hidden" name="ppw_post_id" value="' . $post->ID . '" />';
+							$content .= '<input type="hidden" name="ppw_total_amt" value="' . $price . '" />';
+							if ( trim( $description ) == '' ) {
+								$description = 'content';
+							}
+							$content .= '<input type="submit" class="ppw_submit_btn" name="ppw_otw_submit" value="' . str_replace( array(
+									"PRICE",
+									"DESCRIPTION"
+								), array( $price, $description ), $this->options["one_time_description"] ) . '" />';
+							$content .= '</form>';
+							$content .= '</div>';
+						}
+						// For subscription options redirection will be handled by javascript or by the forms themselves
+						if ( $this->options["daily_pass"] ) {
+							if ( $this->options["one_time"] ) {
+								$content .= '<div class="ppw_or">OR</div>';
+							}
+							$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
+							$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden" >&nbsp;</a></div>';
+							$content .= $this->single_sub_button(); // No recurring
+							$content .= '</div>';
+						}
+						if ( $this->options["subscription"] ) {
+							if ( $this->options["one_time"] OR $this->options["daily_pass"] ) {
+								$content .= '<div class="ppw_or">OR</div>';
+							}
+							$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
+							$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden">&nbsp;</a></div>';
+							$content .= $this->single_sub_button( true ); // Recurring
+							$content .= '</div>';
+						}
+					}
 			$content .= '</div>';
 
 
@@ -992,7 +1070,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$this->options['currency'] = 'USD';
 			}
 
-			$form = '';
+			$form = $ppv_user = '';
 
 			global $post, $current_user;
 
@@ -1001,6 +1079,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			} else {
 				$form .= '<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">';
 			}
+			$return_url = add_query_arg(
+				array(
+					'ppw_confirm' => 1
+				),
+				get_permalink( $post->ID )
+			);
 			$form .= '<input type="hidden" name="business" value="' . esc_attr( $this->options['gateways']['paypal-express']['merchant_email'] ) . '" />';
 			$form .= '<input type="hidden" name="cmd" value="_xclick-subscriptions">';
 			/* translators: %s refer to blog info */
@@ -1008,17 +1092,19 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			$form .= '<input type="hidden" name="item_number" value="' . __( 'Special offer', 'ppw' ) . '" />';
 			$form .= '<input type="hidden" name="no_shipping" value="1" />';
 			$form .= '<input type="hidden" name="currency_code" value="' . $this->options['currency'] . '" />';
-			$form .= '<input type="hidden" name="return" value="' . get_permalink( $post->ID ) . '" />';
+			$form .= '<input type="hidden" name="return" value="' . $return_url . '" />';
 			$form .= '<input type="hidden" name="cancel_return" value="' . get_option( 'home' ) . '" />';
 			$form .= '<input type="hidden" name="notify_url" value="' . admin_url( 'admin-ajax.php?action=ppw_paypal_ipn' ) . '" />';
 			// No recurring, i.e. period pass
 			if ( ! $subs ) {
+
 				$period = empty( $this->options['daily_pass_period'] ) ? 'D' : $this->options['daily_pass_period'];
 				$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
 				$form .= '<input type="hidden" name="a3" value="' . number_format( $this->options['daily_pass_price'], 2 ) . '" />';
 				$form .= '<input type="hidden" name="p3" value="' . $this->options['daily_pass_days'] . '" />';
 				$form .= '<input type="hidden" name="src" value="0" />';
 				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID . ":" . $current_user->ID . ":" . $this->options['daily_pass_days'] . ":0:" . $period . '" />';
+				//Submit button for payment
 				$form .= '<input class="ppw_submit_btn';
 				// Force login if user not logged in
 				if ( ! is_user_logged_in() ) {
@@ -1101,9 +1187,9 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			return $interval;
 		}
 
-
 		/**
-		 *    IPN handling for period pass and subscription selections
+		 * IPN handling for period pass and subscription selections
+		 * Updates the subscribe status of user
 		 */
 		function handle_paypal_return() {
 			// PayPal IPN handling code
@@ -1186,109 +1272,131 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$timestamp = time();
 
 				$new_status = false;
-				// process PayPal response
-				switch ( $_POST['payment_status'] ) {
-					case 'Partially-Refunded':
-						break;
+				//Check if payment_status is available
+				if ( ! empty( $_POST['payment_status'] ) ) {
+					// process PayPal response
+					switch ( $_POST['payment_status'] ) {
+						case 'Partially-Refunded':
+							break;
 
-					case 'In-Progress':
-						break;
+						case 'In-Progress':
+							break;
 
-					case 'Completed':
-					case 'Processed':
-						// case: successful payment
-						$amount   = $_POST['mc_gross'];
-						$currency = $_POST['mc_currency'];
+						case 'Completed':
+						case 'Processed':
+							// case: successful payment
+							$amount   = $_POST['mc_gross'];
+							$currency = $_POST['mc_currency'];
 
-						list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
+							list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
 
-						$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], '' );
+							$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], '' );
 
-						// Check if user already subscribed before. Practically this is impossible, but who knows?
-						$expiry = get_user_meta( $user_id, "ppw_subscribe", true );
+							// Check if user already subscribed before. Practically this is impossible, but who knows?
+							$expiry = get_user_meta( $user_id, "ppw_subscribe", true );
 
-						// Let's be safe. Do not save user meta if new subscription points an earlier date
-						$interval = $this->get_interval( $period );
+							// Let's be safe. Do not save user meta if new subscription points an earlier date
+							$interval = $this->get_interval( $period );
 
-						if ( $expiry && strtotime( $expiry ) > strtotime( "+{$days} {$interval}" ) ) {
-						} else {
-							update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s", strtotime( "+{$days} {$interval}" ) ) );
+							if ( $expiry && strtotime( $expiry ) > strtotime( "+{$days} {$interval}" ) ) {
+							} else {
+								update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s", strtotime( "+{$days} {$interval}" ) ) );
+							}
+
+							if ( $recurring ) {
+								update_user_meta( $user_id, "ppw_days", $days );
+								update_user_meta( $user_id, "ppw_period", $period );
+							}
+//							update_user_meta( $user_id, "ppw_recurring", $recurring );
+							break;
+
+						case 'Reversed':
+							// case: charge back
+							$note     = __( 'Last transaction has been reversed. Reason: Payment has been reversed (charge back)', 'ppw' );
+							$amount   = $_POST['mc_gross'];
+							$currency = $_POST['mc_currency'];
+							list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
+
+							$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
+							// User cancelled subscription. So delete user meta.
+							delete_user_meta( $user_id, "ppw_subscribe" );
+							delete_user_meta( $user_id, "ppw_recurring" );
+							delete_user_meta( $user_id, "ppw_days" );
+							delete_user_meta( $user_id, "ppw_period" );
+							break;
+
+						case 'Refunded':
+							// case: refund
+							$note     = __( 'Last transaction has been reversed. Reason: Payment has been refunded', 'ppw' );
+							$amount   = $_POST['mc_gross'];
+							$currency = $_POST['mc_currency'];
+							list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
+
+							$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
+							// User cancelled subscription. So delete user meta.
+							delete_user_meta( $user_id, "ppw_subscribe" );
+							delete_user_meta( $user_id, "ppw_recurring" );
+							delete_user_meta( $user_id, "ppw_days" );
+							delete_user_meta( $user_id, "ppw_period" );
+							break;
+
+						case 'Denied':
+							// case: denied
+							$note     = __( 'Last transaction has been reversed. Reason: Payment Denied', 'ppw' );
+							$amount   = $_POST['mc_gross'];
+							$currency = $_POST['mc_currency'];
+							list( $post_id, $user_id, $days, $recurring ) = explode( ':', $_POST['custom'] );
+
+							$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
+
+							break;
+
+						case 'Pending':
+							// case: payment is pending
+							$pending_str = array(
+								'address'        => __( 'Customer did not include a confirmed shipping address', 'ppw' ),
+								'authorization'  => __( 'Funds not captured yet', 'ppw' ),
+								'echeck'         => __( 'eCheck that has not cleared yet', 'ppw' ),
+								'intl'           => __( 'Payment waiting for aproval by service provider', 'ppw' ),
+								'multi-currency' => __( 'Payment waiting for service provider to handle multi-currency process', 'ppw' ),
+								'unilateral'     => __( 'Customer did not register or confirm his/her email yet', 'ppw' ),
+								'upgrade'        => __( 'Waiting for service provider to upgrade the PayPal account', 'ppw' ),
+								'verify'         => __( 'Waiting for service provider to verify his/her PayPal account', 'ppw' ),
+								'*'              => ''
+							);
+							$reason      = @$_POST['pending_reason'];
+							$note        = __( 'Last transaction is pending. Reason: ', 'ppw' ) . ( isset( $pending_str[ $reason ] ) ? $pending_str[ $reason ] : $pending_str['*'] );
+							$amount      = $_POST['mc_gross'];
+							$currency    = $_POST['mc_currency'];
+							list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
+
+							// Save transaction, but do not subscribe user.
+							$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
+
+							break;
+
+						default:
+							// case: various error cases
+					}
+				} elseif ( ! empty( $_POST['txn_type'] ) && ( $_POST['txn_type'] == 'subscr_signup' || $_POST['txn_type'] = 'subscr_payment' ) ) {
+					list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
+
+					if ( ! empty( $post_id ) && ! empty( $user_id ) ) {
+
+						//Check for existing payment details first
+						$exists = get_post_meta( $post_id, 'ppv_user_' . $user_id, true );
+
+						//If there is no existing value
+						if ( empty( $exists ) ) {
+							$subscription = array(
+								'status'    => 'pending',
+								'recurring' => $recurring
+							);
+
+							//Set it
+							update_post_meta( $post_id, 'ppv_user_' . $user_id, $subscription );
 						}
-
-						if ( $recurring ) {
-							update_user_meta( $user_id, "ppw_days", $days );
-							update_user_meta( $user_id, "ppw_period", $period );
-						}
-						update_user_meta( $user_id, "ppw_recurring", $recurring );
-						break;
-
-					case 'Reversed':
-						// case: charge back
-						$note     = __( 'Last transaction has been reversed. Reason: Payment has been reversed (charge back)', 'ppw' );
-						$amount   = $_POST['mc_gross'];
-						$currency = $_POST['mc_currency'];
-						list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
-
-						$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
-						// User cancelled subscription. So delete user meta.
-						delete_user_meta( $user_id, "ppw_subscribe" );
-						delete_user_meta( $user_id, "ppw_recurring" );
-						delete_user_meta( $user_id, "ppw_days" );
-						delete_user_meta( $user_id, "ppw_period" );
-						break;
-
-					case 'Refunded':
-						// case: refund
-						$note     = __( 'Last transaction has been reversed. Reason: Payment has been refunded', 'ppw' );
-						$amount   = $_POST['mc_gross'];
-						$currency = $_POST['mc_currency'];
-						list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
-
-						$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
-						// User cancelled subscription. So delete user meta.
-						delete_user_meta( $user_id, "ppw_subscribe" );
-						delete_user_meta( $user_id, "ppw_recurring" );
-						delete_user_meta( $user_id, "ppw_days" );
-						delete_user_meta( $user_id, "ppw_period" );
-						break;
-
-					case 'Denied':
-						// case: denied
-						$note     = __( 'Last transaction has been reversed. Reason: Payment Denied', 'ppw' );
-						$amount   = $_POST['mc_gross'];
-						$currency = $_POST['mc_currency'];
-						list( $post_id, $user_id, $days, $recurring ) = explode( ':', $_POST['custom'] );
-
-						$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
-
-						break;
-
-					case 'Pending':
-						// case: payment is pending
-						$pending_str = array(
-							'address'        => __( 'Customer did not include a confirmed shipping address', 'ppw' ),
-							'authorization'  => __( 'Funds not captured yet', 'ppw' ),
-							'echeck'         => __( 'eCheck that has not cleared yet', 'ppw' ),
-							'intl'           => __( 'Payment waiting for aproval by service provider', 'ppw' ),
-							'multi-currency' => __( 'Payment waiting for service provider to handle multi-currency process', 'ppw' ),
-							'unilateral'     => __( 'Customer did not register or confirm his/her email yet', 'ppw' ),
-							'upgrade'        => __( 'Waiting for service provider to upgrade the PayPal account', 'ppw' ),
-							'verify'         => __( 'Waiting for service provider to verify his/her PayPal account', 'ppw' ),
-							'*'              => ''
-						);
-						$reason      = @$_POST['pending_reason'];
-						$note        = __( 'Last transaction is pending. Reason: ', 'ppw' ) . ( isset( $pending_str[ $reason ] ) ? $pending_str[ $reason ] : $pending_str['*'] );
-						$amount      = $_POST['mc_gross'];
-						$currency    = $_POST['mc_currency'];
-						list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
-
-						// Save transaction, but do not subscribe user.
-						$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], $note );
-
-						break;
-
-					default:
-						// case: various error cases
+					}
 				}
 
 				//check for subscription details
@@ -1318,6 +1426,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				print_r( $_REQUEST );
 				exit;
 			}
+			error_log( json_encode( $_POST ) );
 		}
 
 		/**
@@ -2920,60 +3029,76 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			return false;    // Not a bot
 		}
-	}
-}
 
+		/**
+		 * Ajax handler for checking payment status for recurring payments
+		 */
+		function ppv_payment_status() {
 
-$ppw = new PayPerView();
-global $ppw;
+			$user_id       = ! empty( $_POST['user_id'] ) ? $_POST['user_id'] : '';
+			$ppv_subscribe = trim( get_user_meta( $user_id, "ppw_subscribe", true ) );
 
-if ( ! function_exists( 'wpmudev_ppw' ) ) {
-	function wpmudev_ppw( $content = '', $force = false ) {
-		global $ppw, $post;
-		if ( $content ) {
-			return $ppw->content( $content, $force );
-		} else {
-			return $ppw->content( $post->post_content, $force );
+			//User is subscribed, reload page
+			if ( ! empty( $ppv_subscribe ) ) {
+				wp_send_json_success( array( 'reload' => true ) );
+			} else {
+				wp_send_json_success( array( 'reload' => false ) );
+			}
 		}
 	}
-}
-
-if ( ! function_exists( 'wpmudev_ppw_html' ) ) {
-	// since 1.4.0
-	function wpmudev_ppw_html( $html, $id = 1, $description = '', $price = 0 ) {
-		global $ppw, $post;
-
-		if ( $html ) {
-			$content = $html;
-		} else if ( is_object( $post ) ) {
-			$content = $post->content;
-		} else {
-			return 'No html code or post content found';
 		}
 
-		// Find the price
-		if ( ! $price && is_object( $post ) ) {
-			$price = get_post_meta( $post->ID, "ppw_price", true );
-		}
-		if ( ! $price ) {
-			$price = $ppw->options["price"];
-		} // Apply default price if it is not set for the post/page
 
-		return $ppw->content( '[ppw id="' . $id . '" description="' . $description . '" price="' . $price . '"]' . $content . '[/ppw]', true, 'tool' );
+	$ppw = new PayPerView();
+	global $ppw;
+
+	if ( ! function_exists( 'wpmudev_ppw' ) ) {
+		function wpmudev_ppw( $content = '', $force = false ) {
+			global $ppw, $post;
+			if ( $content ) {
+				return $ppw->content( $content, $force );
+			} else {
+				return $ppw->content( $post->post_content, $force );
+			}
+		}
+	}
+
+	if ( ! function_exists( 'wpmudev_ppw_html' ) ) {
+		// since 1.4.0
+		function wpmudev_ppw_html( $html, $id = 1, $description = '', $price = 0 ) {
+			global $ppw, $post;
+
+			if ( $html ) {
+				$content = $html;
+			} else if ( is_object( $post ) ) {
+				$content = $post->content;
+			} else {
+				return 'No html code or post content found';
+			}
+
+			// Find the price
+			if ( ! $price && is_object( $post ) ) {
+				$price = get_post_meta( $post->ID, "ppw_price", true );
+			}
+			if ( ! $price ) {
+				$price = $ppw->options["price"];
+			} // Apply default price if it is not set for the post/page
+
+			return $ppw->content( '[ppw id="' . $id . '" description="' . $description . '" price="' . $price . '"]' . $content . '[/ppw]', true, 'tool' );
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-/* -------------------- WPMU DEV Dashboard Notice -------------------- */
+	/* -------------------- WPMU DEV Dashboard Notice -------------------- */
 
-global $wpmudev_notices;
-$wpmudev_notices[] = array(
-	'id'      => 261,
-	'name'    => 'Pay per View',
-	'screens' => array(
-		'toplevel_page_pay-per-view',
-		'pay-per-view_page_ppw_transactions',
-		'pay-per-view_page_ppw_customization',
-	)
-);
-include_once( plugin_dir_path( __FILE__ ) . 'dash-notice/wpmudev-dash-notification.php' );
+	global $wpmudev_notices;
+	$wpmudev_notices[] = array(
+		'id'      => 261,
+		'name'    => 'Pay per View',
+		'screens' => array(
+			'toplevel_page_pay-per-view',
+			'pay-per-view_page_ppw_transactions',
+			'pay-per-view_page_ppw_customization',
+		)
+	);
+	include_once( plugin_dir_path( __FILE__ ) . 'dash-notice/wpmudev-dash-notification.php' );

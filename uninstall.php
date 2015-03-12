@@ -15,3 +15,4 @@ function ppw_uninstall() {
 	$wpdb->query( "DELETE FROM " . $wpdb->usermeta . " WHERE meta_key='ppw_subscribe' OR meta_key='ppw_recurring' OR meta_key='ppw_days' " );
 	$wpdb->query( "DELETE FROM " . $wpdb->postmeta . " WHERE meta_key='ppw_method' OR meta_key='ppw_enable' OR meta_key='ppw_excerpt' OR meta_key='ppw_price' " );
 }
+ppw_uninstall();
