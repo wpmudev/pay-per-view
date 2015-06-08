@@ -87,13 +87,13 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			// Send Paypal to IPN function
 			add_action( 'wp_ajax_ppw_paypal_ipn', array(
 				&$this,
-				'handle_paypal_return'
+				'process_paypal_ipn'
 			) );
 
 			// Send Paypal to IPN function
 			add_action( 'wp_ajax_nopriv_ppw_paypal_ipn', array(
 				&$this,
-				'handle_paypal_return'
+				'process_paypal_ipn'
 			) );
 
 			//Check Payment Status
@@ -745,17 +745,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 								$order['order_id'],
 								( time() - 7200 ) ); // Give another 1 hour grace time
 
-							//						$query .= " SELECT * FROM " . $this->table .
-							//						" WHERE transaction_post_ID=".$order['post_id']."
-							//						AND transaction_paypal_ID='".$order['order_id']."' AND ( transaction_status='Paid' OR transaction_status='Pending' )
-							//						AND ". (time()-7200) . "<transaction_stamp UNION"; // Give another 1 hour grace time
 						}
 
 						$query  = rtrim( $query, "UNION" ); // Get rid of the last UNION
 						$result = $wpdb->get_results( $query );
-						echo "<pre>";
-						print_r( $result );
-						echo "</pre>";
 
 						return $result;
 					}
@@ -795,17 +788,33 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				return $this->clear( $content );
 			}
 
-			if( !empty( $_GET['auth'] ) ) {
-				$pp = $this->call_gateway();
-				$response = $pp->GetExpressCheckoutDetails( $_GET['auth']);
-//				echo "<pre>";
-//				print_r( $response );
-//				echo "</pre>";
+			// If user has already subscribed content
+			if ( is_user_logged_in() && trim( get_user_meta( get_current_user_id(), "ppw_subscribe", true ) ) != '' ) {
+				return $this->clear( $content );
 			}
 
-		// If user has already subscribed content
-			if ( is_user_logged_in() && trim( get_user_meta( get_current_user_id(), "pw_subscribe", true ) ) != '' ) {
-				return $this->clear( $content );
+			//PDT Integration
+			if ( ! empty( $_GET['ppw_paypal_subscribe'] ) && ! empty( $_GET['tx'] ) && ! empty( $_GET['st'] ) ) {
+
+				$ppl = $this->call_gateway();
+
+				//Get Transaction Details
+				$transaction_details = $ppl->pdt_get_transaction_details( $_GET['tx'], $this->options['gateways']['paypal-express']['identity_token'] );
+				$transaction_details = $this->process_pdt_response( $transaction_details );
+
+				//Check Status
+				if ( ! empty( $transaction_details['status'] ) && $transaction_details['status'] == 'success' ) {
+					//Update Subscription and show the content
+					$this->update_subscription( $transaction_details );
+
+					//Show the content
+					return $this->clear( $content );
+
+				} else {
+					//Store Payment pending message in $_SESSION, we can use this to display a message
+					$_SESSION['ppv_payment_status'] = 'pending';
+					$_SESSION['ppv_message']        = ! empty( $transaction_details['message'] ) ? $transaction_details['message'] : '';
+				}
 			}
 
 			// Find method if it is not forced
@@ -931,7 +940,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 */
 		function call_gateway() {
 			include_once( WP_PLUGIN_DIR . "/pay-per-view/includes/paypal-express.php" );
-			$P = new PPW_Gateway_Paypal_Express( $_SESSION["ppw_post_id"] );
+			$post_id = ! empty( $_SESSION["ppw_post_id"] ) ? $_SESSION["ppw_post_id"] : '';
+			$P       = new PPW_Gateway_Paypal_Express( $post_id );
 
 			return $P; // return Gateway object
 		}
@@ -992,64 +1002,55 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			//Check post meta for paypal payment, in order to show a waiting message if it was ever made
 			if ( ! empty( $post->ID ) && ! empty( $current_user->ID ) ) {
-				$ppv_user = get_post_meta( $post->ID, 'ppv_user_' . $current_user->ID, true );
+				$ppv_user      = get_post_meta( $post->ID, 'ppv_user_' . $current_user->ID, true );
 				$ppv_subscribe = trim( get_user_meta( $current_user->ID, "ppw_subscribe", true ) );
 			}
-
 			if ( ! empty( $ppv_user ) && empty( $ppv_subscribe ) ) {
 				//Show the waiting status
 				$content .= "<p>" . apply_filters( 'ppv_wait_message', __( "Give us a moment to update the content for you, while we get the payment confirmation from Paypal,", 'ppw' ) ) . "</p>";
-				$content .= '<span id="payment_processing"><img src="' . $this->plugin_url . 'images / waiting . gif" /> ' . __( 'Processing...', 'ppw' ) . '</span>';
-				$content .= " < script type = 'text/javascript' >
-				                              ppv_subscription_status();
-				function ppv_subscription_status() {
-					jQuery.post('" . admin_url( 'admin-ajax.php' ) . "', { action: 'ppv_payment_status', post_id: " . $post->ID . ", user_id:" . $current_user->ID . "}, function( res ) {
-						if( res.data.reload ) {
-							location.reload();
-						}else{
-							 setTimeout(ppv_subscription_status, 3000);
-						}
-					});
+				$content .= '<span id="payment_processing"><img src="' . $this->plugin_url . 'images/waiting.gif" /> ' . __( 'Processing...', 'ppw' ) . '</span>';
+			}
+
+			//Check if there is Payment status in session, to show a waiting message from PDT
+			if ( ! empty( $_SESSION['payment_status'] ) && $_SESSION['payment_status'] == 'pending' && ! empty( $_SESSION['message'] ) ) {
+				$content .= "<p>" . apply_filters( 'ppv_wait_message', $_SESSION['message'] ) . "</p>";
+			}
+			// One time view option. Redirection will be handled by Paypal Express gateway
+			if ( $this->options["one_time"] ) {
+				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
+				$content .= '<form method="post" action="#">';
+				$content .= '<input type="hidden" name="ppw_content_id" value="' . $id . '" />';
+				$content .= '<input type="hidden" name="ppw_post_id" value="' . $post->ID . '" />';
+				$content .= '<input type="hidden" name="ppw_total_amt" value="' . $price . '" />';
+				if ( trim( $description ) == '' ) {
+					$description = 'content';
 				}
-				</script>";
-			} else {
-						// One time view option. Redirection will be handled by Paypal Express gateway
-						if ( $this->options["one_time"] ) {
-							$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
-							$content .= '<form method="post" action="#">';
-							$content .= '<input type="hidden" name="ppw_content_id" value="' . $id . '" />';
-							$content .= '<input type="hidden" name="ppw_post_id" value="' . $post->ID . '" />';
-							$content .= '<input type="hidden" name="ppw_total_amt" value="' . $price . '" />';
-							if ( trim( $description ) == '' ) {
-								$description = 'content';
-							}
-							$content .= '<input type="submit" class="ppw_submit_btn" name="ppw_otw_submit" value="' . str_replace( array(
-									"PRICE",
-									"DESCRIPTION"
-								), array( $price, $description ), $this->options["one_time_description"] ) . '" />';
-							$content .= '</form>';
-							$content .= '</div>';
-						}
-						// For subscription options redirection will be handled by javascript or by the forms themselves
-						if ( $this->options["daily_pass"] ) {
-							if ( $this->options["one_time"] ) {
-								$content .= '<div class="ppw_or">OR</div>';
-							}
-							$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
-							$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden" >&nbsp;</a></div>';
-							$content .= $this->single_sub_button(); // No recurring
-							$content .= '</div>';
-						}
-						if ( $this->options["subscription"] ) {
-							if ( $this->options["one_time"] OR $this->options["daily_pass"] ) {
-								$content .= '<div class="ppw_or">OR</div>';
-							}
-							$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
-							$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden">&nbsp;</a></div>';
-							$content .= $this->single_sub_button( true ); // Recurring
-							$content .= '</div>';
-						}
-					}
+				$content .= '<input type="submit" class="ppw_submit_btn" name="ppw_otw_submit" value="' . str_replace( array(
+						"PRICE",
+						"DESCRIPTION"
+					), array( $price, $description ), $this->options["one_time_description"] ) . '" />';
+				$content .= '</form>';
+				$content .= '</div>';
+			}
+			// For subscription options redirection will be handled by javascript or by the forms themselves
+			if ( $this->options["daily_pass"] ) {
+				if ( $this->options["one_time"] ) {
+					$content .= '<div class="ppw_or">OR</div>';
+				}
+				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
+				$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden" >&nbsp;</a></div>';
+				$content .= $this->single_sub_button(); // No recurring
+				$content .= '</div>';
+			}
+			if ( $this->options["subscription"] ) {
+				if ( $this->options["one_time"] OR $this->options["daily_pass"] ) {
+					$content .= '<div class="ppw_or">OR</div>';
+				}
+				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
+				$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden">&nbsp;</a></div>';
+				$content .= $this->single_sub_button( true ); // Recurring
+				$content .= '</div>';
+			}
 			$content .= '</div>';
 
 
@@ -1060,7 +1061,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		}
 
 		/**
-		 *    Prepare the subscription forms
+		 * Prepare the subscription forms
+		 *
 		 * @subs: bool Means recurring
 		 */
 		function single_sub_button( $subs = false ) {
@@ -1074,16 +1076,19 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			global $post, $current_user;
 
+			/**
+			 * Uses Paypal Payments Standard
+			 * https://developer.paypal.com/docs/classic/products/paypal-payments-standard/
+			 */
 			if ( $this->options['gateways']['paypal-express']['mode'] == 'live' ) {
 				$form .= '<form action="https://www.paypal.com/cgi-bin/webscr" method="post">';
 			} else {
 				$form .= '<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">';
 			}
+			$return_url = get_permalink( $post->ID );
 			$return_url = add_query_arg(
-				array(
-					'ppw_confirm' => 1
-				),
-				get_permalink( $post->ID )
+				array( 'ppw_paypal_subscribe' => 1 ),
+				$return_url
 			);
 			$form .= '<input type="hidden" name="business" value="' . esc_attr( $this->options['gateways']['paypal-express']['merchant_email'] ) . '" />';
 			$form .= '<input type="hidden" name="cmd" value="_xclick-subscriptions">';
@@ -1093,6 +1098,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			$form .= '<input type="hidden" name="no_shipping" value="1" />';
 			$form .= '<input type="hidden" name="currency_code" value="' . $this->options['currency'] . '" />';
 			$form .= '<input type="hidden" name="return" value="' . $return_url . '" />';
+			$form .= '<input type="hidden" name="rm" value="2" />';
 			$form .= '<input type="hidden" name="cancel_return" value="' . get_option( 'home' ) . '" />';
 			$form .= '<input type="hidden" name="notify_url" value="' . admin_url( 'admin-ajax.php?action=ppw_paypal_ipn' ) . '" />';
 			// No recurring, i.e. period pass
@@ -1190,8 +1196,9 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		/**
 		 * IPN handling for period pass and subscription selections
 		 * Updates the subscribe status of user
+		 *
 		 */
-		function handle_paypal_return() {
+		function process_paypal_ipn() {
 			// PayPal IPN handling code
 			$this->options = get_option( 'ppw_options' );
 
@@ -1285,28 +1292,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 						case 'Completed':
 						case 'Processed':
 							// case: successful payment
-							$amount   = $_POST['mc_gross'];
-							$currency = $_POST['mc_currency'];
-
-							list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
-
-							$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $_POST['txn_id'], $_POST['payment_status'], '' );
-
-							// Check if user already subscribed before. Practically this is impossible, but who knows?
-							$expiry = get_user_meta( $user_id, "ppw_subscribe", true );
-
-							// Let's be safe. Do not save user meta if new subscription points an earlier date
-							$interval = $this->get_interval( $period );
-
-							if ( $expiry && strtotime( $expiry ) > strtotime( "+{$days} {$interval}" ) ) {
-							} else {
-								update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s", strtotime( "+{$days} {$interval}" ) ) );
-							}
-
-							if ( $recurring ) {
-								update_user_meta( $user_id, "ppw_days", $days );
-								update_user_meta( $user_id, "ppw_period", $period );
-							}
+							$this->update_subscription( $_POST );
 //							update_user_meta( $user_id, "ppw_recurring", $recurring );
 							break;
 
@@ -1379,24 +1365,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 							// case: various error cases
 					}
 				} elseif ( ! empty( $_POST['txn_type'] ) && ( $_POST['txn_type'] == 'subscr_signup' || $_POST['txn_type'] = 'subscr_payment' ) ) {
-					list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $_POST['custom'] );
-
-					if ( ! empty( $post_id ) && ! empty( $user_id ) ) {
-
-						//Check for existing payment details first
-						$exists = get_post_meta( $post_id, 'ppv_user_' . $user_id, true );
-
-						//If there is no existing value
-						if ( empty( $exists ) ) {
-							$subscription = array(
-								'status'    => 'pending',
-								'recurring' => $recurring
-							);
-
-							//Set it
-							update_post_meta( $post_id, 'ppv_user_' . $user_id, $subscription );
-						}
-					}
+					$this->update_pending( $_POST );
 				}
 
 				//check for subscription details
@@ -1423,10 +1392,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				// This is IPN response, so echoing will not help. Let's log it.
 				$this->log( 'Error: Missing POST variables. Identification is not possible.' );
 				$this . log( print_r( $_REQUEST, true ) );
-				print_r( $_REQUEST );
 				exit;
 			}
-			error_log( json_encode( $_POST ) );
 		}
 
 		/**
@@ -1961,6 +1928,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$this->options['gateways']['paypal-express']['header_border']  = $_POST["ppw"]['gateways']['paypal-express']['header_border'];
 				$this->options['gateways']['paypal-express']['header_back']    = $_POST["ppw"]['gateways']['paypal-express']['header_back'];
 				$this->options['gateways']['paypal-express']['page_back']      = $_POST["ppw"]['gateways']['paypal-express']['page_back'];
+				$this->options['gateways']['paypal-express']['identity_token'] = $_POST["ppw"]['gateways']['paypal-express']['identity_token'];
 
 				$this->options['currency'] = $this->options['gateways']['paypal-express']['currency'];
 
@@ -2681,17 +2649,17 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 				<ul class="subsubsub">
 					<li>
-						<a href="<?php echo add_query_arg( 'type', 'past' ); ?>" class="rbutton <?php if ( $type == 'past' ) {
+						<a href="<?php echo esc_url( add_query_arg( 'type', 'past' ) ); ?>" class="rbutton <?php if ( $type == 'past' ) {
 							echo 'current';
 						} ?>"><?php _e( 'Recent transactions', 'ppw' ); ?></a> |
 					</li>
 					<li>
-						<a href="<?php echo add_query_arg( 'type', 'pending' ); ?>" class="rbutton <?php if ( $type == 'pending' ) {
+						<a href="<?php echo esc_url( add_query_arg( 'type', 'pending' ) ); ?>" class="rbutton <?php if ( $type == 'pending' ) {
 							echo 'current';
 						} ?>"><?php _e( 'Pending transactions', 'ppw' ); ?></a> |
 					</li>
 					<li>
-						<a href="<?php echo add_query_arg( 'type', 'future' ); ?>" class="rbutton <?php if ( $type == 'future' ) {
+						<a href="<?php echo esc_url( add_query_arg( 'type', 'future' ) ); ?>" class="rbutton <?php if ( $type == 'future' ) {
 							echo 'current';
 						} ?>"><?php _e( 'Future transactions', 'ppw' ); ?></a></li>
 				</ul>
@@ -3045,60 +3013,178 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				wp_send_json_success( array( 'reload' => false ) );
 			}
 		}
-	}
+
+		/**
+		 * Process the Transaction details obtained from PDT, convert it into associative array
+		 *
+		 * @param $response
+		 *
+		 * @return array|bool|string
+		 */
+		function process_pdt_response( $response ) {
+			if ( empty( $response ) ) {
+				return false;
+			}
+
+			//If transaction was success
+			if ( strpos( $response, 'SUCCESS' ) === 0 ) {
+				// Remove SUCCESS part (7 characters long)
+				$response = substr( $response, 7 );
+
+				// URL decode
+				$response = urldecode( $response );
+
+				// Turn into associative array
+				preg_match_all( '/^([^=\s]++)=(.*+)/m', $response, $m, PREG_PATTERN_ORDER );
+				$response = array_combine( $m[1], $m[2] );
+
+				// Fix character encoding if different from UTF-8 (in my case)
+				if ( isset( $response['charset'] ) AND strtoupper( $response['charset'] ) !== 'UTF-8' ) {
+					foreach ( $response as $key => &$value ) {
+						$value = mb_convert_encoding( $value, 'UTF-8', $response['charset'] );
+					}
+					$response['charset_original'] = $response['charset'];
+					$response['charset']          = 'UTF-8';
+				}
+				$response['status'] = 'success';
+
+				// Sort on keys for readability (handy when debugging)
+				ksort( $response );
+			} else {
+				if ( empty( $response ) || ! is_array( $response ) ) {
+					$response = array();
+				}
+				$response['status']  = 'pending';
+				$response['message'] = __( "We were unable to get the Payment details from Paypal, Please wait for a while and try refreshing the page, to see if your subscription was successful.", 'ppw' );
+			}
+
+			return $response;
 		}
 
-
-	$ppw = new PayPerView();
-	global $ppw;
-
-	if ( ! function_exists( 'wpmudev_ppw' ) ) {
-		function wpmudev_ppw( $content = '', $force = false ) {
-			global $ppw, $post;
-			if ( $content ) {
-				return $ppw->content( $content, $force );
-			} else {
-				return $ppw->content( $post->post_content, $force );
+		/**
+		 * To be called, if payment status was successful, Updates the respective details for the user
+		 *
+		 * @param $data
+		 *
+		 * @return bool
+		 */
+		private function update_subscription( $data ) {
+			if ( empty( $data ) ) {
+				return false;
 			}
+			$timestamp = time();
+			$amount    = $data['mc_gross'];
+			$currency  = $data['mc_currency'];
+
+			list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $data['custom'] );
+
+			$this->record_transaction( $user_id, $post_id, $amount, $currency, $timestamp, $data['txn_id'], $data['payment_status'], '' );
+
+			// Check if user already subscribed before. Practically this is impossible, but who knows?
+			$expiry = get_user_meta( $user_id, "ppw_subscribe", true );
+
+			// Let's be safe. Do not save user meta if new subscription points an earlier date
+			$interval = $this->get_interval( $period );
+
+			if ( $expiry && strtotime( $expiry ) > strtotime( "+{$days} {$interval}" ) ) {
+			} else {
+				update_user_meta( $user_id, "ppw_subscribe", date( "Y-m-d H:i:s", strtotime( "+{$days} {$interval}" ) ) );
+			}
+
+			if ( $recurring ) {
+				update_user_meta( $user_id, "ppw_days", $days );
+				update_user_meta( $user_id, "ppw_period", $period );
+			}
+
+			return true;
+		}
+
+		/**
+		 * Update Pending payment status for subscription
+		 *
+		 * @param $data
+		 *
+		 * @return bool
+		 */
+		private function update_pending( $data ) {
+			if ( empty( $data ) ) {
+				return false;
+			}
+			list( $post_id, $user_id, $days, $recurring, $period ) = explode( ':', $data['custom'] );
+
+			if ( ! empty( $post_id ) && ! empty( $user_id ) ) {
+
+				//Check for existing payment details first
+				$exists = get_post_meta( $post_id, 'ppv_user_' . $user_id, true );
+
+				//If there is no existing value
+				if ( empty( $exists ) ) {
+					$subscription = array(
+						'status'    => 'pending',
+						'recurring' => $recurring
+					);
+
+					//Set it
+					update_post_meta( $post_id, 'ppv_user_' . $user_id, $subscription );
+				}
+			}
+
+			return true;
 		}
 	}
+}
 
-	if ( ! function_exists( 'wpmudev_ppw_html' ) ) {
-		// since 1.4.0
-		function wpmudev_ppw_html( $html, $id = 1, $description = '', $price = 0 ) {
-			global $ppw, $post;
 
-			if ( $html ) {
-				$content = $html;
-			} else if ( is_object( $post ) ) {
-				$content = $post->content;
-			} else {
-				return 'No html code or post content found';
-			}
+$ppw = new PayPerView();
+global $ppw;
 
-			// Find the price
-			if ( ! $price && is_object( $post ) ) {
-				$price = get_post_meta( $post->ID, "ppw_price", true );
-			}
-			if ( ! $price ) {
-				$price = $ppw->options["price"];
-			} // Apply default price if it is not set for the post/page
+if ( ! function_exists( 'wpmudev_ppw' ) ) {
+	function wpmudev_ppw( $content = '', $force = false ) {
+		global $ppw, $post;
+		if ( $content ) {
+			return $ppw->content( $content, $force );
+		} else {
+			return $ppw->content( $post->post_content, $force );
+		}
+	}
+}
 
-			return $ppw->content( '[ppw id="' . $id . '" description="' . $description . '" price="' . $price . '"]' . $content . '[/ppw]', true, 'tool' );
+if ( ! function_exists( 'wpmudev_ppw_html' ) ) {
+	// since 1.4.0
+	function wpmudev_ppw_html( $html, $id = 1, $description = '', $price = 0 ) {
+		global $ppw, $post;
+
+		if ( $html ) {
+			$content = $html;
+		} else if ( is_object( $post ) ) {
+			$content = $post->content;
+		} else {
+			return 'No html code or post content found';
+		}
+
+		// Find the price
+		if ( ! $price && is_object( $post ) ) {
+			$price = get_post_meta( $post->ID, "ppw_price", true );
+		}
+		if ( ! $price ) {
+			$price = $ppw->options["price"];
+		} // Apply default price if it is not set for the post/page
+
+		return $ppw->content( '[ppw id="' . $id . '" description="' . $description . '" price="' . $price . '"]' . $content . '[/ppw]', true, 'tool' );
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////
-	/* -------------------- WPMU DEV Dashboard Notice -------------------- */
+/* -------------------- WPMU DEV Dashboard Notice -------------------- */
 
-	global $wpmudev_notices;
-	$wpmudev_notices[] = array(
-		'id'      => 261,
-		'name'    => 'Pay per View',
-		'screens' => array(
-			'toplevel_page_pay-per-view',
-			'pay-per-view_page_ppw_transactions',
-			'pay-per-view_page_ppw_customization',
-		)
-	);
-	include_once( plugin_dir_path( __FILE__ ) . 'dash-notice/wpmudev-dash-notification.php' );
+global $wpmudev_notices;
+$wpmudev_notices[] = array(
+	'id'      => 261,
+	'name'    => 'Pay per View',
+	'screens' => array(
+		'toplevel_page_pay-per-view',
+		'pay-per-view_page_ppw_transactions',
+		'pay-per-view_page_ppw_customization',
+	)
+);
+include_once( plugin_dir_path( __FILE__ ) . 'dash-notice/wpmudev-dash-notification.php' );

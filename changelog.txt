@@ -1,9 +1,9 @@
 ==Pay per View==
 
-1.4.2 - 2015-03-4 - Umesh Kumar
+1.4.2 - 2015-06-15 - Umesh Kumar
 ----------------------------------------------------------------------
 
-- Fixed: Show payment status for period pass and subscription selections
+- New: Integrated PDT (Payment Data Transfer) which allows instant payment notification for periodic pass
 
 V1.4.1.9:
 - Add day, month, year choices to Daily Pass. Changed name to Period Pass
