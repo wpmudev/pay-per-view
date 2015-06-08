@@ -260,12 +260,13 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				                                              ) .
 				                                              "';" ) );
 			}
-			//Check and set which logins are working
+			//Check and set which social logins are enabled
 			$logins_enabled = array(
 				'show_facebook' => $this->facebook_enabled(),
 				'show_twiiter'  => $this->twitter_enabled(),
 				'show_google'   => $this->google_enabled()
 			);
+			wp_localize_script('ppw_api_js', 'ppw_social_logins', $logins_enabled );
 
 		}
 
@@ -2370,20 +2371,20 @@ if ( ! class_exists( 'PayPerView' ) ) {
 						if ( !empty($this->options["facebook-no_init"]) && $this->options["facebook-no_init"] ) {
 							$facebook_no_init =  " checked='checked'";
 						}
-						//Either the value is not set, enable login or it is enabled by user itself
+						//Either the value is not set, or it is checked by user itself
 						//Facebook Login
 						$allow_facebook_login = false;
-						if ( !isset( $this->options["facebook-no_init"] ) || ( ! empty( $this->options["allow_facebook_login"] ) && $this->options["allow_facebook_login"] ) ) {
+						if ( !isset( $this->options["allow_facebook_login"] ) || ( ! empty( $this->options["allow_facebook_login"] ) && $this->options["allow_facebook_login"] ) ) {
 							$allow_facebook_login = " checked='checked'";
 						}
 						//Twitter Login
 						$allow_twitter_login = false;
-						if ( !isset( $this->options["facebook-no_init"] ) || ( ! empty( $this->options["allow_twitter_login"] ) && $this->options["allow_twitter_login"] ) ) {
+						if ( !isset( $this->options["allow_twitter_login"] ) || ( ! empty( $this->options["allow_twitter_login"] ) && $this->options["allow_twitter_login"] ) ) {
 							$allow_twitter_login = " checked='checked'";
 						}
 						//Google Login
 						$allow_google_login = false;
-						if ( !isset( $this->options["facebook-no_init"] ) || ( ! empty( $this->options["allow_google_login"] ) && $this->options["allow_google_login"] ) ) {
+						if ( !isset( $this->options["allow_google_login"] ) || ( ! empty( $this->options["allow_google_login"] ) && $this->options["allow_google_login"] ) ) {
 							$allow_google_login = " checked='checked'";
 						}
 
@@ -3255,7 +3256,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 * @return bool
 		 */
 		private function google_enabled() {
-			//Return False if Google login is not enabled, or not set, or Google Client id is missing
+			//Return False if Google login is not enabled, or Google Client id is missing
 			if ( empty( $this->options["allow_google_login"] )
 			     || ! $this->options["allow_google_login"]
 			     || empty( $this->options['google-client_id'] )

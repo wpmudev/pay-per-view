@@ -9,11 +9,16 @@
 		var $root = $("#payperview-login_links-wrapper");
 
 		var login_html = '<ul class="payperview-login_links">';
-		if($(".ppw_accept_api_logins")[0]) {
-			login_html +=
-			'<li><a href="#" class="payperview-login_link payperview-login_link-facebook">' + l10nPpwApi.facebook + '</a></li>' +
-			'<li><a href="#" class="payperview-login_link payperview-login_link-twitter">' + l10nPpwApi.twitter + '</a></li>' +
-			'<li><a href="#" class="payperview-login_link payperview-login_link-google">' + l10nPpwApi.google + '</a></li>';
+		if ($(".ppw_accept_api_logins")[0]) {
+			if (ppw_social_logins.show_facebook) {
+				login_html += '<li><a href="#" class="payperview-login_link payperview-login_link-facebook">' + l10nPpwApi.facebook + '</a></li>';
+			}
+			if (ppw_social_logins.show_twitter) {
+				login_html += '<li><a href="#" class="payperview-login_link payperview-login_link-twitter">' + l10nPpwApi.twitter + '</a></li>';
+			}
+			if (ppw_social_logins.show_google) {
+				login_html += '<li><a href="#" class="payperview-login_link payperview-login_link-google">' + l10nPpwApi.google + '</a></li>';
+			}
 		}
 		login_html +=
 		'<li><a href="#" class="payperview-login_link payperview-login_link-wordpress">' + l10nPpwApi.wordpress + '</a></li>' +
