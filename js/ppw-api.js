@@ -76,7 +76,7 @@
 					var twLogin = window.open('', "twitter_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=800,width=600");
 					$.post(_ppw_data.ajax_url, {
 						"action": "ppw_get_twitter_auth_url",
-						"url": window.location.toString(),
+						"url": window.location.toString()
 					},
 					function (data) {
 						try {

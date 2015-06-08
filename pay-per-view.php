@@ -128,14 +128,25 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			//Alway allow Wordpress login
 			add_action( 'wp_ajax_nopriv_ppw_ajax_login', array( &$this, 'ajax_login' ) );
 
-			// API login after the options have been initialized
-			if ( @$this->options['accept_api_logins'] ) {
-				add_action( 'wp_ajax_nopriv_ppw_facebook_login', array( &$this, 'handle_facebook_login' ) );
-				add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array( &$this, 'handle_get_twitter_auth_url' ) );
-				add_action( 'wp_ajax_nopriv_ppw_twitter_login', array( &$this, 'handle_twitter_login' ) );
-				add_action( 'wp_ajax_nopriv_ppw_get_google_auth_url', array( &$this, 'handle_get_google_auth_url' ) );
-				add_action( 'wp_ajax_nopriv_ppw_google_login', array( &$this, 'handle_google_login' ) );
-
+			// API login after the options have been initialized, Add scripts for enabled logins
+			if ( ! empty( $this->options['accept_api_logins'] ) && $this->options['accept_api_logins'] ) {
+				if ( $this->facebook_enabled() ) {
+					add_action( 'wp_ajax_nopriv_ppw_facebook_login', array( &$this, 'handle_facebook_login' ) );
+				}
+				if ( $this->twitter_enabled() ) {
+					add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array(
+						&$this,
+						'handle_get_twitter_auth_url'
+					) );
+					add_action( 'wp_ajax_nopriv_ppw_twitter_login', array( &$this, 'handle_twitter_login' ) );
+				}
+				if ( $this->google_enabled() ) {
+					add_action( 'wp_ajax_nopriv_ppw_get_google_auth_url', array(
+						&$this,
+						'handle_get_google_auth_url'
+					) );
+					add_action( 'wp_ajax_nopriv_ppw_google_login', array( &$this, 'handle_google_login' ) );
+				}
 
 				// Google login stuff. New in V1.3
 				if ( ! class_exists( 'LightOpenID' ) ) {
@@ -224,6 +235,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				'register'    => __( 'Register', 'ppw' ),
 				'please_wait' => __( 'Please, wait...', 'ppw' ),
 			) );
+			//Facebook Script
 			if ( ! $this->options['facebook-no_init'] ) {
 				add_action( 'wp_footer', create_function( '', "echo '" .
 				                                              sprintf(
@@ -248,6 +260,13 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				                                              ) .
 				                                              "';" ) );
 			}
+			//Check and set which logins are working
+			$logins_enabled = array(
+				'show_facebook' => $this->facebook_enabled(),
+				'show_twiiter'  => $this->twitter_enabled(),
+				'show_google'   => $this->google_enabled()
+			);
+
 		}
 
 		/**
@@ -794,7 +813,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			}
 
 			//PDT Integration
-			if ( ! empty( $_GET['ppw_paypal_subscribe'] ) && ! empty( $_GET['tx'] ) && ! empty( $_GET['st'] ) ) {
+			if ( is_user_logged_in() && ! empty( $_GET['ppw_paypal_subscribe'] ) && ! empty( $_GET['tx'] ) && ! empty( $_GET['st'] ) ) {
 
 				$ppl = $this->call_gateway();
 
@@ -1777,10 +1796,14 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					'paypal_email'             => '',
 					'sandbox'                  => '',
 					'accept_api_logins'        => 'true',
+					'allow_facebook_login'     => 'true',
 					'facebook-no_init'         => '',
 					'facebook-app_id'          => '',
+					'allow_twitter_login'      => 'true',
 					'twitter-app_id'           => '',
-					'twitter-app_secret'       => ''
+					'twitter-app_secret'       => '',
+					'allow_google_login'       => 'true',
+					'google-client-id'         => ''
 				)
 			);
 
@@ -1910,11 +1933,18 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$this->options["subscription_period"]      = $_POST["subscription_period"];
 				$this->options["subscription_description"] = $_POST["subscription_description"];
 
-				$this->options["accept_api_logins"]  = isset( $_POST["accept_api_logins"] );
-				$this->options["facebook-no_init"]   = isset( $_POST["facebook-no_init"] );
-				$this->options['facebook-app_id']    = trim( $_POST['facebook-app_id'] );
-				$this->options['twitter-app_id']     = trim( $_POST['twitter-app_id'] );
-				$this->options['twitter-app_secret'] = trim( $_POST['twitter-app_secret'] );
+				$this->options["accept_api_logins"] = isset( $_POST["accept_api_logins"] );
+				//Facebook
+				$this->options["allow_facebook_login"] = isset( $_POST["allow_facebook_login"] );
+				$this->options["facebook-no_init"]     = isset( $_POST["facebook-no_init"] );
+				$this->options['facebook-app_id']      = isset( $_POST["facebook-app_id"] ) ? trim( $_POST['facebook-app_id'] ) : '';
+				//Twitter
+				$this->options["allow_twitter_login"] = isset( $_POST["allow_twitter_login"] );
+				$this->options['twitter-app_id']      = isset( $_POST["twitter-app_id"] ) ? trim( $_POST['twitter-app_id'] ) : '';
+				$this->options['twitter-app_secret']  = isset( $_POST["twitter-app_secret"] ) ? trim( $_POST['twitter-app_secret'] ) : '';
+				//Google
+				$this->options["allow_google_login"] = isset( $_POST["allow_google_login"] );
+				$this->options["google-client_id"]   = isset( $_POST["google-client_id"] ) ? trim( $_POST["google-client_id"] ) : '';
 
 				// TODO: Shorten these
 				$this->options['gateways']['paypal-express']['api_user']       = $_POST["ppw"]['gateways']['paypal-express']['api_user'];
@@ -2330,8 +2360,34 @@ if ( ! class_exists( 'PayPerView' ) ) {
 								</table>
 							</div>
 						</div>
+						<?php
+						//If Social login is allowed
+						$accept_api_logins = false;
+						if ( $this->options["accept_api_logins"] ) {
+							$accept_api_logins = " checked='checked'";
+						}
+						$facebook_no_init = '';
+						if ( !empty($this->options["facebook-no_init"]) && $this->options["facebook-no_init"] ) {
+							$facebook_no_init =  " checked='checked'";
+						}
+						//Either the value is not set, enable login or it is enabled by user itself
+						//Facebook Login
+						$allow_facebook_login = false;
+						if ( !isset( $this->options["facebook-no_init"] ) || ( ! empty( $this->options["allow_facebook_login"] ) && $this->options["allow_facebook_login"] ) ) {
+							$allow_facebook_login = " checked='checked'";
+						}
+						//Twitter Login
+						$allow_twitter_login = false;
+						if ( !isset( $this->options["facebook-no_init"] ) || ( ! empty( $this->options["allow_twitter_login"] ) && $this->options["allow_twitter_login"] ) ) {
+							$allow_twitter_login = " checked='checked'";
+						}
+						//Google Login
+						$allow_google_login = false;
+						if ( !isset( $this->options["facebook-no_init"] ) || ( ! empty( $this->options["allow_google_login"] ) && $this->options["allow_google_login"] ) ) {
+							$allow_google_login = " checked='checked'";
+						}
 
-
+						?>
 						<div class="postbox" id="ppw_api_postbox">
 							<h3 class='hndle'><span><?php _e( 'API Settings', 'ppw' ) ?></span></h3>
 
@@ -2342,10 +2398,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top">
 										<th scope="row"><?php _e( 'Accept API Logins', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="checkbox" id="accept_api_logins" name="accept_api_logins" value="true" <?php if ( $this->options["accept_api_logins"] ) {
-												echo "checked='checked'";
-											} ?> />
-											<span class="description"><?php _e( 'Enables login to website using Facebook and Twitter.', 'ppw' ) ?></span>
+											<input type="checkbox" id="accept_api_logins" name="accept_api_logins" value="true"<?php echo $accept_api_logins; ?>/>
+											<span class="description"><?php _e( 'Enables login to website using Facebook, Twitter and Google', 'ppw' ) ?></span>
 										</td>
 									</tr>
 									<?php
@@ -2357,36 +2411,67 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									?>
 
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
-										<th scope="row"><?php _e( 'My website already uses Facebook', 'ppw' ) ?></th>
+										<th scope="row"><?php _e( 'Facebook:', 'ppw' ) ?></th>
+										<td>
+											<label><input type="checkbox" name="allow_facebook_login" value="true"<?php echo $allow_facebook_login; ?>><?php _e( "Enabled", "ppw" ); ?>
+											</label>
+										</td>
+									</tr>
+									<tr>
+										<td></td>
 										<td colspan="2">
-											<input type="checkbox" name="facebook-no_init" value="true" <?php if ( $this->options["facebook-no_init"] ) {
-												echo "checked='checked'";
-											} ?> />
+											<label><b><?php _e( 'Facebook App ID:', 'ppw' ); ?></b>
+												<input type="text" style="width:200px" name="facebook-app_id" value="<?php echo !empty( $this->options["facebook-app_id"] ) ? $this->options["facebook-app_id"] : ''; ?>"/>
+											</label>
+
+											<br/><span class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
+										</td>
+									</tr>
+									<tr>
+										<td></td>
+										<td colspan="2">
+											<label>
+												<input type="checkbox" name="facebook-no_init" value="true"<?php echo $facebook_no_init; ?>/><b><?php _e( "Do not load Facebook script", "ppw" ); ?></b></label>
+											<br/>
 											<span class="description"><?php _e( 'By default, Facebook script will be loaded by the plugin. If you are already running Facebook scripts, to prevent any conflict, check this option.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
-										<th scope="row"><?php _e( 'Facebook App ID', 'ppw' ) ?></th>
-										<td colspan="2">
-											<input type="text" style="width:200px" name="facebook-app_id" value="<?php echo $this->options["facebook-app_id"] ?>"/>
-											<br/><span class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
+										<th scope="row"><?php _e( 'Twitter:', 'ppw' ) ?></label></th>
+										<td>
+											<label><input type="checkbox" name="allow_twitter_login" value="true"<?php echo $allow_twitter_login; ?>><?php _e( "Enabled", "ppw" ); ?>
+											</label>
 										</td>
 									</tr>
-
-									<tr valign="top" class="api_detail" <?php echo $style ?>>
-										<th scope="row"><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></th>
+									<tr>
+										<td></td>
 										<td colspan="2">
-											<input type="text" style="width:200px" name="twitter-app_id" value="<?php echo $this->options["twitter-app_id"] ?>"/>
+											<label><b><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></b><input type="text" style="width:200px;margin-left: 20px;" name="twitter-app_id" value="<?php echo !empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
 											<br/><span class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
-										<th scope="row"><?php _e( 'Twitter Consumer Secret', 'ppw' ) ?></th>
+										<td></td>
 										<td colspan="2">
-											<input type="text" style="width:200px" name="twitter-app_secret" value="<?php echo $this->options["twitter-app_secret"] ?>"/>
+											<label><b><?php _e( 'Twitter Consumer Secret', 'ppw' ) ?></b> <input type="text" style="width:200px" name="twitter-app_secret" value="<?php echo !empty( $this->options["twitter-app_secret"] ) ? $this->options["twitter-app_secret"] : ''; ?>"/></label>
 											<br/><span class="description"><?php _e( 'Enter your Twitter App ID Secret here.', 'ppw' ) ?></span>
+										</td>
+									</tr>
+									<tr valign="top" class="api_detail" <?php echo $style ?>>
+										<th scope="row"><b><?php _e( 'Google:', 'ppw' ) ?></b></th>
+										<td>
+											<label><input type="checkbox" name="allow_google_login" value="true"<?php echo $allow_google_login; ?>><?php _e( "Enabled", "ppw" ); ?>
+											</label></td>
+									</tr>
+									<tr>
+										<td></td>
+										<td colspan="2">
+											<label><b><?php _e( "Google Client ID", 'ppw' ); ?></b>
+												<input type="text" style="width:200px" name="google-client_id" value="<?php echo !empty( $this->options["google-client_id"] ) ? $this->options["google-client_id"] : ''; ?>"/>
+											</label>
+											<br/><span class="description"><?php printf( __( 'Enter your Google Sign-in Client ID here. If you don\'t have a Google Developers Console project yet, you will need to create one <a href="%s">here</a>', 'ppw' ), 'https://developers.google.com/identity/sign-in/web/devconsole-project' ) ?></span>
 										</td>
 									</tr>
 
@@ -3127,6 +3212,55 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					//Set it
 					update_post_meta( $post_id, 'ppv_user_' . $user_id, $subscription );
 				}
+			}
+
+			return true;
+		}
+
+		/**
+		 * Check if facebook login is enabled
+		 * @return bool
+		 */
+		private function facebook_enabled() {
+			//Return False if facebook login is not enabled, or not set, or facebook APP id is missing
+			if ( empty( $this->options["allow_facebook_login"] )
+			     || ! $this->options["allow_facebook_login"]
+			     || empty( $this->options['facebook-app_id'] )
+			) {
+				return false;
+			}
+
+			return true;
+		}
+
+		/**
+		 * Check if Twitter login is enabled
+		 * @return bool
+		 */
+		private function twitter_enabled() {
+			//Return False if twitter login is not enabled, or not set, or twitter APP id  or secret is missing
+			if ( empty( $this->options["allow_twitter_login"] )
+			     || ! $this->options["allow_twitter_login"]
+			     || empty( $this->options['twitter-app_id'] )
+			     || empty( $this->options['twitter-app_secret'] )
+			) {
+				return false;
+			}
+
+			return true;
+		}
+
+		/**
+		 * Check if Google Oauth is enabled
+		 * @return bool
+		 */
+		private function google_enabled() {
+			//Return False if Google login is not enabled, or not set, or Google Client id is missing
+			if ( empty( $this->options["allow_google_login"] )
+			     || ! $this->options["allow_google_login"]
+			     || empty( $this->options['google-client_id'] )
+			) {
+				return false;
 			}
 
 			return true;

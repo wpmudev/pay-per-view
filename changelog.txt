@@ -3,7 +3,9 @@
 1.4.2 - 2015-06-15 - Umesh Kumar
 ----------------------------------------------------------------------
 
-- New: Integrated PDT (Payment Data Transfer) which allows instant payment notification for periodic pass
+- New:     Integrated PDT (Payment Data Transfer) which allows instant payment notification for periodic pass
+- Updated: Google OAuth integrated
+- Updated: Social Logins - Enable selected login out of Facebook, Twitter, Google
 
 V1.4.1.9:
 - Add day, month, year choices to Daily Pass. Changed name to Period Pass
