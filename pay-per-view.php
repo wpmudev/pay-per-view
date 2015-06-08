@@ -263,7 +263,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			//Check and set which social logins are enabled
 			$logins_enabled = array(
 				'show_facebook' => $this->facebook_enabled(),
-				'show_twiiter'  => $this->twitter_enabled(),
+				'show_twitter'  => $this->twitter_enabled(),
 				'show_google'   => $this->google_enabled()
 			);
 			wp_localize_script('ppw_api_js', 'ppw_social_logins', $logins_enabled );
@@ -2425,7 +2425,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 												<input type="text" style="width:200px" name="facebook-app_id" value="<?php echo !empty( $this->options["facebook-app_id"] ) ? $this->options["facebook-app_id"] : ''; ?>"/>
 											</label>
 
-											<br/><span class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
+											<br/><span class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s' target='_blank'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
 										</td>
 									</tr>
 									<tr>
@@ -2449,7 +2449,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td></td>
 										<td colspan="2">
 											<label><b><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></b><input type="text" style="width:200px;margin-left: 20px;" name="twitter-app_id" value="<?php echo !empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
-											<br/><span class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
+											<br/><span class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
 										</td>
 									</tr>
 
@@ -2472,7 +2472,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 											<label><b><?php _e( "Google Client ID", 'ppw' ); ?></b>
 												<input type="text" style="width:200px" name="google-client_id" value="<?php echo !empty( $this->options["google-client_id"] ) ? $this->options["google-client_id"] : ''; ?>"/>
 											</label>
-											<br/><span class="description"><?php printf( __( 'Enter your Google Sign-in Client ID here. If you don\'t have a Google Developers Console project yet, you will need to create one <a href="%s">here</a>', 'ppw' ), 'https://developers.google.com/identity/sign-in/web/devconsole-project' ) ?></span>
+											<br/><span class="description"><?php printf( __( 'Enter your Google Sign-in Client ID here. If you don\'t have a Google Developers Console project yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://developers.google.com/identity/sign-in/web/devconsole-project' ) ?></span>
 										</td>
 									</tr>
 

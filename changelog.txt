@@ -4,6 +4,7 @@
 ----------------------------------------------------------------------
 
 - New:     Integrated PDT (Payment Data Transfer) which allows instant payment notification for periodic pass
+- Fixed:   Show social login if settings are available for the particular site
 - Updated: Google OAuth integrated
 - Updated: Social Logins - Enable selected login out of Facebook, Twitter, Google
 
