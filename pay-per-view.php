@@ -73,10 +73,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_action( 'init', array( &$this, 'initiate' ) );
 
 			// Calls post meta addition function on each save
-			add_action( 'save_post', array(
-				&$this,
-				'add_postmeta'
-			) );
+			add_action( 'save_post', array( &$this, 'add_postmeta' ) );
 
 			// Manipulate the content.
 			add_filter( 'the_content', array( &$this, 'content' ), 8 );
@@ -85,32 +82,13 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_filter( 'the_content', array( $this, 'clear' ), 130 );
 
 			// Send Paypal to IPN function
-			add_action( 'wp_ajax_ppw_paypal_ipn', array(
-				&$this,
-				'process_paypal_ipn'
-			) );
+			add_action( 'wp_ajax_ppw_paypal_ipn', array( &$this, 'process_paypal_ipn' ) );
 
 			// Send Paypal to IPN function
-			add_action( 'wp_ajax_nopriv_ppw_paypal_ipn', array(
-				&$this,
-				'process_paypal_ipn'
-			) );
+			add_action( 'wp_ajax_nopriv_ppw_paypal_ipn', array( &$this, 'process_paypal_ipn' ) );
 
 			//Check Payment Status
-			add_action( 'wp_ajax_ppv_payment_status', array(
-				&$this,
-				'ppv_payment_status'
-			) );
-
-			//Handle Google Login
-			add_action( 'wp_ajax_ppv_ggl_login', array(
-				&$this,
-				'ppv_process_ggl_login'
-			) );
-			add_action( 'wp_ajax_nopriv_ppv_ggl_login', array(
-				&$this,
-				'ppv_process_ggl_login'
-			) );
+			add_action( 'wp_ajax_ppv_payment_status', array( &$this, 'ppv_payment_status' ) );
 
 			add_action( 'wp_head', array( &$this, 'wp_head' ) );                    //Print admin ajax on head
 
@@ -118,10 +96,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_action( 'admin_menu', array( &$this, 'admin_init' ) );            // Creates admin settings window
 			add_action( 'admin_notices', array( &$this, 'admin_notices' ) );    // Warns admin
 			add_action( 'add_meta_boxes', array( &$this, 'add_custom_box' ) );    // Add meta box to posts
-			add_filter( 'plugin_row_meta', array(
-				&$this,
-				'set_plugin_meta'
-			), 10, 2 );// Add settings link on plugin page
+			add_filter( 'plugin_row_meta', array( &$this, 'set_plugin_meta' ), 10, 2 );// Add settings link on plugin page
 			add_action( 'admin_print_scripts', array( &$this, 'admin_scripts' ) );
 			add_action( 'admin_print_styles', array( &$this, 'admin_css' ) );
 
@@ -144,44 +119,15 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					add_action( 'wp_ajax_nopriv_ppw_facebook_login', array( &$this, 'handle_facebook_login' ) );
 				}
 				if ( $this->twitter_enabled() ) {
-					add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array(
-						&$this,
-						'handle_get_twitter_auth_url'
-					) );
+					add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array( &$this, 'handle_get_twitter_auth_url' ) );
 					add_action( 'wp_ajax_nopriv_ppw_twitter_login', array( &$this, 'handle_twitter_login' ) );
 				}
 				if ( $this->google_enabled() ) {
-					add_action( 'wp_ajax_nopriv_ppw_get_google_auth_url', array(
-						&$this,
-						'handle_get_google_auth_url'
-					) );
-					add_action( 'wp_ajax_nopriv_ppw_google_login', array( &$this, 'handle_google_login' ) );
+					//Handle Google Login
+					add_action( 'wp_ajax_ppv_ggl_login', array( &$this, 'ppv_process_ggl_login' ) );
+					add_action( 'wp_ajax_nopriv_ppv_ggl_login', array( &$this, 'ppv_process_ggl_login' ) );
 				}
 
-				// Google login stuff. New in V1.3
-				if ( ! class_exists( 'LightOpenID' ) ) {
-					include_once $this->plugin_dir . '/includes/lightopenid/openid.php';
-				}
-				$this->openid = new LightOpenID;
-
-				$this->openid->identity = 'https://www.google.com/accounts/o8/id';
-				$this->openid->required = array(
-					'namePerson/first',
-					'namePerson/last',
-					'namePerson/friendly',
-					'contact/email'
-				);
-				if ( ! empty( $_REQUEST['openid_ns'] ) ) {
-					$cache = $this->openid->getAttributes();
-					if ( isset( $cache['namePerson/first'] ) || isset( $cache['namePerson/last'] ) || isset( $cache['contact/email'] ) ) {
-						$_SESSION['ppw_google_user_cache'] = $cache;
-					}
-				}
-				if ( isset( $_SESSION['ppw_google_user_cache'] ) ) {
-					$this->_google_user_cache = $_SESSION['ppw_google_user_cache'];
-				} else {
-					$this->_google_user_cache = '';
-				}
 			}
 
 			// Show DB results
@@ -258,7 +204,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			wp_localize_script( 'ppw_api_js', 'ppw_social_logins', $logins_enabled );
 
 			if ( $this->options['allow_google_login'] && ! empty( $this->options['google-client_id'] ) ) {
-				wp_localize_script('ppw_api_js', "ppw_ggl_api", array( 'clientid' => $this->options['google-client_id'], 'cookiepolicy' => site_url() ) );
+				wp_localize_script( 'ppw_api_js', "ppw_ggl_api", array(
+					'clientid'     => $this->options['google-client_id'],
+					'cookiepolicy' => site_url()
+				) );
 			}
 		}
 
@@ -273,22 +222,23 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			);
 			//Google Sign in script
 			if ( $this->options['allow_google_login'] && ! empty( $this->options['google-client_id'] ) ) { ?>
-				<meta name="google-signin-client_id" content="<?php echo $this->options['google-client_id']; ?>" />
-				<meta name="google-signin-cookiepolicy" content="<?php echo site_url('', 'http' ); ?>" />
-				<meta name="google-signin-callback" content="ppv_ggl_signinCallback" />
-				<meta name="google-signin-scope" content="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile" />
+				<meta name="google-signin-client_id" content="<?php echo $this->options['google-client_id']; ?>"/>
+				<meta name="google-signin-cookiepolicy" content="<?php echo site_url( '', 'http' ); ?>"/>
+				<meta name="google-signin-callback" content="ppv_ggl_signinCallback"/>
+				<meta name="google-signin-scope" content="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"/>
 				<script src="https://apis.google.com/js/platform.js" async defer>
-					{"parsetags": "explicit"}
+					{"parsetags":"explicit"}
 				</script>
 
-				<?php
-			} ?>
 			<?php
+			} ?>
+		<?php
 		}
 
-		function wp_footer() {?>
-			<div id="fb-root"></div><script type="text/javascript">
-				window.fbAsyncInit = function() {
+		function wp_footer() { ?>
+			<div id="fb-root"></div>
+			<script type="text/javascript">
+				window.fbAsyncInit = function () {
 					FB.init({
 						appId: "<?php echo $this->options['facebook-app_id']; ?>",
 						status: true,
@@ -370,22 +320,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			if ( ! $email ) {
 				die( json_encode( $resp ) );
 			} // Wrong email
-
-			$wp_user = get_user_by( 'email', $email );
-
-			if ( ! $wp_user ) { // Not an existing user, let's create a new one
-				$password = wp_generate_password( 12, false );
-				$username = @$data->name
-					? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->name ) )
-					: preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->first_name ) ) . '_' . preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->last_name ) );
-
-				$wp_user = wp_create_user( $username, $password, $email );
-				if ( is_wp_error( $wp_user ) ) {
-					die( json_encode( $resp ) );
-				} // Failure creating user
-			} else {
-				$wp_user = $wp_user->ID;
-			}
+			$name    = $data->name ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->name ) ) : ( preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->first_name ) ) . '_' . preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->last_name ) ) );
+			$wp_user = $this->user_from_email( $email, $name );
 
 			$user = get_userdata( $wp_user );
 
@@ -507,84 +443,6 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		}
 
 		/**
-		 * Get OAuth request URL and token.
-		 */
-		function handle_get_google_auth_url() {
-			header( "Content-type: application/json" );
-
-			$this->openid->returnUrl = $_POST['url'];
-
-			echo json_encode( array(
-				'url' => $this->openid->authUrl()
-			) );
-			exit();
-		}
-
-		/**
-		 * Login or create a new user using whatever data we get from Google.
-		 */
-		function handle_google_login() {
-			header( "Content-type: application/json" );
-			$resp = array(
-				"status" => 0,
-			);
-
-			$cache = $this->openid->getAttributes();
-
-			if ( isset( $cache['namePerson/first'] ) || isset( $cache['namePerson/last'] ) || isset( $cache['namePerson/friendly'] ) || isset( $cache['contact/email'] ) ) {
-				$this->_google_user_cache = $cache;
-			}
-
-			// Have user, now register him/her
-			if ( isset( $this->_google_user_cache['namePerson/friendly'] ) ) {
-				$username = $this->_google_user_cache['namePerson/friendly'];
-			} else {
-				$username = $this->_google_user_cache['namePerson/first'];
-			}
-			$email      = $this->_google_user_cache['contact/email'];
-			$wordp_user = get_user_by( 'email', $email );
-
-			if ( ! $wordp_user ) { // Not an existing user, let's create a new one
-				$password = wp_generate_password( 12, false );
-				$count    = 0;
-				while ( username_exists( $username ) ) {
-					$username .= rand( 0, 9 );
-					if ( ++ $count > 10 ) {
-						break;
-					}
-				}
-
-				$wordp_user = wp_create_user( $username, $password, $email );
-				if ( is_wp_error( $wordp_user ) ) {
-					die( json_encode( $resp ) );
-				} // Failure creating user
-				else {
-					update_user_meta( $wordp_user, 'first_name', $this->_google_user_cache['namePerson/first'] );
-					update_user_meta( $wordp_user, 'last_name', $this->_google_user_cache['namePerson/last'] );
-				}
-			} else {
-				$wordp_user = $wordp_user->ID;
-			}
-
-			$user = get_userdata( $wordp_user );
-			wp_set_current_user( $user->ID, $user->user_login );
-			wp_set_auth_cookie( $user->ID ); // Logged in with Google, yay
-			do_action( 'wp_login', $user->user_login );
-
-			// Check if user has already subscribed
-			$reveal = 0;
-			if ( get_user_meta( $user->ID, "ppw_subscribe", true ) != '' OR $this->is_authorised() ) {
-				$reveal = 1;
-			}
-
-			die( json_encode( array(
-				"status"  => 1,
-				"user_id" => $user->ID,
-				"reveal"  => $reveal
-			) ) );
-		}
-
-		/**
 		 * Saves expiry date field on user profile
 		 */
 		function save_profile( $user_id ) {
@@ -618,11 +476,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					<th><label for="address"><?php _e( "Expires at" ); ?></label></th>
 					<td>
 						<?php
-			$expiry   = get_user_meta( $current_user->ID, 'ppw_subscribe', true );
-			$days     = get_user_meta( $current_user->ID, 'ppw_days', true );
-			$period   = get_user_meta( $current_user->ID, 'ppw_period', true );
-			$readonly = ( ! current_user_can( 'administrator' ) ) ? "readonly" : "";
-			?>
+						$expiry   = get_user_meta( $current_user->ID, 'ppw_subscribe', true );
+						$days     = get_user_meta( $current_user->ID, 'ppw_days', true );
+						$period   = get_user_meta( $current_user->ID, 'ppw_period', true );
+						$readonly = ( ! current_user_can( 'administrator' ) ) ? "readonly" : "";
+						?>
 						<input type="text" name="ppw_expiry" value="<?php echo $expiry ?>" <?php echo $readonly; ?> />
 					</td>
 				</tr>
@@ -1554,57 +1412,58 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			// Use nonce for verification
 			wp_nonce_field( plugin_basename( __FILE__ ), 'ppw_nonce' );
 			?>
-			<style type = "text/css" >
-			<!--
-			#ppw_metabox label {
-				float: left;
-				padding-top: 5px;
-			}
+			<style type="text/css">
+				<!--
+				#ppw_metabox label {
+					float: left;
+					padding-top: 5px;
+				}
 
-			#ppw_metabox select {
-				float: right;
-			}
+				#ppw_metabox select {
+					float: right;
+				}
 
-			#ppw_metabox input {
-				float: right;
-				width: 20%;
-				text-align: right;
-			}
+				#ppw_metabox input {
+					float: right;
+					width: 20%;
+					text-align: right;
+				}
 
-			.ppw_clear {
-				clear: both;
-				margin: 10px 0 10px 0;
-			}
+				.ppw_clear {
+					clear: both;
+					margin: 10px 0 10px 0;
+				}
 
-			.ppw_info {
-				padding-top: 5px;
-			}
+				.ppw_info {
+					padding-top: 5px;
+				}
 
-			.ppw_info span.wpmudev-help {
-				margin-top: 10px;
-			}
+				.ppw_info span.wpmudev-help {
+					margin-top: 10px;
+				}
 
-			.ppw_span {
-				float: right;
-				font-weight: bold;
-				padding-top: 5px;
-				padding-right: 3px;
-			}
+				.ppw_span {
+					float: right;
+					font-weight: bold;
+					padding-top: 5px;
+					padding-right: 3px;
+				}
 
-			.red {
-				color: red
-			}
+				.red {
+					color: red
+				}
 
-			.green {
-				color: green
-			}
+				.green {
+					color: green
+				}
 
-			.ppw_border {
-				border-top-color: white;
-				border-bottom-color: #DFDFDF;
-				border-style: solid;
-				border-width: 1px 0;
-			}
+				.ppw_border {
+					border-top-color: white;
+					border-bottom-color: #DFDFDF;
+					border-style: solid;
+					border-width: 1px 0;
+				}
+
 				-->
 				<?php if ( 'automatic' != $method ) {echo '#ppw_excerpt{opacity:0.2}';}?>
 			</style>
@@ -1653,7 +1512,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			</div>
 			<div class="ppw_clear ppw_border"></div>
 
-			<input type="text" name="ppw_excerpt" id="ppw_excerpt" value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true );?> "/>
+			<input type="text" name="ppw_excerpt" id="ppw_excerpt" value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true ); ?> "/>
 			<label for="ppw_excerpt"><?php
 				_e( 'Excerpt length', 'ppw' ); ?>
 			</label>
@@ -3319,7 +3178,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			$verify_token = wp_remote_get( $ggl_auth_url );
 
 			//Handle Token Verification Error
-			if( is_wp_error( $verify_token ) || $verify_token['response']['code'] !== 200 ) {
+			if ( is_wp_error( $verify_token ) || $verify_token['response']['code'] !== 200 ) {
 				wp_send_json_error();
 			}
 			//If verified, Get Profile details
@@ -3332,16 +3191,58 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$ggl_api
 			);
 			$user_info = wp_remote_get( $ggl_api );
-			if( is_wp_error( $user_info ) || $user_info['response']['code'] !== 200 ) {
+			if ( is_wp_error( $user_info ) || $user_info['response']['code'] !== 200 ) {
 				wp_send_json_error();
 			}
 			$user_info = wp_remote_retrieve_body( $user_info );
-			if( !empty( $user_info['email'] ) ) {
-				//Check for user
+			if ( ! empty( $user_info['email'] ) ) {
+				//Check for user, if doesn't exists, create user and login
+				if ( ! email_exists( $user_info['email'] ) ) {
+					$wp_user = $this->user_from_email( $user_info['email'], $user_info['full_name'] );
+				} else {
+					//Login user
+					$wp_user = get_user_by( 'email', $user_info['email'] );
+				}
+			} else {
+				wp_send_json_error();
 			}
-			//Create or login user
-			wp_send_json_success();
+			$user = get_userdata( $wp_user );
 
+			wp_set_current_user( $user->ID, $user->user_login );
+			wp_set_auth_cookie( $user->ID ); // Logged in with Facebook, yay
+			do_action( 'wp_login', $user->user_login );
+
+			// Check if user has already subscribed or authorized. Does not include Admin!!
+			$reveal = 0;
+			if ( get_user_meta( $user->ID, "ppw_subscribe", true ) != '' OR $this->is_authorised() ) {
+				$reveal = 1;
+			}
+
+			die( json_encode( array(
+				"status"  => 1,
+				"user_id" => $user->ID,
+				"reveal"  => $reveal
+			) ) );
+		}
+
+		function user_from_email( $email, $full_name ) {
+			if ( empty( $email ) ) {
+				$wp_user = get_user_by( 'email', $email );
+			}
+
+			if ( ! $wp_user ) { // Not an existing user, let's create a new one
+				$password = wp_generate_password( 12, false );
+				$username = preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $full_name ) );
+
+				$wp_user = wp_create_user( $username, $password, $email );
+				if ( is_wp_error( $wp_user ) ) {
+					return false;
+				} // Failure creating user
+			} else {
+				$wp_user = $wp_user->ID;
+			}
+
+			return $wp_user;
 		}
 	}
 }

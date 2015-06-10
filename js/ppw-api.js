@@ -147,57 +147,6 @@
 						}, 'json')
 					return false;
 				};
-			} else if ($lnk.is(".payperview-login_link-google")) {
-				callback = function () {
-					var googleLogin = window.open('https://www.google.com/accounts', "google_login", "scrollbars=no,resizable=no,toolbar=no,location=no,directories=no,status=no,menubar=no,copyhistory=no,height=600,width=900");
-					$.post(_ppw_data.ajax_url, {
-							"action": "ppw_get_google_auth_url",
-							"url": window.location.href
-						},
-						function (data) {
-							var href = data.url;
-							googleLogin.location = href;
-							var gTimer = setInterval(function () {
-								try {
-									if (googleLogin.location.hostname == window.location.hostname) {
-										// We're back!
-										clearInterval(gTimer);
-										googleLogin.close();
-										// change UI
-										$root.html('<img src="' + _ppw_data.root_url + 'waiting.gif" /> ' + l10nPpwApi.please_wait);
-										$.post(_ppw_data.ajax_url, {
-											"action": "ppw_google_login"
-										}, function (data) {
-											var status = 0;
-											try {
-												status = parseInt(data.status);
-											} catch (e) {
-												status = 0;
-											}
-											if (!status) { // ... handle error
-												$root.remove();
-												return false;
-											}
-											if (data.reveal) { // user has subscribed or has right to see content
-												window.location.href = window.location.href;
-											}
-											else {
-												var user_id = parseInt(data.user_id); // Get the user ID
-												var custom = $me.find(".ppw_custom").val(); // Get existing custom value
-												if (custom && user_id) { // Make a double check
-													var c = custom.split(":");
-													$me.find(".ppw_custom").val(c[0] + ":" + user_id + ":" + c[2] + ":" + c[3] + ":" + c[4]); // Modify
-													$me.submit(); // Send form to Paypal
-												}
-											}
-										});
-									}
-								} catch (e) {
-								}
-							}, 300);
-						})
-					return false;
-				};
 			} else if ($lnk.is(".payperview-login_link-wordpress")) {
 				// Pass on to wordpress login
 				callback = function () {
@@ -299,10 +248,28 @@ var ppv_ggl_signinCallback = function (authResult) {
 					'id_token': authResult['id_token']
 				}
 			},
-			function (result) {
-				console.log("Google Login")
-				// Handle or verify the server response.
-				console.log(result)
+			function (data) {
+				var status = 0;
+				try {
+					status = parseInt(data.status);
+				} catch (e) {
+					status = 0;
+				}
+				if (!status) { // ... handle error
+					jQuery("#payperview-login_links-wrapper").remove();
+					return false;
+				}
+				if (data.reveal) { // user has subscribed or has right to see content
+					window.location.href = window.location.href;
+				} else {
+					var user_id = parseInt(data.user_id); // Get the user ID
+					var custom = $me.find(".ppw_custom").val(); // Get existing custom value
+					if (custom && user_id) { // Make a double check
+						var c = custom.split(":");
+						$me.find(".ppw_custom").val(c[0] + ":" + user_id + ":" + c[2] + ":" + c[3] + ":" + c[4]); // Modify
+						$me.submit(); // Send form to Paypal
+					}
+				}
 			}
 		);
 	}
