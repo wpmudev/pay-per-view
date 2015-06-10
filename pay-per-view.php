@@ -102,6 +102,16 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				'ppv_payment_status'
 			) );
 
+			//Handle Google Login
+			add_action( 'wp_ajax_ppv_ggl_login', array(
+				&$this,
+				'ppv_process_ggl_login'
+			) );
+			add_action( 'wp_ajax_nopriv_ppv_ggl_login', array(
+				&$this,
+				'ppv_process_ggl_login'
+			) );
+
 			add_action( 'wp_head', array( &$this, 'wp_head' ) );                    //Print admin ajax on head
 
 			// Admin side actions
@@ -237,28 +247,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			) );
 			//Facebook Script
 			if ( ! $this->options['facebook-no_init'] ) {
-				add_action( 'wp_footer', create_function( '', "echo '" .
-				                                              sprintf(
-					                                              '<div id="fb-root"></div><script type="text/javascript">
-				window.fbAsyncInit = function() {
-				FB.init({
-				appId: "%s",
-				status: true,
-				cookie: true,
-				xfbml: true
-				});
-				};
-				// Load the FB SDK Asynchronously
-				(function(d){
-				var js, id = "facebook-jssdk"; if (d.getElementById(id)) {return;}
-				js = d.createElement("script"); js.id = id; js.async = true;
-				js.src = "//connect.facebook.net/en_US/all.js";
-				d.getElementsByTagName("head")[0].appendChild(js);
-				}(document));
-				</script>',
-					                                              $this->options['facebook-app_id']
-				                                              ) .
-				                                              "';" ) );
+				add_action( 'wp_footer', array( $this, 'wp_footer' ) );;
 			}
 			//Check and set which social logins are enabled
 			$logins_enabled = array(
@@ -266,8 +255,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				'show_twitter'  => $this->twitter_enabled(),
 				'show_google'   => $this->google_enabled()
 			);
-			wp_localize_script('ppw_api_js', 'ppw_social_logins', $logins_enabled );
+			wp_localize_script( 'ppw_api_js', 'ppw_social_logins', $logins_enabled );
 
+			if ( $this->options['allow_google_login'] && ! empty( $this->options['google-client_id'] ) ) {
+				wp_localize_script('ppw_api_js', "ppw_ggl_api", array( 'clientid' => $this->options['google-client_id'], 'cookiepolicy' => site_url() ) );
+			}
 		}
 
 		/**
@@ -279,6 +271,44 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				'<script type="text/javascript">var _ppw_data={"ajax_url": "%s", "root_url": "%s","register_url": "%s"};</script>',
 				admin_url( 'admin-ajax.php' ), plugins_url( 'pay-per-view/images/' ), wp_registration_url()
 			);
+			//Google Sign in script
+			if ( $this->options['allow_google_login'] && ! empty( $this->options['google-client_id'] ) ) { ?>
+				<meta name="google-signin-client_id" content="<?php echo $this->options['google-client_id']; ?>" />
+				<meta name="google-signin-cookiepolicy" content="<?php echo site_url('', 'http' ); ?>" />
+				<meta name="google-signin-callback" content="ppv_ggl_signinCallback" />
+				<meta name="google-signin-scope" content="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile" />
+				<script src="https://apis.google.com/js/platform.js" async defer>
+					{"parsetags": "explicit"}
+				</script>
+
+				<?php
+			} ?>
+			<?php
+		}
+
+		function wp_footer() {?>
+			<div id="fb-root"></div><script type="text/javascript">
+				window.fbAsyncInit = function() {
+					FB.init({
+						appId: "<?php echo $this->options['facebook-app_id']; ?>",
+						status: true,
+						cookie: true,
+						xfbml: true
+					});
+				};
+				// Load the FB SDK Asynchronously
+				(function (d) {
+					var js, id = "facebook-jssdk";
+					if (d.getElementById(id)) {
+						return;
+					}
+					js = d.createElement("script");
+					js.id = id;
+					js.async = true;
+					js.src = "//connect.facebook.net/en_US/all.js";
+					d.getElementsByTagName("head")[0].appendChild(js);
+				}(document));
+			</script><?php
 		}
 
 		/**
@@ -588,11 +618,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					<th><label for="address"><?php _e( "Expires at" ); ?></label></th>
 					<td>
 						<?php
-						$expiry   = get_user_meta( $current_user->ID, 'ppw_subscribe', true );
-						$days     = get_user_meta( $current_user->ID, 'ppw_days', true );
-						$period   = get_user_meta( $current_user->ID, 'ppw_period', true );
-						$readonly = ( ! current_user_can( 'administrator' ) ) ? "readonly" : "";
-						?>
+			$expiry   = get_user_meta( $current_user->ID, 'ppw_subscribe', true );
+			$days     = get_user_meta( $current_user->ID, 'ppw_days', true );
+			$period   = get_user_meta( $current_user->ID, 'ppw_period', true );
+			$readonly = ( ! current_user_can( 'administrator' ) ) ? "readonly" : "";
+			?>
 						<input type="text" name="ppw_expiry" value="<?php echo $expiry ?>" <?php echo $readonly; ?> />
 					</td>
 				</tr>
@@ -1524,129 +1554,124 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			// Use nonce for verification
 			wp_nonce_field( plugin_basename( __FILE__ ), 'ppw_nonce' );
 			?>
-			<style type="text/css">
-				<!--
-				#ppw_metabox label {
-					float: left;
-					padding-top: 5px;
-				}
+			<style type = "text/css" >
+			<!--
+			#ppw_metabox label {
+				float: left;
+				padding-top: 5px;
+			}
 
-				#ppw_metabox select {
-					float: right;
-				}
+			#ppw_metabox select {
+				float: right;
+			}
 
-				#ppw_metabox input {
-					float: right;
-					width: 20%;
-					text-align: right;
-				}
+			#ppw_metabox input {
+				float: right;
+				width: 20%;
+				text-align: right;
+			}
 
-				.ppw_clear {
-					clear: both;
-					margin: 10px 0 10px 0;
-				}
+			.ppw_clear {
+				clear: both;
+				margin: 10px 0 10px 0;
+			}
 
-				.ppw_info {
-					padding-top: 5px;
-				}
+			.ppw_info {
+				padding-top: 5px;
+			}
 
-				.ppw_info span.wpmudev-help {
-					margin-top: 10px;
-				}
+			.ppw_info span.wpmudev-help {
+				margin-top: 10px;
+			}
 
-				.ppw_span {
-					float: right;
-					font-weight: bold;
-					padding-top: 5px;
-					padding-right: 3px;
-				}
+			.ppw_span {
+				float: right;
+				font-weight: bold;
+				padding-top: 5px;
+				padding-right: 3px;
+			}
 
-				.red {
-					color: red
-				}
+			.red {
+				color: red
+			}
 
-				.green {
-					color: green
-				}
+			.green {
+				color: green
+			}
 
-				.ppw_border {
-					border-top-color: white;
-					border-bottom-color: #DFDFDF;
-					border-style: solid;
-					border-width: 1px 0;
-				}
-
+			.ppw_border {
+				border-top-color: white;
+				border-bottom-color: #DFDFDF;
+				border-style: solid;
+				border-width: 1px 0;
+			}
 				-->
 				<?php if ( 'automatic' != $method ) {echo '#ppw_excerpt{opacity:0.2}';}?>
 			</style>
-			<?php
-			echo '<select name="ppw_enable" id="ppw_enable">';
-			echo '<option value="" >' . __( "Follow global setting", "ppw" ) . '</option>';
-			echo '<option value="enable" ' . $eselect . '>' . __( "Always enabled", "ppw" ) . '</option>';
-			echo '<option value="disable" ' . $dselect . '>' . __( "Always disabled", "ppw" ) . '</option>';
-			echo '</select>';
+			<select name="ppw_enable" id="ppw_enable">
+				<option value=""><?php echo __( "Follow global setting", "ppw" ); ?></option>
+				<option value="enable"<?php echo $eselect; ?>><?php echo __( "Always enabled", "ppw" ); ?></option>
+				<option value="disable"<?php echo $dselect; ?> ><?php echo __( "Always disabled", "ppw" ); ?></option>
+			</select>
 
-			echo '<label for="ppw_enable">';
-			_e( 'Enabled?', 'ppw' );
-			echo '</label>';
-			/* translators: Both %s refer to post or page */
-			echo '<div class="ppw_info">';
-			echo $this->tips->add_tip( sprintf( __( 'Selects if Pay With a Like is enabled for this %s or not. If Follow global setting is selected, General Setting page selection will be valid. Always enabled and Always disabled selections will enable or disable Pay With a Like for this %s, respectively, overriding general setting.', 'ppw' ), $pp, $pp ) );
-			echo '</div>';
-			echo '<div class="ppw_clear"></div>';
+			<label for="ppw_enable"> <?php _e( 'Enabled?', 'ppw' ) ?></label>
+			<div class="ppw_info"><?php
+				/* translators: Both %s refer to post or page */
+				echo $this->tips->add_tip( sprintf( __( 'Selects if Pay With a Like is enabled for this %s or not. If Follow global setting is selected, General Setting page selection will be valid. Always enabled and Always disabled selections will enable or disable Pay With a Like for this %s, respectively, overriding general setting.', 'ppw' ), $pp, $pp ) ); ?>
 
-			echo "<label for='effective_status'>" . __( 'Effective status', 'ppw' ) . "</label>";
-			echo $eff_status;
-			echo '<div class="ppw_info">';
-			/* translators: %s refer to post or page */
-			echo $this->tips->add_tip( sprintf( __( 'Effective status dynamically shows the final result of the setting that will be applied to this %s. Disabled means Pay With a Like will not work for this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save.', 'ppw' ), $pp, $pp ) );
-			echo '</div>';
-			echo '<div class="ppw_clear ppw_border"></div>';
+			</div>
+			<div class="ppw_clear"></div>
 
-			echo '<select name="ppw_method" id="ppw_method">';
-			echo '<option value="" >' . __( "Follow global setting", "ppw" ) . '</option>';
-			echo '<option value="automatic" ' . $aselect . '>' . $automatic_wording . '</option>';
-			echo '<option value="manual" ' . $mselect . '>' . $manual_wording . '</option>';
-			echo '<option value="tool" ' . $tselect . '>' . $tool_wording . '</option>';
-			echo '</select>';
-			echo '<label for="ppw_method">';
-			_e( 'Method', 'ppw' );
-			echo '</label>';
-			echo '<div class="ppw_info">';
-			/* translators: First %s refer to post or page. Second %s is the url address of the icon */
-			echo $this->tips->add_tip( sprintf( __( 'Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page.', 'ppw' ), $pp, "<img src='" . $this->plugin_url . "/images/menu_icon.png" . "' />" ) );
-			echo '</div>';
-			echo '<div class="ppw_clear"></div>';
+			<label for='effective_status'><?php echo __( 'Effective status', 'ppw' ); ?></label>
+			<?php echo $eff_status; ?>
+			<div class="ppw_info"><?php
+				/* translators: %s refer to post or page */
+				echo $this->tips->add_tip( sprintf( __( 'Effective status dynamically shows the final result of the setting that will be applied to this %s. Disabled means Pay With a Like will not work for this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save.', 'ppw' ), $pp, $pp ) ); ?>
+			</div>
+			<div class="ppw_clear ppw_border"></div>
 
-			echo "<label for='effective_method'>" . __( 'Effective method', 'ppw' ) . ":</label>";
-			echo "<span class='ppw_span' id='ppw_eff_method'>&nbsp;" . $eff_method . "</span>";
-			echo '<div class="ppw_info">';
-			/* translators: %s refer to post or page */
-			echo $this->tips->add_tip( sprintf( __( 'Effective method dynamically shows the final result of the setting that will be applied to this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save.', 'ppw' ), $pp ) );
-			echo '</div>';
-			echo '<div class="ppw_clear ppw_border"></div>';
+			<select name="ppw_method" id="ppw_method">
+				<option value=""><?php _e( "Follow global setting", "ppw" ); ?></option>
+				<option value="automatic" <?php echo $aselect; ?> ><?php echo $automatic_wording; ?></option>
+				<option value="manual" <?php echo $mselect; ?>><?php $manual_wording; ?></option>
+				<option value="tool" <?php echo $tselect; ?> ><?php echo $tool_wording; ?></option>
+			</select>
+			<label for="ppw_method"><?php
+				_e( 'Method', 'ppw' ); ?>
+			</label>
+			<div class="ppw_info"><?php
+				/* translators: First %s refer to post or page. Second %s is the url address of the icon */
+				echo $this->tips->add_tip( sprintf( __( 'Selects the content protection method for this %s. If Follow Global Setting is selected, method selected in General Settings page will be applied. If you want to override general settings, select one of the other methods. With Use Selection Tool you need to select each content using the icon %s on the editor tool bar. For other methods refer to the settings page.', 'ppw' ), $pp, "<img src='" . $this->plugin_url . "/images/menu_icon.png" . "' />" ) ); ?>
+			</div>
+			<div class="ppw_clear"></div>
 
-			echo '<input type="text" name="ppw_excerpt" id="ppw_excerpt" value="' . get_post_meta( $post->ID, 'ppw_excerpt', true ) . '" />';
-			echo '<label for="ppw_excerpt">';
-			_e( 'Excerpt length', 'ppw' );
-			echo '</label>';
-			echo '<div class="ppw_info">';
-			/* translators: %s refer to post or page */
-			echo $this->tips->add_tip( sprintf( __( 'If you want to override the number of words that will be used as an excerpt for the unprotected content, enter it here. Please note that this value is only used when Automatic Excerpt method is applied to the %s.', 'ppw' ), $pp ) );
-			echo '</div>';
-			echo '<div class="ppw_clear ppw_border"></div>';
+			<label for='effective_method'><?php _e( 'Effective method', 'ppw' ); ?>:</label>
+			<span class='ppw_span' id='ppw_eff_method'>&nbsp;<?php echo $eff_method; ?></span>
+			<div class="ppw_info"><?php
+				/* translators: %s refer to post or page */
+				echo $this->tips->add_tip( sprintf( __( 'Effective method dynamically shows the final result of the setting that will be applied to this %s. It takes global settings into account and helps you to check if your intention will be correctly reflected to the settings after you save.', 'ppw' ), $pp ) ); ?>
+			</div>
+			<div class="ppw_clear ppw_border"></div>
 
-			echo '<input type="text" name="ppw_price" value="' . get_post_meta( $post->ID, 'ppw_price', true ) . '" />';
-			echo '<label for="ppw_price">';
-			printf( __( 'Price (%s)', 'ppw' ), $this->options["currency"] );
-			echo '</label>';
-			echo '<div class="ppw_info">';
-			/* translators: %s refer to post or page */
-			echo $this->tips->add_tip( sprintf( __( 'If you want to override the default price to reveal this %s, enter it here. This value is NOT used when Selection Tool method is applied to the %s.', "ppw" ), $pp, $pp ) );
-			echo '</div>';
-			echo '<div class="ppw_clear"></div>';
+			<input type="text" name="ppw_excerpt" id="ppw_excerpt" value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true );?> "/>
+			<label for="ppw_excerpt"><?php
+				_e( 'Excerpt length', 'ppw' ); ?>
+			</label>
+			<div class="ppw_info"><?php
+				/* translators: %s refer to post or page */
+				echo $this->tips->add_tip( sprintf( __( 'If you want to override the number of words that will be used as an excerpt for the unprotected content, enter it here. Please note that this value is only used when Automatic Excerpt method is applied to the %s.', 'ppw' ), $pp ) ); ?>
+			</div>
+			<div class="ppw_clear ppw_border"></div>
 
-			?>
+			<input type="text" name="ppw_price" value="<?php echo get_post_meta( $post->ID, 'ppw_price', true ); ?>"/>
+			<label for="ppw_price"><?php
+				printf( __( 'Price (%s)', 'ppw' ), $this->options["currency"] ); ?>
+			</label>
+			<div class="ppw_info"><?php
+				/* translators: %s refer to post or page */
+				echo $this->tips->add_tip( sprintf( __( 'If you want to override the default price to reveal this %s, enter it here. This value is NOT used when Selection Tool method is applied to the %s.', "ppw" ), $pp, $pp ) ); ?>
+			</div>
+			<div class="ppw_clear"></div>
 			<script type="text/javascript">
 				jQuery(document).ready(function ($) {
 					var def = '<?php echo $default ?>';
@@ -1664,7 +1689,6 @@ if ( ! class_exists( 'PayPerView' ) ) {
 							$('#ppw_eff_status').html('&nbsp;<?php echo $disabled_wording?>').addClass('red').removeClass('green');
 						}
 					});
-
 
 					$("select#ppw_method").change(function () {
 						var m = $('select#ppw_method').val();
@@ -2368,23 +2392,23 @@ if ( ! class_exists( 'PayPerView' ) ) {
 							$accept_api_logins = " checked='checked'";
 						}
 						$facebook_no_init = '';
-						if ( !empty($this->options["facebook-no_init"]) && $this->options["facebook-no_init"] ) {
-							$facebook_no_init =  " checked='checked'";
+						if ( ! empty( $this->options["facebook-no_init"] ) && $this->options["facebook-no_init"] ) {
+							$facebook_no_init = " checked='checked'";
 						}
 						//Either the value is not set, or it is checked by user itself
 						//Facebook Login
 						$allow_facebook_login = false;
-						if ( !isset( $this->options["allow_facebook_login"] ) || ( ! empty( $this->options["allow_facebook_login"] ) && $this->options["allow_facebook_login"] ) ) {
+						if ( ! isset( $this->options["allow_facebook_login"] ) || ( ! empty( $this->options["allow_facebook_login"] ) && $this->options["allow_facebook_login"] ) ) {
 							$allow_facebook_login = " checked='checked'";
 						}
 						//Twitter Login
 						$allow_twitter_login = false;
-						if ( !isset( $this->options["allow_twitter_login"] ) || ( ! empty( $this->options["allow_twitter_login"] ) && $this->options["allow_twitter_login"] ) ) {
+						if ( ! isset( $this->options["allow_twitter_login"] ) || ( ! empty( $this->options["allow_twitter_login"] ) && $this->options["allow_twitter_login"] ) ) {
 							$allow_twitter_login = " checked='checked'";
 						}
 						//Google Login
 						$allow_google_login = false;
-						if ( !isset( $this->options["allow_google_login"] ) || ( ! empty( $this->options["allow_google_login"] ) && $this->options["allow_google_login"] ) ) {
+						if ( ! isset( $this->options["allow_google_login"] ) || ( ! empty( $this->options["allow_google_login"] ) && $this->options["allow_google_login"] ) ) {
 							$allow_google_login = " checked='checked'";
 						}
 
@@ -2422,7 +2446,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td></td>
 										<td colspan="2">
 											<label><b><?php _e( 'Facebook App ID:', 'ppw' ); ?></b>
-												<input type="text" style="width:200px" name="facebook-app_id" value="<?php echo !empty( $this->options["facebook-app_id"] ) ? $this->options["facebook-app_id"] : ''; ?>"/>
+												<input type="text" style="width:200px" name="facebook-app_id" value="<?php echo ! empty( $this->options["facebook-app_id"] ) ? $this->options["facebook-app_id"] : ''; ?>"/>
 											</label>
 
 											<br/><span class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s' target='_blank'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
@@ -2448,7 +2472,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr>
 										<td></td>
 										<td colspan="2">
-											<label><b><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></b><input type="text" style="width:200px;margin-left: 20px;" name="twitter-app_id" value="<?php echo !empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
+											<label><b><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></b><input type="text" style="width:200px;margin-left: 20px;" name="twitter-app_id" value="<?php echo ! empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
 											<br/><span class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
 										</td>
 									</tr>
@@ -2456,7 +2480,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
 										<td></td>
 										<td colspan="2">
-											<label><b><?php _e( 'Twitter Consumer Secret', 'ppw' ) ?></b> <input type="text" style="width:200px" name="twitter-app_secret" value="<?php echo !empty( $this->options["twitter-app_secret"] ) ? $this->options["twitter-app_secret"] : ''; ?>"/></label>
+											<label><b><?php _e( 'Twitter Consumer Secret', 'ppw' ) ?></b>
+												<input type="text" style="width:200px" name="twitter-app_secret" value="<?php echo ! empty( $this->options["twitter-app_secret"] ) ? $this->options["twitter-app_secret"] : ''; ?>"/></label>
 											<br/><span class="description"><?php _e( 'Enter your Twitter App ID Secret here.', 'ppw' ) ?></span>
 										</td>
 									</tr>
@@ -2470,7 +2495,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td></td>
 										<td colspan="2">
 											<label><b><?php _e( "Google Client ID", 'ppw' ); ?></b>
-												<input type="text" style="width:200px" name="google-client_id" value="<?php echo !empty( $this->options["google-client_id"] ) ? $this->options["google-client_id"] : ''; ?>"/>
+												<input type="text" style="width:200px" name="google-client_id" value="<?php echo ! empty( $this->options["google-client_id"] ) ? $this->options["google-client_id"] : ''; ?>"/>
 											</label>
 											<br/><span class="description"><?php printf( __( 'Enter your Google Sign-in Client ID here. If you don\'t have a Google Developers Console project yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://developers.google.com/identity/sign-in/web/devconsole-project' ) ?></span>
 										</td>
@@ -3265,6 +3290,58 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			}
 
 			return true;
+		}
+
+		/**
+		 * Process the code returned from Google sign in request, Verify the token
+		 * If login details are popular, create or login the user, else return error
+		 */
+		function ppv_process_ggl_login() {
+
+			//If we didn't got required data
+			if ( empty( $_POST ) || empty( $_POST['data'] ) ) {
+				wp_send_json_error();
+			}
+			$data = $_POST['data'];
+
+			if ( empty( $data['access_token'] ) || empty( $data['id_token'] ) || empty( $data['code'] ) ) {
+				//Send error details
+				wp_send_json_error();
+			}
+			//Verify token
+			$ggl_auth_url = "https://www.googleapis.com/oauth2/v2/tokeninfo";
+			$ggl_auth_url = add_query_arg(
+				array(
+					'access_token' => $data['access_token']
+				),
+				$ggl_auth_url
+			);
+			$verify_token = wp_remote_get( $ggl_auth_url );
+
+			//Handle Token Verification Error
+			if( is_wp_error( $verify_token ) || $verify_token['response']['code'] !== 200 ) {
+				wp_send_json_error();
+			}
+			//If verified, Get Profile details
+			//Get user info
+			$ggl_api   = "https://www.googleapis.com/oauth2/v2/userinfo";
+			$ggl_api   = add_query_arg(
+				array(
+					'access_token' => $data['access_token']
+				),
+				$ggl_api
+			);
+			$user_info = wp_remote_get( $ggl_api );
+			if( is_wp_error( $user_info ) || $user_info['response']['code'] !== 200 ) {
+				wp_send_json_error();
+			}
+			$user_info = wp_remote_retrieve_body( $user_info );
+			if( !empty( $user_info['email'] ) ) {
+				//Check for user
+			}
+			//Create or login user
+			wp_send_json_success();
+
 		}
 	}
 }
