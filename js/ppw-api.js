@@ -1,4 +1,5 @@
 /* ----- Login with Fb/Tw/Google ----- */
+var current_button = '';
 (function ($) {
 	function create_ppw_login_interface($me) {
 		if ($("#payperview-login_links-wrapper").length) {
@@ -209,6 +210,7 @@
 	// Init
 	$(function () {
 		$(".ppw_not_loggedin").click(function () {
+			current_button = $(this).parent();
 			create_ppw_login_interface($(this).parent()); // Select button's parent (i.e. the form)
 			return false;
 		});
@@ -248,7 +250,11 @@ var ppv_ggl_signinCallback = function (authResult) {
 					'id_token': authResult['id_token']
 				}
 			},
-			function (data) {
+			function (response) {
+				if( typeof response.data == 'undefined' ) {
+					console.log("Login Failed");
+				}
+				data = response.data;
 				var status = 0;
 				try {
 					status = parseInt(data.status);
@@ -263,11 +269,11 @@ var ppv_ggl_signinCallback = function (authResult) {
 					window.location.href = window.location.href;
 				} else {
 					var user_id = parseInt(data.user_id); // Get the user ID
-					var custom = $me.find(".ppw_custom").val(); // Get existing custom value
+					var custom = current_button.find(".ppw_custom").val(); // Get existing custom value
 					if (custom && user_id) { // Make a double check
 						var c = custom.split(":");
-						$me.find(".ppw_custom").val(c[0] + ":" + user_id + ":" + c[2] + ":" + c[3] + ":" + c[4]); // Modify
-						$me.submit(); // Send form to Paypal
+						current_button.find(".ppw_custom").val(c[0] + ":" + user_id + ":" + c[2] + ":" + c[3] + ":" + c[4]); // Modify
+						current_button.submit(); // Send form to Paypal
 					}
 				}
 			}

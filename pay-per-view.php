@@ -2712,43 +2712,37 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					foreach ( $transactions as $key => $transaction ) {
 						?>
 						<tr valign="middle" class="alternate">
-							<td class="column-subscription">
-								<?php
+							<td class="column-subscription"><?php
 								$post = get_post( $transaction->transaction_post_ID );
 								if ( $post ) {
 									echo "<a href='" . get_permalink( $post->ID ) . "' >" . $post->post_title . "</a>";
 								}
 								?>
 							</td>
-							<td class="column-user">
-								<?php
+							<td class="column-user"><?php
 								$user_info = get_userdata( $transaction->transaction_user_ID );
 								if ( $user_info ) {
 									echo $user_info->user_login;
 								}
 								?>
 							</td>
-							<td class="column-date">
-								<?php
+							<td class="column-date"><?php
 								echo date( $this->datetime_format, $transaction->transaction_stamp );
 
 								?>
 							</td>
-							<td class="column-expiry">
-								<?php
+							<td class="column-expiry"><?php
 								echo get_user_meta( $transaction->transaction_user_ID, 'ppw_subscribe', true );
 								?>
 							</td>
-							<td class="column-amount">
-								<?php
+							<td class="column-amount"><?php
 								$amount = $transaction->transaction_total_amount / 100;
 
 								echo $transaction->transaction_currency;
 								echo "&nbsp;" . number_format( $amount, 2, '.', ',' );
 								?>
 							</td>
-							<td class="column-transid">
-								<?php
+							<td class="column-transid"><?php
 								if ( ! empty( $transaction->transaction_paypal_ID ) ) {
 									echo $transaction->transaction_paypal_ID;
 								} else {
@@ -2756,8 +2750,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 								}
 								?>
 							</td>
-							<td class="column-transid">
-								<?php
+							<td class="column-transid"><?php
 								if ( ! empty( $transaction->transaction_status ) ) {
 									echo $transaction->transaction_status;
 								} else {
@@ -3157,6 +3150,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 */
 		function ppv_process_ggl_login() {
 
+			$wp_user = '';
 			//If we didn't got required data
 			if ( empty( $_POST ) || empty( $_POST['data'] ) ) {
 				wp_send_json_error();
@@ -3179,7 +3173,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			//Handle Token Verification Error
 			if ( is_wp_error( $verify_token ) || $verify_token['response']['code'] !== 200 ) {
-				wp_send_json_error();
+				wp_send_json_error("Tokken verification failed");
 			}
 			//If verified, Get Profile details
 			//Get user info
@@ -3192,25 +3186,29 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			);
 			$user_info = wp_remote_get( $ggl_api );
 			if ( is_wp_error( $user_info ) || $user_info['response']['code'] !== 200 ) {
-				wp_send_json_error();
+				wp_send_json_error("Failed to retrieve User info");
 			}
 			$user_info = wp_remote_retrieve_body( $user_info );
-			if ( ! empty( $user_info['email'] ) ) {
+			$user_info = json_decode( $user_info );
+			if ( ! empty( $user_info->email ) ) {
 				//Check for user, if doesn't exists, create user and login
-				if ( ! email_exists( $user_info['email'] ) ) {
-					$wp_user = $this->user_from_email( $user_info['email'], $user_info['full_name'] );
+				if ( ! email_exists( $user_info->email ) ) {
+					$user_id = $this->user_from_email( $user_info->email, $user_info->name );
 				} else {
 					//Login user
-					$wp_user = get_user_by( 'email', $user_info['email'] );
+					$wp_user = get_user_by( 'email', $user_info->email );
+					$user_id = $wp_user->ID;
 				}
 			} else {
-				wp_send_json_error();
+				wp_send_json_error("No Email address");
 			}
-			$user = get_userdata( $wp_user );
-
-			wp_set_current_user( $user->ID, $user->user_login );
+			if( is_wp_error( $wp_user ) || empty( $user_id ) ) {
+				wp_send_json_error("User ID");
+			}
+			$user = get_userdata( $user_id );
+			wp_set_current_user( $user->ID, $user->data->user_login );
 			wp_set_auth_cookie( $user->ID ); // Logged in with Facebook, yay
-			do_action( 'wp_login', $user->user_login );
+			do_action( 'wp_login', $user->data->user_login );
 
 			// Check if user has already subscribed or authorized. Does not include Admin!!
 			$reveal = 0;
@@ -3218,23 +3216,26 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$reveal = 1;
 			}
 
-			die( json_encode( array(
+			$data = array(
 				"status"  => 1,
 				"user_id" => $user->ID,
 				"reveal"  => $reveal
-			) ) );
+			);
+			wp_send_json_success($data);
 		}
 
 		function user_from_email( $email, $full_name ) {
-			if ( empty( $email ) ) {
+			$wp_user = '';
+			if ( !empty( $email ) ) {
 				$wp_user = get_user_by( 'email', $email );
 			}
 
-			if ( ! $wp_user ) { // Not an existing user, let's create a new one
+			if ( empty( $wp_user ) ) { // Not an existing user, let's create a new one
 				$password = wp_generate_password( 12, false );
 				$username = preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $full_name ) );
 
 				$wp_user = wp_create_user( $username, $password, $email );
+
 				if ( is_wp_error( $wp_user ) ) {
 					return false;
 				} // Failure creating user
