@@ -271,7 +271,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			if ( ! is_wp_error( $user ) ) {
 				$reveal = 0;
-				if ( get_user_meta( $user->ID, "ppw_subscribe", true ) != '' OR $this->is_authorised() ) {
+				if ( $this->is_subscription_valid( $user->ID ) OR $this->is_authorised() ) {
 					$reveal = 1;
 				}
 
@@ -331,7 +331,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			// Check if user has already subscribed or authorized. Does not include Admin!!
 			$reveal = 0;
-			if ( get_user_meta( $user->ID, "ppw_subscribe", true ) != '' OR $this->is_authorised() ) {
+			if ( $this->is_subscription_valid( $user->ID ) OR $this->is_authorised() ) {
 				$reveal = 1;
 			}
 
@@ -431,7 +431,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			// Check if user has already subscribed
 			$reveal = 0;
-			if ( get_user_meta( $user->ID, "ppw_subscribe", true ) != '' OR $this->is_authorised() ) {
+			if ( $this->is_subscription_valid( $user->ID ) OR $this->is_authorised() ) {
 				$reveal = 1;
 			}
 
@@ -696,8 +696,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				return $this->clear( $content );
 			}
 
+			$is_subscription_valid = $this->is_subscription_valid( get_current_user_id() );
+
 			// If user has already subscribed content
-			if ( is_user_logged_in() && trim( get_user_meta( get_current_user_id(), "ppw_subscribe", true ) ) != '' ) {
+			if ( is_user_logged_in() && $is_subscription_valid ) {
 				return $this->clear( $content );
 			}
 
@@ -911,12 +913,17 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			//Check post meta for paypal payment, in order to show a waiting message if it was ever made
 			if ( ! empty( $post->ID ) && ! empty( $current_user->ID ) ) {
 				$ppv_user      = get_post_meta( $post->ID, 'ppv_user_' . $current_user->ID, true );
-				$ppv_subscribe = trim( get_user_meta( $current_user->ID, "ppw_subscribe", true ) );
+				$ppw_subscribe = get_user_meta( $current_user->ID, "ppw_subscribe", true );
+				//If there is a value for subscribe meta, it means, subscription must have expired, else there was no sub
+				$show_waiting = empty( $ppw_subscribe ) ? true : false;
+				$ppw_subscribe = $this->is_subscription_valid( $current_user->ID, $ppw_subscribe );
 			}
-			if ( ! empty( $ppv_user ) && empty( $ppv_subscribe ) ) {
-				//Show the waiting status
-				$content .= "<p>" . apply_filters( 'ppv_wait_message', __( "Give us a moment to update the content for you, while we get the payment confirmation from Paypal,", 'ppw' ) ) . "</p>";
-				$content .= '<span id="payment_processing"><img src="' . $this->plugin_url . 'images/waiting.gif" /> ' . __( 'Processing...', 'ppw' ) . '</span>';
+			if ( ! empty( $ppv_user ) && !$ppw_subscribe ) {
+				if( $show_waiting ) {
+					//Show the waiting status
+					$content .= "<p>" . apply_filters( 'ppv_wait_message', __( "Give us a moment to update the content for you, while we get the payment confirmation from Paypal,", 'ppw' ) ) . "</p>";
+					$content .= '<span id="payment_processing"><img src="' . $this->plugin_url . 'images/waiting.gif" /> ' . __( 'Processing...', 'ppw' ) . '</span>';
+				}
 			}
 
 			//Check if there is Payment status in session, to show a waiting message from PDT
@@ -1646,50 +1653,50 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 *
 		 */
 		function init() {
+			$options = array(
+				'post_default'             => 'enable',
+				'page_default'             => '',
+				'custom_default'           => '',
+				'method'                   => 'automatic',
+				'excerpt'                  => 100,
+				'price'                    => '0.25',
+				'admin'                    => 'true',
+				'home'                     => '',
+				'multi'                    => 'true',
+				'authorized'               => '',
+				'level'                    => 'editor',
+				'bot'                      => '',
+				'cookie'                   => 1,
+				'one_time'                 => 'true',
+				'one_time_description'     => 'Pay only $PRICE to see this DESCRIPTION',
+				'daily_pass'               => 'true',
+				'daily_pass_price'         => '2.75',
+				'daily_pass_days'          => '1',
+				'daily_pass_period'        => 'D',
+				'daily_pass_description'   => 'Access all content for just $PRICE for DAY PERIOD',
+				'subscription'             => 'true',
+				'subscription_price'       => '11.55',
+				'subscription_days'        => '30',
+				'subscription_period'      => 'D',
+				'subscription_description' => 'Subscribe for just $PRICE for DAY PERIOD',
+				'currency'                 => 'USD',
+				'admin_email'              => get_option( "admin_email" ),
+				'paypal_email'             => '',
+				'sandbox'                  => '',
+				'accept_api_logins'        => 'true',
+				'allow_facebook_login'     => 'true',
+				'facebook-no_init'         => '',
+				'facebook-app_id'          => '',
+				'allow_twitter_login'      => 'true',
+				'twitter-app_id'           => '',
+				'twitter-app_secret'       => '',
+				'allow_google_login'       => 'true',
+				'google-client-id'         => ''
+			);
 			// Since wp-cron is not reliable, use this instead
 			add_option( "ppw_last_update", time() );
 
-			add_option( 'ppw_options', array(
-					'post_default'             => 'enable',
-					'page_default'             => '',
-					'custom_default'           => '',
-					'method'                   => 'automatic',
-					'excerpt'                  => 100,
-					'price'                    => '0.25',
-					'admin'                    => 'true',
-					'home'                     => '',
-					'multi'                    => 'true',
-					'authorized'               => '',
-					'level'                    => 'editor',
-					'bot'                      => '',
-					'cookie'                   => 1,
-					'one_time'                 => 'true',
-					'one_time_description'     => 'Pay only $PRICE to see this DESCRIPTION',
-					'daily_pass'               => 'true',
-					'daily_pass_price'         => '2.75',
-					'daily_pass_days'          => '1',
-					'daily_pass_period'        => 'D',
-					'daily_pass_description'   => 'Access all content for just $PRICE for DAY PERIOD',
-					'subscription'             => 'true',
-					'subscription_price'       => '11.55',
-					'subscription_days'        => '30',
-					'subscription_period'      => 'D',
-					'subscription_description' => 'Subscribe for just $PRICE for DAY PERIOD',
-					'currency'                 => 'USD',
-					'admin_email'              => get_option( "admin_email" ),
-					'paypal_email'             => '',
-					'sandbox'                  => '',
-					'accept_api_logins'        => 'true',
-					'allow_facebook_login'     => 'true',
-					'facebook-no_init'         => '',
-					'facebook-app_id'          => '',
-					'allow_twitter_login'      => 'true',
-					'twitter-app_id'           => '',
-					'twitter-app_secret'       => '',
-					'allow_google_login'       => 'true',
-					'google-client-id'         => ''
-				)
-			);
+			add_option( 'ppw_options', $options );
 
 			add_post_type_support( 'page', 'excerpt' );
 
@@ -1705,12 +1712,6 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 *
 		 */
 		function admin_notices() {
-			//				if ( ( $this->options["daily_pass"] OR $this->options["subscription"] ) && !$this->options["accept_api_logins"] ) {
-			//					echo '<div class="error fade"><p>' .
-			//					__("<b>[Pay Per View]</b> If you are using Period Pass or Recurring Subscriptions, you need to enable and set API logins or be limited to WordPress login.", "ppw") .
-			//					'</p></div>';
-			//				}
-
 			// Warn admin in case of default permalink.
 			if ( ! get_option( 'permalink_structure' ) ) {
 				echo '<div class="error fade"><p>' .
@@ -2967,10 +2968,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		function ppv_payment_status() {
 
 			$user_id       = ! empty( $_POST['user_id'] ) ? $_POST['user_id'] : '';
-			$ppv_subscribe = trim( get_user_meta( $user_id, "ppw_subscribe", true ) );
+			$is_subscription_valid = $this->is_subscription_valid($user_id);
 
 			//User is subscribed, reload page
-			if ( ! empty( $ppv_subscribe ) ) {
+			if ( $is_subscription_valid ) {
 				wp_send_json_success( array( 'reload' => true ) );
 			} else {
 				wp_send_json_success( array( 'reload' => false ) );
@@ -3212,7 +3213,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			// Check if user has already subscribed or authorized. Does not include Admin!!
 			$reveal = 0;
-			if ( get_user_meta( $user->ID, "ppw_subscribe", true ) != '' OR $this->is_authorised() ) {
+			if ( $this->is_subscription_valid( $user_id ) OR $this->is_authorised() ) {
 				$reveal = 1;
 			}
 
@@ -3244,6 +3245,26 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			}
 
 			return $wp_user;
+		}
+
+		/**
+		 * Check if subscription is not expired for the user
+		 *
+*@param $userid
+		 *
+		 * @return bool
+		 */
+		function is_subscription_valid ( $userid, $meta = '' ) {
+			if( empty( $userid ) ) {
+				return false;
+			}
+			$ppw_subscribe = !empty( $meta ) ? $meta : get_user_meta( $userid, "ppw_subscribe", true );
+			if( !empty( $ppw_subscribe ) ) {
+				if( strtotime('now') <= strtotime( $ppw_subscribe ) ) {
+					return true;
+				}
+			}
+			return false;
 		}
 	}
 }
