@@ -7,7 +7,7 @@
 - Fixed:   Show social login if settings are available for the particular site
 - Fixed:   Fixed Expire field at user screen not working
 - Updated: Google OAuth integrated
-- Updated: Social Logins - Enable selected login out of Facebook, Twitter, Google
+- Updated: Social Login - Enable selected login out of Facebook, Twitter, Google
 
 V1.4.1.9:
 - Add day, month, year choices to Daily Pass. Changed name to Period Pass
