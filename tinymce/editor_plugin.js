@@ -28,7 +28,7 @@
 			ed.addButton('payperview', {
 				title : ed.getLang('payperview.title'),
 				cmd : 'mcePayPerView',
-				image : url + '/payperview.png'
+				icon : 'icon dashicons-tickets-alt'
 			});
 
 			// Add a node change handler, selects the button in the UI when a image is selected

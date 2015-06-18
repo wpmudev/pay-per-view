@@ -1645,7 +1645,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 		//enqeue css on product settings screen
 		function admin_css() {
+			global $current_screen;
 			wp_enqueue_style( 'jquery-colorpicker-css', $this->plugin_url . '/css/colorpicker.css', false, $this->version );
+			if( $current_screen->base == 'post') {
+				wp_enqueue_style('ppv-tinymce',  $this->plugin_url . '/css/tinymce-dashicon.css', false, $this->version );
+			}
 		}
 
 		/**
@@ -1775,7 +1779,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_menu_page( __( 'Pay Per View', 'ppw' ), __( 'Pay Per View', 'ppw' ), 'manage_options', $this->plugin_name, array(
 				&$this,
 				'settings'
-			), $this->plugin_url . "/images/menu_icon.png" );
+			), 'dashicons-tickets-alt' );
 			add_submenu_page( $this->plugin_name, __( 'Transactions', 'ppw' ), __( 'Transactions', 'ppw' ), 'manage_options', "ppw_transactions", array(
 				&$this,
 				'transactions'
