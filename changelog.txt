@@ -4,8 +4,8 @@
 ----------------------------------------------------------------------
 
 - New:     Integrated PDT (Payment Data Transfer) which allows instant payment notification for periodic pass
-- Fixed:   Show social login if settings are available for the particular site
-- Fixed:   Fixed Expire field at user screen not working
+- Fixed:   Show social login, only if API settings are available
+- Fixed:   User Profile : Expire field not working
 - Updated: Google OAuth integrated
 - Updated: Social Login - Enable selected login out of Facebook, Twitter, Google
 
