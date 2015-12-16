@@ -340,7 +340,7 @@ msgstr ""
 msgid "Submit"
 msgstr ""
 
-#: pay-per-view.php:196 pay-per-view.php:2970
+#: pay-per-view.php:196 pay-per-view.php:2975
 msgid "Cancel"
 msgstr ""
 
@@ -437,12 +437,12 @@ msgid "Last transaction is pending. Reason: "
 msgstr ""
 
 #: pay-per-view.php:1334 pay-per-view.php:1336 pay-per-view.php:1795
-#: pay-per-view.php:2938
+#: pay-per-view.php:2943
 msgid "Pay Per View"
 msgstr ""
 
 #: pay-per-view.php:1364 pay-per-view.php:2378 pay-per-view.php:2410
-#: pay-per-view.php:2440
+#: pay-per-view.php:2445
 msgid "Enabled"
 msgstr ""
 
@@ -551,7 +551,7 @@ msgstr ""
 msgid "Transactions"
 msgstr ""
 
-#: pay-per-view.php:1803 pay-per-view.php:2532
+#: pay-per-view.php:1803 pay-per-view.php:2537
 msgid "Customization"
 msgstr ""
 
@@ -855,139 +855,143 @@ msgstr ""
 msgid "Twitter Consumer Key"
 msgstr ""
 
-#: pay-per-view.php:2422
-msgid "Enter your Twitter App ID number here. If you don't have a Twitter App yet, you will need to create one <a href=\"%s\" target=\"_blank\">here</a>"
+#: pay-per-view.php:2423
+msgid "Enter your Twitter App ID number here. If you don't have a Twitter App yet, you will need to create one <a href=\"%s\" target=\"_blank\">here</a>."
 msgstr ""
 
-#: pay-per-view.php:2429
+#: pay-per-view.php:2425
+msgid "Specify `%s` as Callback URL in your Twitter app."
+msgstr ""
+
+#: pay-per-view.php:2434
 msgid "Twitter Consumer Secret"
 msgstr ""
 
-#: pay-per-view.php:2433
+#: pay-per-view.php:2438
 msgid "Enter your Twitter App ID Secret here."
 msgstr ""
 
-#: pay-per-view.php:2437
+#: pay-per-view.php:2442
 msgid "Google:"
 msgstr ""
 
-#: pay-per-view.php:2446
+#: pay-per-view.php:2451
 msgid "Google Client ID"
 msgstr ""
 
-#: pay-per-view.php:2451
+#: pay-per-view.php:2456
 msgid "Enter your Google Sign-in Client ID here. If you don't have a Google Developers Console project yet, you will need to create one <a href=\"%s\" target=\"_blank\">here</a>"
 msgstr ""
 
-#: pay-per-view.php:2468
+#: pay-per-view.php:2473
 msgid "Save Changes"
 msgstr ""
 
-#: pay-per-view.php:2538
+#: pay-per-view.php:2543
 msgid "Customization Examples"
 msgstr ""
 
-#: pay-per-view.php:2542
+#: pay-per-view.php:2547
 msgid "For protecting html codes that you cannot add to post content, there is a template function <b>wpmudev_ppw_html</b>. This function replace all such codes with payment buttons and reveal them when payment is done. Add the following codes to the page template where you want the html codes to be displayed and modify as required. Also you need to use the bottom action function."
 msgstr ""
 
-#: pay-per-view.php:2564
+#: pay-per-view.php:2569
 msgid "Note: In this usage, enabled/disabled and method settings of the post has no significance. Such an html code will be fully protected. However, Accessibility Settings will be applied."
 msgstr ""
 
-#: pay-per-view.php:2569
+#: pay-per-view.php:2574
 msgid "Some custom post types use templates which take the post content directly from the database. For such applications you may need to use <b>wpmudev_ppw</b> function to manage the content."
 msgstr ""
 
-#: pay-per-view.php:2573
+#: pay-per-view.php:2578
 msgid "Example: Suppose that the content of a post type is displayed like this: <code>&lt;?php echo custom_description(); ?&gt;</code>. Then edit that part of the template like this:"
 msgstr ""
 
-#: pay-per-view.php:2587
+#: pay-per-view.php:2592
 msgid "For both of the above usages you <b>must</b> create a function in your functions.php to call necessary css and js files. Here is an example:"
 msgstr ""
 
-#: pay-per-view.php:2613
+#: pay-per-view.php:2618
 msgid "If you want to apply your own styles copy contents of front.css to your theme css file and add this code inside functions.php of your theme:<code>add_theme_support( \"pay_per_view_style\" )</code> OR copy and rename the default css file <b>%s</b> as <b>%s</b> and edit this latter file. Then, your edited styles will not be affected from plugin updates."
 msgstr ""
 
-#: pay-per-view.php:2710
+#: pay-per-view.php:2715
 msgid " Pay Per View Transactions"
 msgstr ""
 
-#: pay-per-view.php:2717
+#: pay-per-view.php:2722
 msgid "Recent transactions"
 msgstr ""
 
-#: pay-per-view.php:2723
+#: pay-per-view.php:2728
 msgid "Pending transactions"
 msgstr ""
 
-#: pay-per-view.php:2729
+#: pay-per-view.php:2734
 msgid "Future transactions"
 msgstr ""
 
-#: pay-per-view.php:2756
+#: pay-per-view.php:2761
 msgid "Post"
 msgstr ""
 
-#: pay-per-view.php:2757
+#: pay-per-view.php:2762
 msgid "User"
 msgstr ""
 
-#: pay-per-view.php:2758
+#: pay-per-view.php:2763
 msgid "Date/Time"
 msgstr ""
 
-#: pay-per-view.php:2759
+#: pay-per-view.php:2764
 msgid "Expiry Date"
 msgstr ""
 
-#: pay-per-view.php:2760
+#: pay-per-view.php:2765
 msgid "Amount"
 msgstr ""
 
-#: pay-per-view.php:2761
+#: pay-per-view.php:2766
 msgid "Transaction id"
 msgstr ""
 
-#: pay-per-view.php:2762
+#: pay-per-view.php:2767
 msgid "Status"
 msgstr ""
 
-#: pay-per-view.php:2846 pay-per-view.php:2854
+#: pay-per-view.php:2851 pay-per-view.php:2859
 msgid "None yet"
 msgstr ""
 
-#: pay-per-view.php:2866
+#: pay-per-view.php:2871
 msgid "No Transactions have been found, patience is a virtue."
 msgstr ""
 
-#: pay-per-view.php:2946
+#: pay-per-view.php:2951
 msgid "Please enter a value!"
 msgstr ""
 
-#: pay-per-view.php:2950
+#: pay-per-view.php:2955
 msgid "Description"
 msgstr ""
 
-#: pay-per-view.php:2955
+#: pay-per-view.php:2960
 msgid "Description for this selection."
 msgstr ""
 
-#: pay-per-view.php:2958
+#: pay-per-view.php:2963
 msgid "Price"
 msgstr ""
 
-#: pay-per-view.php:2962
+#: pay-per-view.php:2967
 msgid "Price for this selection."
 msgstr ""
 
-#: pay-per-view.php:2975
+#: pay-per-view.php:2980
 msgid "Insert"
 msgstr ""
 
-#: pay-per-view.php:3124
+#: pay-per-view.php:3129
 msgid "We were unable to get the Payment details from Paypal, Please wait for a while and try refreshing the page, to see if your subscription was successful."
 msgstr ""
 #. Plugin Name of the plugin/theme
