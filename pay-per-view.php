@@ -2418,8 +2418,13 @@ if ( ! class_exists( 'PayPerView' ) ) {
 											                                                                 style="width:200px;margin-left: 20px;"
 											                                                                 name="twitter-app_id"
 											                                                                 value="<?php echo ! empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
-											<br/><span
-												class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
+											<br/>
+											<span class="description"><?php
+												printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s" target="_blank">here</a>.', 'ppw' ), 'https://dev.twitter.com/apps/new' );
+												echo "<br />";
+												printf( esc_html__( "Specify `%s` as Callback URL in your Twitter app.", "ppw"), network_site_url() );
+												?>
+											</span>
 										</td>
 									</tr>
 
