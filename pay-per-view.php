@@ -3,7 +3,7 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.2
+Version: 1.4.3
 Author: WPMU Dev
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
@@ -34,7 +34,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
-		var $version = "1.4.2";
+		var $version = "1.4.3";
 
 		/**
 		 * Constructor
@@ -96,7 +96,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_action( 'admin_menu', array( &$this, 'admin_init' ) );            // Creates admin settings window
 			add_action( 'admin_notices', array( &$this, 'admin_notices' ) );    // Warns admin
 			add_action( 'add_meta_boxes', array( &$this, 'add_custom_box' ) );    // Add meta box to posts
-			add_filter( 'plugin_row_meta', array( &$this, 'set_plugin_meta' ), 10, 2 );// Add settings link on plugin page
+			add_filter( 'plugin_row_meta', array(
+				&$this,
+				'set_plugin_meta'
+			), 10, 2 );// Add settings link on plugin page
 			add_action( 'admin_print_scripts', array( &$this, 'admin_scripts' ) );
 			add_action( 'admin_print_styles', array( &$this, 'admin_css' ) );
 
@@ -119,7 +122,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					add_action( 'wp_ajax_nopriv_ppw_facebook_login', array( &$this, 'handle_facebook_login' ) );
 				}
 				if ( $this->twitter_enabled() ) {
-					add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array( &$this, 'handle_get_twitter_auth_url' ) );
+					add_action( 'wp_ajax_nopriv_ppw_get_twitter_auth_url', array(
+						&$this,
+						'handle_get_twitter_auth_url'
+					) );
 					add_action( 'wp_ajax_nopriv_ppw_twitter_login', array( &$this, 'handle_twitter_login' ) );
 				}
 				if ( $this->google_enabled() ) {
@@ -225,14 +231,19 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				<meta name="google-signin-client_id" content="<?php echo $this->options['google-client_id']; ?>"/>
 				<meta name="google-signin-cookiepolicy" content="<?php echo site_url( '', 'http' ); ?>"/>
 				<meta name="google-signin-callback" content="ppv_ggl_signinCallback"/>
-				<meta name="google-signin-scope" content="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"/>
+				<meta name="google-signin-scope"
+				      content="https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile"/>
 				<script src="https://apis.google.com/js/platform.js" async defer>
-					{"parsetags":"explicit"}
+					{
+						"parsetags"
+					:
+						"explicit"
+					}
 				</script>
 
-			<?php
+				<?php
 			} ?>
-		<?php
+			<?php
 		}
 
 		function wp_footer() { ?>
@@ -304,10 +315,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			$request = new WP_Http;
 			$result  = $request->request(
-				'https://graph.facebook.com/me?oauth_token=' . $token,
+				'https://graph.facebook.com/me?fields=email&oauth_token=' . $token,
 				array( 'sslverify' => false ) // SSL certificate issue workaround
 			);
-			if ( 200 != $result['response']['code'] ) {
+			if ( is_wp_error( $result ) || 200 != $result['response']['code'] ) {
 				die( json_encode( $resp ) );
 			} // Couldn't fetch info
 
@@ -488,14 +499,18 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					<th><label for="address"><?php _e( "Recurring days" ); ?></label></th>
 					<td>
 						<input type="text" name="ppw_days" value="<?php echo $days ?>" <?php echo $readonly; ?> />
-						<input type="radio" name="ppw_period" value="D" <?php echo checked( $period == "D" || empty( $period ) ); ?> <?php echo $readonly; ?> />Days&nbsp;&nbsp;
-						<input type="radio" name="ppw_period" value="W" <?php echo checked( $period == "W" ); ?> <?php echo $readonly; ?> />Weeks&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="ppw_period" value="M" <?php echo checked( $period == "M" ); ?> <?php echo $readonly; ?> />Months&nbsp;&nbsp;&nbsp;
-						<input type="radio" name="ppw_period" value="Y" <?php echo checked( $period == "Y" ); ?> <?php echo $readonly; ?> />Years&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="ppw_period"
+						       value="D" <?php echo checked( $period == "D" || empty( $period ) ); ?> <?php echo $readonly; ?> />Days&nbsp;&nbsp;
+						<input type="radio" name="ppw_period"
+						       value="W" <?php echo checked( $period == "W" ); ?> <?php echo $readonly; ?> />Weeks&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="ppw_period"
+						       value="M" <?php echo checked( $period == "M" ); ?> <?php echo $readonly; ?> />Months&nbsp;&nbsp;&nbsp;
+						<input type="radio" name="ppw_period"
+						       value="Y" <?php echo checked( $period == "Y" ); ?> <?php echo $readonly; ?> />Years&nbsp;&nbsp;&nbsp;
 					</td>
 				</tr>
 			</table>
-		<?php
+			<?php
 		}
 
 		/**
@@ -915,11 +930,11 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				$ppv_user      = get_post_meta( $post->ID, 'ppv_user_' . $current_user->ID, true );
 				$ppw_subscribe = get_user_meta( $current_user->ID, "ppw_subscribe", true );
 				//If there is a value for subscribe meta, it means, subscription must have expired, else there was no sub
-				$show_waiting = empty( $ppw_subscribe ) ? true : false;
+				$show_waiting  = empty( $ppw_subscribe ) ? true : false;
 				$ppw_subscribe = $this->is_subscription_valid( $current_user->ID, $ppw_subscribe );
 			}
-			if ( ! empty( $ppv_user ) && !$ppw_subscribe ) {
-				if( $show_waiting ) {
+			if ( ! empty( $ppv_user ) && ! $ppw_subscribe ) {
+				if ( $show_waiting ) {
 					//Show the waiting status
 					$content .= "<p>" . apply_filters( 'ppv_wait_message', __( "Give us a moment to update the content for you, while we get the payment confirmation from Paypal,", 'ppw' ) ) . "</p>";
 					$content .= '<span id="payment_processing"><img src="' . $this->plugin_url . 'images/waiting.gif" /> ' . __( 'Processing...', 'ppw' ) . '</span>';
@@ -1519,7 +1534,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			</div>
 			<div class="ppw_clear ppw_border"></div>
 
-			<input type="text" name="ppw_excerpt" id="ppw_excerpt" value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true ); ?> "/>
+			<input type="text" name="ppw_excerpt" id="ppw_excerpt"
+			       value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true ); ?> "/>
 			<label for="ppw_excerpt"><?php
 				_e( 'Excerpt length', 'ppw' ); ?>
 			</label>
@@ -1581,7 +1597,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 				});
 			</script>
-		<?php
+			<?php
 		}
 
 		/**
@@ -1647,8 +1663,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		function admin_css() {
 			global $current_screen;
 			wp_enqueue_style( 'jquery-colorpicker-css', $this->plugin_url . '/css/colorpicker.css', false, $this->version );
-			if( $current_screen->base == 'post') {
-				wp_enqueue_style('ppv-tinymce',  $this->plugin_url . '/css/tinymce-dashicon.css', false, $this->version );
+			if ( $current_screen->base == 'post' ) {
+				wp_enqueue_style( 'ppv-tinymce', $this->plugin_url . '/css/tinymce-dashicon.css', false, $this->version );
 			}
 		}
 
@@ -1894,7 +1910,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 							<h3 class='hndle'><span><?php _e( 'Global Settings', 'ppw' ) ?></span></h3>
 
 							<div class="inside">
-								<span class="description"><?php _e( 'Pay Per View allows protecting posts/page content or parts of post/page content until visitor pays a nominal fee or subscribes to the website. These settings provide a quick way to set Pay Per View for your posts and pages. They can be overridden per post basis using post editor page.', 'ppw' ) ?></span>
+								<span
+									class="description"><?php _e( 'Pay Per View allows protecting posts/page content or parts of post/page content until visitor pays a nominal fee or subscribes to the website. These settings provide a quick way to set Pay Per View for your posts and pages. They can be overridden per post basis using post editor page.', 'ppw' ) ?></span>
 
 								<table class="form-table">
 
@@ -1902,10 +1919,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Protection for posts', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="post_default">
-												<option value="" <?php if ( $this->options['post_default'] <> 'enable' ) {
+												<option
+													value="" <?php if ( $this->options['post_default'] <> 'enable' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Disabled for all posts', 'ppw' ) ?></option>
-												<option value="enable" <?php if ( $this->options['post_default'] == 'enable' ) {
+												<option
+													value="enable" <?php if ( $this->options['post_default'] == 'enable' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Enabled for all posts', 'ppw' ) ?></option>
 											</select>
@@ -1916,10 +1935,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Protection for pages', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="page_default">
-												<option value="" <?php if ( $this->options['page_default'] <> 'enable' ) {
+												<option
+													value="" <?php if ( $this->options['page_default'] <> 'enable' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Disabled for all pages', 'ppw' ) ?></option>
-												<option value="enable" <?php if ( $this->options['page_default'] == 'enable' ) {
+												<option
+													value="enable" <?php if ( $this->options['page_default'] == 'enable' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Enabled for all pages', 'ppw' ) ?></option>
 											</select>
@@ -1948,10 +1969,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Protection for custom post types', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="custom_default">
-												<option value="" <?php if ( $this->options['custom_default'] <> 'enable' ) {
+												<option
+													value="" <?php if ( $this->options['custom_default'] <> 'enable' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Disabled for all custom post types', 'ppw' ) ?></option>
-												<option value="enable" <?php if ( $this->options['custom_default'] == 'enable' ) {
+												<option
+													value="enable" <?php if ( $this->options['custom_default'] == 'enable' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Enabled for all custom post types', 'ppw' ) ?></option>
 											</select>
@@ -1963,10 +1986,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Public content selection method', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="ppw_method" id="ppw_method">
-												<option value="automatic" <?php if ( $this->options['method'] == 'automatic' ) {
+												<option
+													value="automatic" <?php if ( $this->options['method'] == 'automatic' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Automatic excerpt from the content', 'ppw' ) ?></option>
-												<option value="manual" <?php if ( $this->options['method'] == 'manual' ) {
+												<option
+													value="manual" <?php if ( $this->options['method'] == 'manual' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Manual excerpt from post excerpt field', 'ppw' ) ?></option>
 												<option value="tool" <?php if ( $this->options['method'] == 'tool' ) {
@@ -1979,21 +2004,26 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										</td>
 									</tr>
 
-									<tr valign="top" id="excerpt_length" <?php if ( $this->options['method'] != 'automatic' ) {
+									<tr valign="top"
+									    id="excerpt_length" <?php if ( $this->options['method'] != 'automatic' ) {
 										echo 'style="display:none"';
 									} ?>>
 										<th scope="row"><?php _e( 'Excerpt length (words)', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" name="excerpt" value="<?php echo $this->options["excerpt"] ?>"/>
-											<span class="description"><?php _e( 'Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected.', 'ppw' ) ?></span>
+											<input type="text" style="width:50px" name="excerpt"
+											       value="<?php echo $this->options["excerpt"] ?>"/>
+											<span
+												class="description"><?php _e( 'Number of words of the post content that will be displayed publicly. Only effective if Automatic excerpt is selected.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top">
 										<th scope="row"><?php printf( __( 'Unit price (%s)', 'ppw' ), $this->options["currency"] ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" name="price" value="<?php echo $this->options["price"] ?>"/>
-											<span class="description"><?php _e( 'Default price per protected content.', 'ppw' ) ?></span>
+											<input type="text" style="width:50px" name="price"
+											       value="<?php echo $this->options["price"] ?>"/>
+											<span
+												class="description"><?php _e( 'Default price per protected content.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2033,7 +2063,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
-											<span class="description"><?php _e( 'Enables the plugin for pages (except the home page) which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. ', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'Enables the plugin for pages (except the home page) which contain content for more that one post/page, e.g. archive, category pages. Some themes use excerpts here so enabling plugin for these pages may cause strange output. ', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2048,7 +2079,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 													echo "selected='selected'";
 												} ?> ><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
-											<span class="description"><?php _e( 'You may want to select No for test purposes.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'You may want to select No for test purposes.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2056,14 +2088,16 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'Authorized users see full content', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="authorized" id="authorized">
-												<option value="true" <?php if ( $this->options['authorized'] == 'true' ) {
+												<option
+													value="true" <?php if ( $this->options['authorized'] == 'true' ) {
 													echo "selected='selected'";
 												} ?> ><?php _e( 'Yes', 'ppw' ) ?></option>
 												<option value="" <?php if ( $this->options['authorized'] <> 'true' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
-											<span class="description"><?php _e( 'If Yes, authorized users will see the full content without the need to pay or subscribe. Admin setting is independent of this one.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'If Yes, authorized users will see the full content without the need to pay or subscribe. Admin setting is independent of this one.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2073,20 +2107,25 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<th scope="row"><?php _e( 'User level where authorization starts', 'ppw' ) ?></th>
 										<td colspan="2">
 											<select name="level">
-												<option value="editor" <?php if ( $this->options['level'] == 'editor' ) {
+												<option
+													value="editor" <?php if ( $this->options['level'] == 'editor' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Editor', 'ppw' ) ?></option>
-												<option value="author" <?php if ( $this->options['level'] == 'author' ) {
+												<option
+													value="author" <?php if ( $this->options['level'] == 'author' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Author', 'ppw' ) ?></option>
-												<option value="contributor" <?php if ( $this->options['level'] == 'contributor' ) {
+												<option
+													value="contributor" <?php if ( $this->options['level'] == 'contributor' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Contributor', 'ppw' ) ?></option>
-												<option value="subscriber" <?php if ( $this->options['level'] == 'subscriber' ) {
+												<option
+													value="subscriber" <?php if ( $this->options['level'] == 'subscriber' ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'Subscriber', 'ppw' ) ?></option>
 											</select>
-											<span class="description"><?php _e( 'If the above field is selected as yes, users having a higher level than this selection will see the full content.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'If the above field is selected as yes, users having a higher level than this selection will see the full content.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2101,15 +2140,18 @@ if ( ! class_exists( 'PayPerView' ) ) {
 													echo "selected='selected'";
 												} ?>><?php _e( 'No', 'ppw' ) ?></option>
 											</select>
-											<span class="description"><?php _e( 'You may want to enable this for SEO purposes. Warning: Your full content may be visible in search engine results.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'You may want to enable this for SEO purposes. Warning: Your full content may be visible in search engine results.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top">
 										<th scope="row"><?php _e( 'Cookie validity time (hours)', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" name="cookie" value="<?php echo $this->options["cookie"] ?>"/>
-											<span class="description"><?php _e( 'Validity time of the cookie which lets visitor to be exempt from the protection after he/she liked. Tip: If you want the cookie to expire at the end of the session (when the browser closes), enter zero here.', 'ppw' ) ?></span>
+											<input type="text" style="width:50px" name="cookie"
+											       value="<?php echo $this->options["cookie"] ?>"/>
+											<span
+												class="description"><?php _e( 'Validity time of the cookie which lets visitor to be exempt from the protection after he/she liked. Tip: If you want the cookie to expire at the end of the session (when the browser closes), enter zero here.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2127,10 +2169,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top">
 										<th scope="row"><?php _e( 'One time view', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="checkbox" id="one_time" name="one_time" value="true" <?php if ( $this->options["one_time"] ) {
+											<input type="checkbox" id="one_time" name="one_time"
+											       value="true" <?php if ( $this->options["one_time"] ) {
 												echo "checked='checked'";
 											} ?> />
-											<span class="description"><?php _e( 'Visitors pay per content they want to reveal. Price can be set globally from the above "unit price" field, or per post basis using the post editor. Does not require registration of the visitor.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'Visitors pay per content they want to reveal. Price can be set globally from the above "unit price" field, or per post basis using the post editor. Does not require registration of the visitor.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 									<?php
@@ -2145,7 +2189,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top" class="one_time_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'One time view description', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:400px" name="one_time_description" value="<?php echo stripslashes( $this->options["one_time_description"] ) ?>"/>
+											<input type="text" style="width:400px" name="one_time_description"
+											       value="<?php echo stripslashes( $this->options["one_time_description"] ) ?>"/>
 											<br/>
 											<span class="description"><?php _e( 'This text will be shown on the button. PRICE (case sensitive) will be replaced by its real value.
 												DESCRIPTION (case sensitive) will be replaced by description field defined in Selection Tool, or the word "content" if it is not given.', 'ppw' ) ?>
@@ -2156,10 +2201,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top" style="border-top:1px solid lightgrey">
 										<th scope="row"><?php _e( 'Period Pass', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="checkbox" id="daily_pass" name="daily_pass" value="true" <?php if ( $this->options["daily_pass"] ) {
+											<input type="checkbox" id="daily_pass" name="daily_pass"
+											       value="true" <?php if ( $this->options["daily_pass"] ) {
 												echo "checked='checked'";
 											} ?> />
-											<span class="description"><?php _e( 'Visitor pays a lumpsum fee and then he/she can view all the content on the website. Visitor is required to register to the website.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'Visitor pays a lumpsum fee and then he/she can view all the content on the website. Visitor is required to register to the website.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 									<?php
@@ -2173,29 +2220,39 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top" class="daily_pass_detail" <?php echo $style ?>>
 										<th scope="row"><?php printf( __( 'Period pass price (%s)', 'ppw' ), $this->options["currency"] ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" name="daily_pass_price" value="<?php echo $this->options["daily_pass_price"] ?>"/>
-											<span class="description"><?php _e( 'Price that will be paid once which lets the visitor see full content during validity period.', 'ppw' ) ?></span>
+											<input type="text" style="width:50px" name="daily_pass_price"
+											       value="<?php echo $this->options["daily_pass_price"] ?>"/>
+											<span
+												class="description"><?php _e( 'Price that will be paid once which lets the visitor see full content during validity period.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="daily_pass_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'Period pass validity', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" name="daily_pass_days" value="<?php echo $this->options["daily_pass_days"] ?>"/>
-											<input type="radio" name="daily_pass_period" value="D" <?php echo checked( $this->options["daily_pass_period"] == "D" || empty( $this->options["daily_pass_period"] ) ); ?> />Days&nbsp;&nbsp;
-											<input type="radio" name="daily_pass_period" value="W" <?php echo checked( $this->options["daily_pass_period"], "W" ); ?> />Weeks&nbsp;&nbsp;&nbsp;
-											<input type="radio" name="daily_pass_period" value="M" <?php echo checked( $this->options["daily_pass_period"], "M" ); ?> />Months&nbsp;&nbsp;&nbsp;
-											<input type="radio" name="daily_pass_period" value="Y" <?php echo checked( $this->options["daily_pass_period"], "Y" ); ?> />Years&nbsp;&nbsp;&nbsp;
+											<input type="text" style="width:50px" name="daily_pass_days"
+											       value="<?php echo $this->options["daily_pass_days"] ?>"/>
+											<input type="radio" name="daily_pass_period"
+											       value="D" <?php echo checked( $this->options["daily_pass_period"] == "D" || empty( $this->options["daily_pass_period"] ) ); ?> />Days&nbsp;&nbsp;
+											<input type="radio" name="daily_pass_period"
+											       value="W" <?php echo checked( $this->options["daily_pass_period"], "W" ); ?> />Weeks&nbsp;&nbsp;&nbsp;
+											<input type="radio" name="daily_pass_period"
+											       value="M" <?php echo checked( $this->options["daily_pass_period"], "M" ); ?> />Months&nbsp;&nbsp;&nbsp;
+											<input type="radio" name="daily_pass_period"
+											       value="Y" <?php echo checked( $this->options["daily_pass_period"], "Y" ); ?> />Years&nbsp;&nbsp;&nbsp;
 
-											<span class="description"><?php _e( 'Period pass will be valid for this period.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'Period pass will be valid for this period.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="daily_pass_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'Period pass description', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:400px" name="daily_pass_description" value="<?php echo stripslashes( $this->options["daily_pass_description"] ) ?>"/>
-											<br/><span class="description"><?php _e( 'This text will be shown on the button. PRICE, DAY and PERIOD (case sensitive) will be replaced by their real values.', 'ppw' ) ?></span>
+											<input type="text" style="width:400px" name="daily_pass_description"
+											       value="<?php echo stripslashes( $this->options["daily_pass_description"] ) ?>"/>
+											<br/><span
+												class="description"><?php _e( 'This text will be shown on the button. PRICE, DAY and PERIOD (case sensitive) will be replaced by their real values.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2204,10 +2261,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 											<?php _e( 'Recurring subscription', 'ppw' ) ?>
 										</th>
 										<td colspan="2">
-											<input type="checkbox" id="subscription" name="subscription" value="true" <?php if ( $this->options["subscription"] ) {
+											<input type="checkbox" id="subscription" name="subscription"
+											       value="true" <?php if ( $this->options["subscription"] ) {
 												echo "checked='checked'";
 											} ?> />
-											<span class="description"><?php _e( 'Visitor subscribes to view all the content on the website. Visitor is required to register to the website.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'Visitor subscribes to view all the content on the website. Visitor is required to register to the website.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 									<?php
@@ -2221,27 +2280,38 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top" class="subscription_detail" <?php echo $style ?>>
 										<th scope="row"><?php printf( __( 'Subscription price (%s)', 'ppw' ), $this->options["currency"] ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" id="subscription_price" name="subscription_price" value="<?php echo $this->options["subscription_price"] ?>"/>
+											<input type="text" style="width:50px" id="subscription_price"
+											       name="subscription_price"
+											       value="<?php echo $this->options["subscription_price"] ?>"/>
 										</td>
 									</tr>
 
 									<tr valign="top" class="subscription_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'Subscription period (days)', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:50px" id="subscription_days" name="subscription_days" value="<?php echo $this->options["subscription_days"] ?>"/>
-											<input type="radio" id="subscription_period" name="subscription_period" value="D" <?php echo checked( $this->options["subscription_period"] == "D" || empty( $this->options["subscription_period"] ) ); ?> />Days&nbsp;&nbsp;
-											<input type="radio" id="subscription_period" name="subscription_period" value="W" <?php echo checked( $this->options["subscription_period"], "W" ); ?> />Weeks&nbsp;&nbsp;&nbsp;
-											<input type="radio" id="subscription_period" name="subscription_period" value="M" <?php echo checked( $this->options["subscription_period"], "M" ); ?> />Months&nbsp;&nbsp;&nbsp;
-											<input type="radio" id="subscription_period" name="subscription_period" value="Y" <?php echo checked( $this->options["subscription_period"], "Y" ); ?> />Years&nbsp;&nbsp;&nbsp;
-											<span class="description"><?php _e( 'Price is valid for this period and it will be renewed after it expires.', 'ppw' ) ?></span>
+											<input type="text" style="width:50px" id="subscription_days"
+											       name="subscription_days"
+											       value="<?php echo $this->options["subscription_days"] ?>"/>
+											<input type="radio" id="subscription_period" name="subscription_period"
+											       value="D" <?php echo checked( $this->options["subscription_period"] == "D" || empty( $this->options["subscription_period"] ) ); ?> />Days&nbsp;&nbsp;
+											<input type="radio" id="subscription_period" name="subscription_period"
+											       value="W" <?php echo checked( $this->options["subscription_period"], "W" ); ?> />Weeks&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="subscription_period" name="subscription_period"
+											       value="M" <?php echo checked( $this->options["subscription_period"], "M" ); ?> />Months&nbsp;&nbsp;&nbsp;
+											<input type="radio" id="subscription_period" name="subscription_period"
+											       value="Y" <?php echo checked( $this->options["subscription_period"], "Y" ); ?> />Years&nbsp;&nbsp;&nbsp;
+											<span
+												class="description"><?php _e( 'Price is valid for this period and it will be renewed after it expires.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="subscription_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'Subscription description', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="text" style="width:400px" name="subscription_description" value="<?php echo stripslashes( $this->options["subscription_description"] ) ?>"/>
-											<br/><span class="description"><?php _e( 'This text will be shown on the button. PRICE, DAY and PERIOD (case sensitive) will be replaced by their real values.', 'ppw' ) ?></span>
+											<input type="text" style="width:400px" name="subscription_description"
+											       value="<?php echo stripslashes( $this->options["subscription_description"] ) ?>"/>
+											<br/><span
+												class="description"><?php _e( 'This text will be shown on the button. PRICE, DAY and PERIOD (case sensitive) will be replaced by their real values.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
@@ -2287,8 +2357,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top">
 										<th scope="row"><?php _e( 'Accept API Logins', 'ppw' ) ?></th>
 										<td colspan="2">
-											<input type="checkbox" id="accept_api_logins" name="accept_api_logins" value="true"<?php echo $accept_api_logins; ?>/>
-											<span class="description"><?php _e( 'Enables login to website using Facebook, Twitter and Google', 'ppw' ) ?></span>
+											<input type="checkbox" id="accept_api_logins" name="accept_api_logins"
+											       value="true"<?php echo $accept_api_logins; ?>/>
+											<span
+												class="description"><?php _e( 'Enables login to website using Facebook, Twitter and Google', 'ppw' ) ?></span>
 										</td>
 									</tr>
 									<?php
@@ -2302,7 +2374,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'Facebook:', 'ppw' ) ?></th>
 										<td>
-											<label><input type="checkbox" name="allow_facebook_login" value="true"<?php echo $allow_facebook_login; ?>><?php _e( "Enabled", "ppw" ); ?>
+											<label><input type="checkbox" name="allow_facebook_login"
+											              value="true"<?php echo $allow_facebook_login; ?>><?php _e( "Enabled", "ppw" ); ?>
 											</label>
 										</td>
 									</tr>
@@ -2310,34 +2383,43 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td></td>
 										<td colspan="2">
 											<label><b><?php _e( 'Facebook App ID:', 'ppw' ); ?></b>
-												<input type="text" style="width:200px" name="facebook-app_id" value="<?php echo ! empty( $this->options["facebook-app_id"] ) ? $this->options["facebook-app_id"] : ''; ?>"/>
+												<input type="text" style="width:200px" name="facebook-app_id"
+												       value="<?php echo ! empty( $this->options["facebook-app_id"] ) ? $this->options["facebook-app_id"] : ''; ?>"/>
 											</label>
 
-											<br/><span class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s' target='_blank'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
+											<br/><span
+												class="description"><?php printf( __( "Enter your App ID number here. If you don't have a Facebook App yet, you will need to create one <a href='%s' target='_blank'>here</a>", 'ppw' ), 'https://developers.facebook.com/apps' ) ?></span>
 										</td>
 									</tr>
 									<tr>
 										<td></td>
 										<td colspan="2">
 											<label>
-												<input type="checkbox" name="facebook-no_init" value="true"<?php echo $facebook_no_init; ?>/><b><?php _e( "Do not load Facebook script", "ppw" ); ?></b></label>
+												<input type="checkbox" name="facebook-no_init"
+												       value="true"<?php echo $facebook_no_init; ?>/><b><?php _e( "Do not load Facebook script", "ppw" ); ?></b></label>
 											<br/>
-											<span class="description"><?php _e( 'By default, Facebook script will be loaded by the plugin. If you are already running Facebook scripts, to prevent any conflict, check this option.', 'ppw' ) ?></span>
+											<span
+												class="description"><?php _e( 'By default, Facebook script will be loaded by the plugin. If you are already running Facebook scripts, to prevent any conflict, check this option.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
 										<th scope="row"><?php _e( 'Twitter:', 'ppw' ) ?></label></th>
 										<td>
-											<label><input type="checkbox" name="allow_twitter_login" value="true"<?php echo $allow_twitter_login; ?>><?php _e( "Enabled", "ppw" ); ?>
+											<label><input type="checkbox" name="allow_twitter_login"
+											              value="true"<?php echo $allow_twitter_login; ?>><?php _e( "Enabled", "ppw" ); ?>
 											</label>
 										</td>
 									</tr>
 									<tr>
 										<td></td>
 										<td colspan="2">
-											<label><b><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></b><input type="text" style="width:200px;margin-left: 20px;" name="twitter-app_id" value="<?php echo ! empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
-											<br/><span class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
+											<label><b><?php _e( 'Twitter Consumer Key', 'ppw' ) ?></b><input type="text"
+											                                                                 style="width:200px;margin-left: 20px;"
+											                                                                 name="twitter-app_id"
+											                                                                 value="<?php echo ! empty( $this->options["twitter-app_id"] ) ? $this->options["twitter-app_id"] : ''; ?>"/></label>
+											<br/><span
+												class="description"><?php printf( __( 'Enter your Twitter App ID number here. If you don\'t have a Twitter App yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://dev.twitter.com/apps/new' ) ?></span>
 										</td>
 									</tr>
 
@@ -2345,23 +2427,28 @@ if ( ! class_exists( 'PayPerView' ) ) {
 										<td></td>
 										<td colspan="2">
 											<label><b><?php _e( 'Twitter Consumer Secret', 'ppw' ) ?></b>
-												<input type="text" style="width:200px" name="twitter-app_secret" value="<?php echo ! empty( $this->options["twitter-app_secret"] ) ? $this->options["twitter-app_secret"] : ''; ?>"/></label>
-											<br/><span class="description"><?php _e( 'Enter your Twitter App ID Secret here.', 'ppw' ) ?></span>
+												<input type="text" style="width:200px" name="twitter-app_secret"
+												       value="<?php echo ! empty( $this->options["twitter-app_secret"] ) ? $this->options["twitter-app_secret"] : ''; ?>"/></label>
+											<br/><span
+												class="description"><?php _e( 'Enter your Twitter App ID Secret here.', 'ppw' ) ?></span>
 										</td>
 									</tr>
 									<tr valign="top" class="api_detail" <?php echo $style ?>>
 										<th scope="row"><b><?php _e( 'Google:', 'ppw' ) ?></b></th>
 										<td>
-											<label><input type="checkbox" name="allow_google_login" value="true"<?php echo $allow_google_login; ?>><?php _e( "Enabled", "ppw" ); ?>
+											<label><input type="checkbox" name="allow_google_login"
+											              value="true"<?php echo $allow_google_login; ?>><?php _e( "Enabled", "ppw" ); ?>
 											</label></td>
 									</tr>
 									<tr>
 										<td></td>
 										<td colspan="2">
 											<label><b><?php _e( "Google Client ID", 'ppw' ); ?></b>
-												<input type="text" style="width:200px" name="google-client_id" value="<?php echo ! empty( $this->options["google-client_id"] ) ? $this->options["google-client_id"] : ''; ?>"/>
+												<input type="text" style="width:200px" name="google-client_id"
+												       value="<?php echo ! empty( $this->options["google-client_id"] ) ? $this->options["google-client_id"] : ''; ?>"/>
 											</label>
-											<br/><span class="description"><?php printf( __( 'Enter your Google Sign-in Client ID here. If you don\'t have a Google Developers Console project yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://developers.google.com/identity/sign-in/web/devconsole-project' ) ?></span>
+											<br/><span
+												class="description"><?php printf( __( 'Enter your Google Sign-in Client ID here. If you don\'t have a Google Developers Console project yet, you will need to create one <a href="%s" target="_blank">here</a>', 'ppw' ), 'https://developers.google.com/identity/sign-in/web/devconsole-project' ) ?></span>
 										</td>
 									</tr>
 
@@ -2429,7 +2516,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					});
 				});
 			</script>
-		<?php
+			<?php
 		}
 
 		/**
@@ -2532,7 +2619,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				</div>
 			</div>
 
-		<?php
+			<?php
 		}
 
 		/**
@@ -2624,19 +2711,22 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 				<ul class="subsubsub">
 					<li>
-						<a href="<?php echo esc_url( add_query_arg( 'type', 'past' ) ); ?>" class="rbutton <?php if ( $type == 'past' ) {
-							echo 'current';
-						} ?>"><?php _e( 'Recent transactions', 'ppw' ); ?></a> |
+						<a href="<?php echo esc_url( add_query_arg( 'type', 'past' ) ); ?>"
+						   class="rbutton <?php if ( $type == 'past' ) {
+							   echo 'current';
+						   } ?>"><?php _e( 'Recent transactions', 'ppw' ); ?></a> |
 					</li>
 					<li>
-						<a href="<?php echo esc_url( add_query_arg( 'type', 'pending' ) ); ?>" class="rbutton <?php if ( $type == 'pending' ) {
-							echo 'current';
-						} ?>"><?php _e( 'Pending transactions', 'ppw' ); ?></a> |
+						<a href="<?php echo esc_url( add_query_arg( 'type', 'pending' ) ); ?>"
+						   class="rbutton <?php if ( $type == 'pending' ) {
+							   echo 'current';
+						   } ?>"><?php _e( 'Pending transactions', 'ppw' ); ?></a> |
 					</li>
 					<li>
-						<a href="<?php echo esc_url( add_query_arg( 'type', 'future' ) ); ?>" class="rbutton <?php if ( $type == 'future' ) {
-							echo 'current';
-						} ?>"><?php _e( 'Future transactions', 'ppw' ); ?></a></li>
+						<a href="<?php echo esc_url( add_query_arg( 'type', 'future' ) ); ?>"
+						   class="rbutton <?php if ( $type == 'future' ) {
+							   echo 'current';
+						   } ?>"><?php _e( 'Future transactions', 'ppw' ); ?></a></li>
 				</ul>
 
 				<?php
@@ -2644,7 +2734,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 				?>
 			</div> <!-- wrap -->
-		<?php
+			<?php
 
 		}
 
@@ -2691,8 +2781,9 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					<?php
 					foreach ( $columns as $key => $col ) {
 						?>
-						<th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
-					<?php
+						<th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>"
+						    scope="col"><?php echo $col; ?></th>
+						<?php
 					}
 					?>
 				</tr>
@@ -2704,8 +2795,9 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					reset( $columns );
 					foreach ( $columns as $key => $col ) {
 						?>
-						<th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>" scope="col"><?php echo $col; ?></th>
-					<?php
+						<th style="" class="manage-column column-<?php echo $key; ?>" id="<?php echo $key; ?>"
+						    scope="col"><?php echo $col; ?></th>
+						<?php
 					}
 					?>
 				</tr>
@@ -2764,21 +2856,22 @@ if ( ! class_exists( 'PayPerView' ) ) {
 								?>
 							</td>
 						</tr>
-					<?php
+						<?php
 					}
 				} else {
 					$columncount = count( $columns );
 					?>
 					<tr valign="middle" class="alternate">
-						<td colspan="<?php echo $columncount; ?>" scope="row"><?php _e( 'No Transactions have been found, patience is a virtue.', 'ppw' ); ?></td>
+						<td colspan="<?php echo $columncount; ?>"
+						    scope="row"><?php _e( 'No Transactions have been found, patience is a virtue.', 'ppw' ); ?></td>
 					</tr>
-				<?php
+					<?php
 				}
 				?>
 
 				</tbody>
 			</table>
-		<?php
+			<?php
 		}
 
 		/**
@@ -2800,85 +2893,90 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			?>
 			<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 			<html>
-				<head>
-					<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-					<script type="text/javascript" src="../wp-includes/js/tinymce/tiny_mce_popup.js?ver=327-1235"></script>
-					<script type="text/javascript" src="../wp-includes/js/tinymce/utils/form_utils.js?ver=327-1235"></script>
-					<script type="text/javascript" src="../wp-includes/js/tinymce/utils/editable_selects.js?ver=327-1235"></script>
+			<head>
+				<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+				<script type="text/javascript" src="../wp-includes/js/tinymce/tiny_mce_popup.js?ver=327-1235"></script>
+				<script type="text/javascript"
+				        src="../wp-includes/js/tinymce/utils/form_utils.js?ver=327-1235"></script>
+				<script type="text/javascript"
+				        src="../wp-includes/js/tinymce/utils/editable_selects.js?ver=327-1235"></script>
 
-					<script type="text/javascript" src="../wp-includes/js/jquery/jquery.js"></script>
+				<script type="text/javascript" src="../wp-includes/js/jquery/jquery.js"></script>
 
-					<script type="text/javascript">
+				<script type="text/javascript">
 
 
-						tinyMCEPopup.storeSelection();
+					tinyMCEPopup.storeSelection();
 
-						var insertPayperview = function (ed) {
-							var description = jQuery.trim(jQuery('#ppw-description').val());
-							var price = jQuery.trim(jQuery('#ppw-price').val());
-							if (!price) {
-								jQuery('#ppw-error').show();
-								jQuery('#ppw-price').focus();
-								return false;
-							}
-							// Create unique ID from Unix timestamp
-							var id = Math.round((new Date()).getTime() / 1000) -1330955000;
-							tinyMCEPopup.restoreSelection();
-							output = '[ppw id="'+id+'" description="'+description+'" price="'+price+'"]'+tinyMCEPopup.editor.selection.getContent()+'[/ppw]';
-
-							tinyMCEPopup.execCommand('mceInsertContent', 0, output);
-							tinyMCEPopup.editor.execCommand('mceRepaint');
-							tinyMCEPopup.editor.focus();
-							// Return
-							tinyMCEPopup.close();
-						};
-					</script>
-					<style type="text/css">
-						td.info {
-							vertical-align: top;
-							color: #777;
+					var insertPayperview = function (ed) {
+						var description = jQuery.trim(jQuery('#ppw-description').val());
+						var price = jQuery.trim(jQuery('#ppw-price').val());
+						if (!price) {
+							jQuery('#ppw-error').show();
+							jQuery('#ppw-price').focus();
+							return false;
 						}
-					</style>
+						// Create unique ID from Unix timestamp
+						var id = Math.round((new Date()).getTime() / 1000) - 1330955000;
+						tinyMCEPopup.restoreSelection();
+						output = '[ppw id="' + id + '" description="' + description + '" price="' + price + '"]' + tinyMCEPopup.editor.selection.getContent() + '[/ppw]';
 
-					<title><?php _e( "Pay Per View", 'ppw' ); ?></title>
-				</head>
-				<body style="display: none">
+						tinyMCEPopup.execCommand('mceInsertContent', 0, output);
+						tinyMCEPopup.editor.execCommand('mceRepaint');
+						tinyMCEPopup.editor.focus();
+						// Return
+						tinyMCEPopup.close();
+					};
+				</script>
+				<style type="text/css">
+					td.info {
+						vertical-align: top;
+						color: #777;
+					}
+				</style>
 
-					<form onsubmit="insertPayperview();return false;" action="#">
+				<title><?php _e( "Pay Per View", 'ppw' ); ?></title>
+			</head>
+			<body style="display: none">
 
-						<div id="general_panel" class="panel current">
-							<div id="ppw-error" style="display: none;color:#C00;padding: 2px 0;"><?php _e( "Please enter a value!", 'ppw' ); ?></div>
-							<fieldset>
-								<table border="0" cellpadding="4" cellspacing="0">
-									<tr>
-										<td><label for="chat_width"><?php _e( "Description", 'ppw' ); ?></label></td>
-										<td>
-											<input type="text" id="ppw-description" name="ppw-description" value="" class="size" size="30" />
-										</td>
-										<td class="info"><?php _e( "Description for this selection.", 'ppw' ); ?></td>
-									</tr>
-									<tr>
-										<td><label for="chat_width"><?php _e( "Price", 'ppw' ); ?></label></td>
-										<td>
-											<input type="text" id="ppw-price" name="ppw-price" value="" class="size" size="15" />
-										</td>
-										<td class="info"><?php _e( "Price for this selection.", 'ppw' ); ?></td>
-									</tr>
-								</table>
-							</fieldset>
-						</div>
+			<form onsubmit="insertPayperview();return false;" action="#">
 
-						<div class="mceActionPanel">
-							<div style="float: left">
-								<input type="button" id="cancel" name="cancel" value="<?php _e( "Cancel", 'ppw' ); ?>" onclick="tinyMCEPopup.close();" />
-							</div>
+				<div id="general_panel" class="panel current">
+					<div id="ppw-error"
+					     style="display: none;color:#C00;padding: 2px 0;"><?php _e( "Please enter a value!", 'ppw' ); ?></div>
+					<fieldset>
+						<table border="0" cellpadding="4" cellspacing="0">
+							<tr>
+								<td><label for="chat_width"><?php _e( "Description", 'ppw' ); ?></label></td>
+								<td>
+									<input type="text" id="ppw-description" name="ppw-description" value="" class="size"
+									       size="30"/>
+								</td>
+								<td class="info"><?php _e( "Description for this selection.", 'ppw' ); ?></td>
+							</tr>
+							<tr>
+								<td><label for="chat_width"><?php _e( "Price", 'ppw' ); ?></label></td>
+								<td>
+									<input type="text" id="ppw-price" name="ppw-price" value="" class="size" size="15"/>
+								</td>
+								<td class="info"><?php _e( "Price for this selection.", 'ppw' ); ?></td>
+							</tr>
+						</table>
+					</fieldset>
+				</div>
 
-							<div style="float: right">
-								<input type="submit" id="insert" name="insert" value="<?php _e( "Insert", 'ppw' ); ?>" />
-							</div>
-						</div>
-					</form>
-				</body>
+				<div class="mceActionPanel">
+					<div style="float: left">
+						<input type="button" id="cancel" name="cancel" value="<?php _e( "Cancel", 'ppw' ); ?>"
+						       onclick="tinyMCEPopup.close();"/>
+					</div>
+
+					<div style="float: right">
+						<input type="submit" id="insert" name="insert" value="<?php _e( "Insert", 'ppw' ); ?>"/>
+					</div>
+				</div>
+			</form>
+			</body>
 			</html>
 			<?php
 			exit( 0 );
@@ -2971,8 +3069,8 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 */
 		function ppv_payment_status() {
 
-			$user_id       = ! empty( $_POST['user_id'] ) ? $_POST['user_id'] : '';
-			$is_subscription_valid = $this->is_subscription_valid($user_id);
+			$user_id               = ! empty( $_POST['user_id'] ) ? $_POST['user_id'] : '';
+			$is_subscription_valid = $this->is_subscription_valid( $user_id );
 
 			//User is subscribed, reload page
 			if ( $is_subscription_valid ) {
@@ -3178,7 +3276,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			//Handle Token Verification Error
 			if ( is_wp_error( $verify_token ) || $verify_token['response']['code'] !== 200 ) {
-				wp_send_json_error("Tokken verification failed");
+				wp_send_json_error( "Tokken verification failed" );
 			}
 			//If verified, Get Profile details
 			//Get user info
@@ -3191,7 +3289,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			);
 			$user_info = wp_remote_get( $ggl_api );
 			if ( is_wp_error( $user_info ) || $user_info['response']['code'] !== 200 ) {
-				wp_send_json_error("Failed to retrieve User info");
+				wp_send_json_error( "Failed to retrieve User info" );
 			}
 			$user_info = wp_remote_retrieve_body( $user_info );
 			$user_info = json_decode( $user_info );
@@ -3205,10 +3303,10 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					$user_id = $wp_user->ID;
 				}
 			} else {
-				wp_send_json_error("No Email address");
+				wp_send_json_error( "No Email address" );
 			}
-			if( is_wp_error( $wp_user ) || empty( $user_id ) ) {
-				wp_send_json_error("User ID");
+			if ( is_wp_error( $wp_user ) || empty( $user_id ) ) {
+				wp_send_json_error( "User ID" );
 			}
 			$user = get_userdata( $user_id );
 			wp_set_current_user( $user->ID, $user->data->user_login );
@@ -3226,12 +3324,12 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				"user_id" => $user->ID,
 				"reveal"  => $reveal
 			);
-			wp_send_json_success($data);
+			wp_send_json_success( $data );
 		}
 
 		function user_from_email( $email, $full_name ) {
 			$wp_user = '';
-			if ( !empty( $email ) ) {
+			if ( ! empty( $email ) ) {
 				$wp_user = get_user_by( 'email', $email );
 			}
 
@@ -3254,20 +3352,21 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		/**
 		 * Check if subscription is not expired for the user
 		 *
-*@param $userid
+		 * @param $userid
 		 *
 		 * @return bool
 		 */
-		function is_subscription_valid ( $userid, $meta = '' ) {
-			if( empty( $userid ) ) {
+		function is_subscription_valid( $userid, $meta = '' ) {
+			if ( empty( $userid ) ) {
 				return false;
 			}
-			$ppw_subscribe = !empty( $meta ) ? $meta : get_user_meta( $userid, "ppw_subscribe", true );
-			if( !empty( $ppw_subscribe ) ) {
-				if( strtotime('now') <= strtotime( $ppw_subscribe ) ) {
+			$ppw_subscribe = ! empty( $meta ) ? $meta : get_user_meta( $userid, "ppw_subscribe", true );
+			if ( ! empty( $ppw_subscribe ) ) {
+				if ( strtotime( 'now' ) <= strtotime( $ppw_subscribe ) ) {
 					return true;
 				}
 			}
+
 			return false;
 		}
 	}
