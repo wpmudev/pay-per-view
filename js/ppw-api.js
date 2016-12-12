@@ -10,10 +10,10 @@ var current_button = '';
 
 		var login_html = '<ul class="payperview-login_links">';
 		if ($(".ppw_accept_api_logins")[0]) {
-			if (ppw_social_logins.show_facebook) {
+			if ( 1 == ppw_social_logins.show_facebook) {
 				login_html += '<li><a href="#" class="payperview-login_link payperview-login_link-facebook">' + l10nPpwApi.facebook + '</a></li>';
 			}
-			if (ppw_social_logins.show_twitter) {
+			if ( 1 == ppw_social_logins.show_twitter) {
 				login_html += '<li><a href="#" class="payperview-login_link payperview-login_link-twitter">' + l10nPpwApi.twitter + '</a></li>';
 			}
 			if (ppw_social_logins.show_google) {
@@ -34,8 +34,9 @@ var current_button = '';
 		$('.payperview-login_link-register').click(function () {
 			$.cookie('ppv-register-page', window.location.href, {path: "/"});
 		});
+
 		//If google login has to be shown, call the explicit render
-		if( ppw_social_logins.show_google ) {
+		if( 1 == ppw_social_logins.show_google ) {
 			var parameters = {'clientid' : ppw_ggl_api.clientid, 'cookiepolicy' : ppw_ggl_api.cookiepolicy, 'callback' : 'ppv_ggl_signinCallback' };
 			gapi.signin.render("gConnect", parameters );
 		}

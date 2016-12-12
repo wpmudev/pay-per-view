@@ -3,7 +3,7 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.3
+Version: 1.4.4
 Author: WPMU Dev
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
@@ -34,7 +34,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
-		var $version = "1.4.3";
+		var $version = "1.4.4-beta1";
 
 		/**
 		 * Constructor
@@ -315,7 +315,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 			$request = new WP_Http;
 			$result  = $request->request(
-				'https://graph.facebook.com/me?fields=email&oauth_token=' . $token,
+				'https://graph.facebook.com/me?fields=email,name,first_name,last_name&oauth_token=' . $token,
 				array( 'sslverify' => false ) // SSL certificate issue workaround
 			);
 			if ( is_wp_error( $result ) || 200 != $result['response']['code'] ) {
@@ -331,7 +331,13 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			if ( ! $email ) {
 				die( json_encode( $resp ) );
 			} // Wrong email
-			$name    = $data->name ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->name ) ) : ( preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->first_name ) ) . '_' . preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->last_name ) ) );
+
+			if ( empty( $data->name ) ) {
+				$f_name = ! empty( $data->first_name ) ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->first_name ) ) : '';
+				$l_name = ! empty( $data->last_name ) ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->last_name ) ) : '';
+			}
+
+			$name    = !empty( $data->name ) ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->name ) ) : ( $f_name . '_' . $l_name );
 			$wp_user = $this->user_from_email( $email, $name );
 
 			$user = get_userdata( $wp_user );
@@ -1392,6 +1398,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			}
 
 			$saved_method = get_post_meta( $post->ID, 'ppw_method', true );
+			$aselect = $mselect = $tselect = '';
 			switch ( $saved_method ) {
 				case "automatic":
 					$aselect = 'selected="selected"';
@@ -1401,9 +1408,6 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					break;
 				case "tool":
 					$tselect = 'selected="selected"';
-					break;
-				default:
-					$aselect = $mselect = $tselect = '';
 					break;
 			}
 
