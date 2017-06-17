@@ -1,4 +1,4 @@
-(function() {
+(function( $ ) {
 	// Load plugin specific language pack
 	tinymce.PluginManager.requireLangPack('payperview');
 
@@ -15,10 +15,34 @@
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceChat');
 			ed.addCommand('mcePayPerView', function() {
 				ed.windowManager.open({
-					file : url + "../../../../../wp-admin/admin-ajax.php?action=ppwTinymceOptions",
-    	 		width : 480,
-					height : 130,
-					inline : 1
+					//file : url + "../../../../../wp-admin/admin-ajax.php?action=ppwTinymceOptions",
+					width: 300,
+					height: 200,
+					inline : 1,
+					id: 'plugin-slug-insert-dialog',
+					body: [{
+					    type: 'container',
+					    layout: 'stack',
+					    items: [
+					      {type: 'label', id: 'ppw-description-label', text: ed.getLang( 'ppw_lang.description' ) },
+					      {type: 'textbox', name: 'ppw-description', id: 'ppw-description', label: 'textbox', value: ''},
+					      {type: 'label', text: ed.getLang( 'ppw_lang.price' )},
+					      {type: 'textbox', name: 'ppw-price', id: 'ppw-price', label: 'textbox', value: ''}					      
+					    ]
+					  }],
+					buttons: [{
+						text: ed.getLang( 'ppw_lang.insert' ),
+						id: 'plugin-slug-button-insert',
+						class: 'insert',
+						onclick: function( e ) {
+							tinymce_ppw.insert_PPW_Shortcode( ed );
+						},
+					},
+					{
+						text: ed.getLang( 'ppw_lang.cancel' ),
+						id: 'plugin-slug-button-cancel',
+						onclick: 'close'
+					}],
 				}, {
 					plugin_url : url // Plugin absolute URL
 				});
@@ -70,4 +94,54 @@
 
 	// Register plugin
 	tinymce.PluginManager.add('payperview', tinymce.plugins.PayPerViewPlugin);
-})();
+
+	tinymce_ppw = {
+
+		insert_PPW_Shortcode: function( ed ){
+
+			var selected_text = ed.selection.getContent();
+			var description = $.trim($('#ppw-description').val());
+			var price = $.trim($('#ppw-price').val());
+
+			$( '.pw-error' ).remove();
+
+			if ( ! price || isNaN( price ) ) {
+
+				this.show_error_message( ed.getLang( 'ppw_lang.invalid_number' ) );
+				jQuery('#ppw-price').focus();
+				return false;
+
+			}
+
+			var id = Math.round((new Date()).getTime() / 1000) - 1330955000;
+
+			var output = '[ppw id="' + id + '" description="' + description + '" price="' + price + '"]' + ed.selection.getContent() + '[/ppw]';
+
+		    ed.execCommand('mceInsertContent', 0, output);
+		    ed.windowManager.close();
+
+		},
+
+		show_error_message: function( msg ){
+			
+			var error_msg = $('<div>', {
+				class: "pw-error",
+				css: {           
+				    color: "#E4717A",
+				    fontSize: "1.1em",				    
+				    width: "100%",
+				    "text-align": "left",
+				    border: "1px solid #E4717A",
+				    "margin-bottom": "10px",
+				    padding: "6px",
+				    "white-space": "initial"
+				  },
+			});
+			error_msg.text( msg );
+
+			$( '#ppw-description-label' ).before( error_msg );
+		}
+
+	}
+
+})(jQuery);

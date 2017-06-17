@@ -104,7 +104,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_action( 'admin_print_styles', array( &$this, 'admin_css' ) );
 
 			// tinyMCE stuff
-			add_action( 'wp_ajax_ppwTinymceOptions', array( &$this, 'tinymce_options' ) );
+			//add_action( 'wp_ajax_ppwTinymceOptions', array( &$this, 'tinymce_options' ) );
 			add_action( 'admin_init', array( &$this, 'load_tinymce' ) );
 
 			// Add/edit expiry date to user field
@@ -112,6 +112,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			add_action( 'edit_user_profile', array( &$this, 'edit_profile' ) );
 			add_action( 'personal_options_update', array( &$this, 'save_profile' ) );
 			add_action( 'edit_user_profile_update', array( &$this, 'save_profile' ) );
+            add_filter( 'mce_external_languages', array( $this, 'localize_mce' ), 10, 1 );
 
 			//Alway allow Wordpress login
 			add_action( 'wp_ajax_nopriv_ppw_ajax_login', array( &$this, 'ajax_login' ) );
@@ -2894,11 +2895,23 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				add_filter( 'mce_external_languages', array( &$this, 'tinymce_load_langs' ) );
 			}
 		}
+        
+        /**
+		 * TinyMCE localization
+		 */
+		public function localize_mce( $langfiles ){
+
+			$langfiles[] = dirname( __FILE__ ) . '/tinymce/langs/ppw-mce.php';
+    		return $langfiles;
+
+		}
 
 		/**
 		 * TinyMCE dialog content
 		 */
-		function tinymce_options() {
+		/*
+        //Commenting this out until completely removed
+        function tinymce_options() {
 			?>
 			<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 			<html>
@@ -2989,7 +3002,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 			</html>
 			<?php
 			exit( 0 );
-		}
+		} */
 
 		/**
 		 * @see        http://codex.wordpress.org/TinyMCE_Custom_Buttons
