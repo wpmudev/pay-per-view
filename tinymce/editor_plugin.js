@@ -12,6 +12,12 @@
 		 * @param {string} url Absolute URL to where the plugin is located.
 		 */
 		init : function(ed, url) {
+            if ('undefined' == typeof tinymce.plugins.dom) {
+                tinymce.plugins.dom = tinymce.dom;
+            }
+            if ('undefined' == typeof tinymce.plugins.util ) {
+                tinymce.plugins.util = tinymce.util;
+            }
 			// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceChat');
 			ed.addCommand('mcePayPerView', function() {
 				ed.windowManager.open({
