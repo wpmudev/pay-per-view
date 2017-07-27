@@ -34,7 +34,7 @@ if ( ! class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
-		var $version = "1.4.4-beta1";
+		var $version = "1.4.4";
 
 		/**
 		 * Constructor
