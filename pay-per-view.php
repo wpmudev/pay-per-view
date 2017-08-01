@@ -657,7 +657,9 @@ if ( !class_exists( 'PayPerView' ) ) {
 		 */
 		function is_authorised() {
 
-			$result = false;if ( $this->options['authorized'] == 'true' && is_user_logged_in() && !current_user_can('administrator') ) {
+			$result = false;
+
+			if ( $this->options['authorized'] == 'true' && is_user_logged_in() && !current_user_can('administrator') ) {
 				if ( $this->options['level'] == 'subscriber' && current_user_can( 'read' ) ){
 				$result = true;
 				}else if ( $this->options['level'] == 'contributor' && current_user_can( 'edit_posts' ) ){
@@ -1477,15 +1479,6 @@ if ( !class_exists( 'PayPerView' ) ) {
 			$saved_method = get_post_meta( $post->ID, 'ppw_method', true );
 			$aselect = $mselect = $tselect = '';
 			switch ( $saved_method ) {
-				case "automatic":
-					$aselect = 'selected="selected"';
-					break;
-				case "manual":
-					$mselect = 'selected="selected"';
-					break;
-				case "tool":
-					$tselect = 'selected="selected"';
-					break;
 				case "automatic":
 					$aselect = 'selected="selected"';
 					break;
