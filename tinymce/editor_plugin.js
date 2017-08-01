@@ -17,7 +17,8 @@
             }
             if ('undefined' == typeof tinymce.plugins.util) {
                 tinymce.plugins.util = tinymce.util;
-            }// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceChat');
+            }
+            // Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceChat');
 			ed.addCommand('mcePayPerView', function() {
 				ed.windowManager.open({
 					file : url + "../../../../../wp-admin/admin-ajax.php?action=ppwTinymceOptions",

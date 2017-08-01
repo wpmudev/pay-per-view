@@ -410,10 +410,9 @@ class WpmuDev_HelpTooltips {
 						.html($help.html())
 						.end()
 						// Position tip
-                        .css({
-                            "position": "absolute",
-                            "z-index": 99999
-                        })
+						.css({
+							"position": "absolute",
+							"z-index": 99999})
 						.offset({
 							"top": top_pos - ($tip.height() / 2),
 							"left": left_pos
