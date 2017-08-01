@@ -2,33 +2,32 @@
     // Load plugin specific language pack
     tinymce.PluginManager.requireLangPack('payperview');
 
-    tinymce.create('tinymce.plugins.PayPerViewPlugin', {
-        /**
-         * Initializes the plugin, this will be executed after the plugin has been created.
-         * This call is done before the editor instance has finished it's initialization so use the onInit event
-         * of the editor instance to intercept that event.
-         *
-         * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
-         * @param {string} url Absolute URL to where the plugin is located.
-         */
-        init: function (ed, url) {
-            if ('undefined' == typeof tinymce.plugins.dom) {
+	tinymce.create('tinymce.plugins.PayPerViewPlugin', {
+		/**
+		 * Initializes the plugin, this will be executed after the plugin has been created.
+		 * This call is done before the editor instance has finished it's initialization so use the onInit event
+		 * of the editor instance to intercept that event.
+		 *
+		 * @param {tinymce.Editor} ed Editor instance that the plugin is initialized in.
+		 * @param {string} url Absolute URL to where the plugin is located.
+		 */
+		init : function(ed, url) {
+			if ('undefined' == typeof tinymce.plugins.dom) {
                 tinymce.plugins.dom = tinymce.dom;
             }
             if ('undefined' == typeof tinymce.plugins.util) {
                 tinymce.plugins.util = tinymce.util;
-            }
-            // Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceChat');
-            ed.addCommand('mcePayPerView', function () {
-                ed.windowManager.open({
-                    file: url + "../../../../../wp-admin/admin-ajax.php?action=ppwTinymceOptions",
-                    width: 480,
-                    height: 130,
-                    inline: 1
-                }, {
-                    plugin_url: url // Plugin absolute URL
-                });
-            });
+            }// Register the command so that it can be invoked by using tinyMCE.activeEditor.execCommand('mceChat');
+			ed.addCommand('mcePayPerView', function() {
+				ed.windowManager.open({
+					file : url + "../../../../../wp-admin/admin-ajax.php?action=ppwTinymceOptions",
+    	 		width : 480,
+					height : 130,
+					inline : 1
+				}, {
+					plugin_url : url // Plugin absolute URL
+				});
+			});
 
             // Register button
             ed.addButton('payperview', {

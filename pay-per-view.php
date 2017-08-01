@@ -30,15 +30,19 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-if ( ! class_exists( 'PayPerView' ) ) {
+include_once 'ppw-uninstall.php';
+register_uninstall_hook(  __FILE__ , "ppw_uninstall" );
+register_activation_hook( __FILE__, array('PayPerView', 'install') );
+
+if ( !class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
 		var $version = "1.4.5";
 
 		/**
-		 * Constructor
-		 */
+		* Constructor
+		*/
 		function __construct() {
 			// Plugin locations
 			$this->plugin_name = "pay-per-view";
@@ -458,6 +462,79 @@ if ( ! class_exists( 'PayPerView' ) ) {
 				"reveal"  => $reveal
 			) ) );
 		}
+		/**
+		* Get OAuth request URL and token.
+		*/
+		function handle_get_google_auth_url () {
+			header("Content-type: application/json");
+
+			$this->openid->returnUrl = $_POST['url'];
+
+			echo json_encode(array(
+			'url' => $this->openid->authUrl()
+			));
+			exit();
+		}
+
+		/**
+		* Login or create a new user using whatever data we get from Google.
+		*/
+		function handle_google_login () {
+			header("Content-type: application/json");
+			$resp = array(
+			"status" => 0,
+			);
+
+			$cache = $this->openid->getAttributes();
+
+			if (isset($cache['namePerson/first']) || isset($cache['namePerson/last']) || isset($cache['namePerson/friendly']) || isset($cache['contact/email'])) {
+				$this->_google_user_cache = $cache;
+			}
+
+			// Have user, now register him/her
+			if ( isset( $this->_google_user_cache['namePerson/friendly'] ) )
+			$username = $this->_google_user_cache['namePerson/friendly'];
+			else
+			$username = $this->_google_user_cache['namePerson/first'];
+			$email = $this->_google_user_cache['contact/email'];
+			$wordp_user = get_user_by('email', $email);
+
+			if (!$wordp_user) { // Not an existing user, let's create a new one
+				$password = wp_generate_password(12, false);
+				$count = 0;
+				while (username_exists($username)) {
+					$username .= rand(0,9);
+					if (++$count > 10) break;
+				}
+
+				$wordp_user = wp_create_user($username, $password, $email);
+				if (is_wp_error($wordp_user))
+				die(json_encode($resp)); // Failure creating user
+				else {
+					update_user_meta($wordp_user, 'first_name', $this->_google_user_cache['namePerson/first']);
+					update_user_meta($wordp_user, 'last_name', $this->_google_user_cache['namePerson/last']);
+				}
+			}
+			else {
+				$wordp_user = $wordp_user->ID;
+			}
+
+			$user = get_userdata($wordp_user);
+			wp_set_current_user($user->ID, $user->user_login);
+			wp_set_auth_cookie($user->ID); // Logged in with Google, yay
+			do_action('wp_login', $user->user_login);
+
+			// Check if user has already subscribed
+			$reveal = 0;
+			if ( get_user_meta( $user->ID, "ppw_subscribe", true) != '' OR $this->is_authorised() )
+			$reveal = 1;
+
+			die(json_encode(array(
+			"status" => 1,
+			"user_id"=>$user->ID,
+			"reveal"=>$reveal
+			)));
+		}
 
 		/**
 		 * Saves expiry date field on user profile
@@ -580,19 +657,19 @@ if ( ! class_exists( 'PayPerView' ) ) {
 		 */
 		function is_authorised() {
 
-			if ( $this->options['authorized'] == 'true' && is_user_logged_in() && ! current_user_can( 'administrator' ) ) {
-				if ( $this->options['level'] == 'subscriber' && current_user_can( 'read' ) ) {
-					return true;
-				} else if ( $this->options['level'] == 'contributor' && current_user_can( 'edit_posts' ) ) {
-					return true;
-				} else if ( $this->options['level'] == 'author' && current_user_can( 'edit_published_posts' ) ) {
-					return true;
-				} else if ( $this->options['level'] == 'editor' && current_user_can( 'edit_others_posts' ) ) {
-					return true;
-				}
+			$result = false;if ( $this->options['authorized'] == 'true' && is_user_logged_in() && !current_user_can('administrator') ) {
+				if ( $this->options['level'] == 'subscriber' && current_user_can( 'read' ) ){
+				$result = true;
+				}else if ( $this->options['level'] == 'contributor' && current_user_can( 'edit_posts' ) ){
+				$result = true;
+				}else if ( $this->options['level'] == 'author' && current_user_can( 'edit_published_posts' ) ){
+				$result = true;
+				}else if ( $this->options['level'] == 'editor' && current_user_can( 'edit_others_posts' ) ){
+				$result = true;}
 			}
+			$result = apply_filters( 'ppv_authorized_role', $result, $this->options );
 
-			return false;
+			return $result;
 		}
 
 		/**
@@ -1408,6 +1485,18 @@ if ( ! class_exists( 'PayPerView' ) ) {
 					break;
 				case "tool":
 					$tselect = 'selected="selected"';
+					break;
+				case "automatic":
+					$aselect = 'selected="selected"';
+					break;
+				case "manual":
+					$mselect = 'selected="selected"';
+					break;
+				case "tool":
+					$tselect = 'selected="selected"';
+					break;
+				default:
+					$aselect = $mselect = $tselect = '';
 					break;
 			}
 
