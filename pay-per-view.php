@@ -1529,7 +1529,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 				#ppw_metabox input {
 					float: right;
-					width: 20%;
+					width: 25%;
 					text-align: right;
 				}
 
@@ -1616,8 +1616,8 @@ if ( !class_exists( 'PayPerView' ) ) {
 			</div>
 			<div class="ppw_clear ppw_border"></div>
 
-			<input type="text" name="ppw_excerpt" id="ppw_excerpt"
-			       value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true ); ?> "/>
+			<input type="number" min="0" step="1" name="ppw_excerpt" id="ppw_excerpt"
+			       value="<?php echo get_post_meta( $post->ID, 'ppw_excerpt', true ); ?>"/>
 			<label for="ppw_excerpt"><?php
 				_e( 'Excerpt length', 'ppw' ); ?>
 			</label>
@@ -1627,7 +1627,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			</div>
 			<div class="ppw_clear ppw_border"></div>
 
-			<input type="text" name="ppw_price" value="<?php echo get_post_meta( $post->ID, 'ppw_price', true ); ?>"/>
+			<input type="number" min="0" step="0.1" name="ppw_price" value="<?php echo get_post_meta( $post->ID, 'ppw_price', true ); ?>"/>
 			<label for="ppw_price"><?php
 				printf( __( 'Price (%s)', 'ppw' ), $this->options["currency"] ); ?>
 			</label>
