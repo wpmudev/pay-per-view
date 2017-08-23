@@ -1028,6 +1028,10 @@ if ( !class_exists( 'PayPerView' ) ) {
 			}
 			// One time view option. Redirection will be handled by Paypal Express gateway
 			if ( $this->options["one_time"] ) {
+				// Store price in session to prevent hacking
+				$_SESSION["ppw_total_amt"] = $price;
+
+				// Build form
 				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
 				$content .= '<form method="post" action="#">';
 				$content .= '<input type="hidden" name="ppw_content_id" value="' . $id . '" />';
@@ -1179,7 +1183,11 @@ if ( !class_exists( 'PayPerView' ) ) {
 				// Save content and post ids
 				$_SESSION["ppw_content_id"] = $_POST["ppw_content_id"];
 				$_SESSION["ppw_post_id"]    = $_POST["ppw_post_id"];
-				$_SESSION["ppw_total_amt"]  = $_POST["ppw_total_amt"];
+
+				// If we do not have any amount store in session get the one from the form input
+				if( !isset( $_SESSION["ppw_total_amt"] ) && empty( $_SESSION["ppw_total_amt"] ) ) {
+					$_SESSION["ppw_total_amt"]  = $_POST["ppw_total_amt"];
+				}
 
 				// Now start paypal API Call
 				$pp = $this->call_gateway();
