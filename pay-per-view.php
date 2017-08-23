@@ -1596,7 +1596,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			<select name="ppw_method" id="ppw_method">
 				<option value=""><?php _e( "Follow global setting", "ppw" ); ?></option>
 				<option value="automatic" <?php echo $aselect; ?> ><?php echo $automatic_wording; ?></option>
-				<option value="manual" <?php echo $mselect; ?>><?php $manual_wording; ?></option>
+				<option value="manual" <?php echo $mselect; ?>><?php echo $manual_wording; ?></option>
 				<option value="tool" <?php echo $tselect; ?> ><?php echo $tool_wording; ?></option>
 			</select>
 			<label for="ppw_method"><?php
