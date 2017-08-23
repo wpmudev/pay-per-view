@@ -32,7 +32,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 include_once 'uninstall.php';
 register_uninstall_hook(  __FILE__ , "ppw_uninstall" );
-register_activation_hook( __FILE__, array('PayPerView', 'install') );
 
 if ( !class_exists( 'PayPerView' ) ) {
 
