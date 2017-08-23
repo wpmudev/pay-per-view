@@ -30,9 +30,6 @@ along with this program; if not, write to the Free Software
 Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 */
 
-include_once 'uninstall.php';
-register_uninstall_hook(  __FILE__ , "ppw_uninstall" );
-
 if ( !class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
@@ -52,6 +49,9 @@ if ( !class_exists( 'PayPerView' ) ) {
 			$this->time_format     = get_option( 'time_format' );
 			$this->date_format     = get_option( 'date_format' );
 			$this->datetime_format = $this->date_format . " " . $this->time_format;
+			
+			// Read all options at once
+			$this->options = get_option( 'ppw_options' );
 
 			// We will need sessions
 			if ( ! session_id() ) {
@@ -59,9 +59,6 @@ if ( !class_exists( 'PayPerView' ) ) {
 			}
 
 			register_activation_hook( __FILE__, array( $this, 'install' ) );
-
-			// Read all options at once
-			$this->options = get_option( 'ppw_options' );
 
 			// Check if page can be cached
 			add_action( 'template_redirect', array( &$this, 'cachable' ), 1 );
