@@ -1,10 +1,10 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Pay Per View 1.4.3\n"
+"Project-Id-Version: Pay Per View 1.4.6\n"
 "Report-Msgid-Bugs-To: http://premium.wpmudev.org/project/pay-per-view\n"
 "POT-Creation-Date: 2017-08-01 14:31+0530\n"
-"PO-Revision-Date: 2017-08-01 14:31+0530\n"
+"PO-Revision-Date: 2017-08-29 14:31+0530\n"
 "Last-Translator: Umesh <umeshsingla05@gmail.com>\n"
 "Language-Team: Umesh <umeshsingla05@gmail.com>\n"
 "MIME-Version: 1.0\n"
@@ -144,105 +144,105 @@ msgid "Your PayPal transaction has been canceled."
 msgstr ""
 
 #: includes/paypal-express.php:117 includes/paypal-express.php:352
-#: includes/paypal-express.php:862
+#: includes/paypal-express.php:866
 msgid ""
 "A reversal has been canceled; for example, when you win a dispute and the "
 "funds for the reversal have been returned to you."
 msgstr ""
 
 #: includes/paypal-express.php:121 includes/paypal-express.php:356
-#: includes/paypal-express.php:867
+#: includes/paypal-express.php:871
 msgid "The authorization period for this payment has been reached."
 msgstr ""
 
 #: includes/paypal-express.php:125 includes/paypal-express.php:360
-#: includes/paypal-express.php:872
+#: includes/paypal-express.php:876
 msgid "An authorization for this transaction has been voided."
 msgstr ""
 
 #: includes/paypal-express.php:129 includes/paypal-express.php:364
-#: includes/paypal-express.php:877
+#: includes/paypal-express.php:881
 msgid ""
 "The payment has failed. This happens only if the payment was made from your "
 "customer's bank account."
 msgstr ""
 
 #: includes/paypal-express.php:133 includes/paypal-express.php:368
-#: includes/paypal-express.php:882
+#: includes/paypal-express.php:886
 msgid "The payment has been partially refunded."
 msgstr ""
 
 #: includes/paypal-express.php:137 includes/paypal-express.php:372
-#: includes/paypal-express.php:887
+#: includes/paypal-express.php:891
 msgid ""
 "The transaction has not terminated, e.g. an authorization may be awaiting "
 "completion."
 msgstr ""
 
 #: includes/paypal-express.php:141 includes/paypal-express.php:376
-#: includes/paypal-express.php:892
+#: includes/paypal-express.php:896
 msgid ""
 "The payment has been completed, and the funds have been added successfully "
 "to your account balance."
 msgstr ""
 
 #: includes/paypal-express.php:145 includes/paypal-express.php:380
-#: includes/paypal-express.php:897
+#: includes/paypal-express.php:901
 msgid "A payment has been accepted."
 msgstr ""
 
 #: includes/paypal-express.php:149 includes/paypal-express.php:384
-#: includes/paypal-express.php:902
+#: includes/paypal-express.php:906
 msgid ""
 "A payment was reversed due to a chargeback or other type of reversal. The "
 "funds have been removed from your account balance and returned to the buyer:"
 msgstr ""
 
 #: includes/paypal-express.php:152 includes/paypal-express.php:387
-#: includes/paypal-express.php:905
+#: includes/paypal-express.php:909
 msgid ""
 "A reversal has occurred on this transaction due to a chargeback by your "
 "customer."
 msgstr ""
 
 #: includes/paypal-express.php:153 includes/paypal-express.php:388
-#: includes/paypal-express.php:906
+#: includes/paypal-express.php:910
 msgid ""
 "A reversal has occurred on this transaction due to your customer triggering "
 "a money-back guarantee."
 msgstr ""
 
 #: includes/paypal-express.php:154 includes/paypal-express.php:389
-#: includes/paypal-express.php:907
+#: includes/paypal-express.php:911
 msgid ""
 "A reversal has occurred on this transaction due to a complaint about the "
 "transaction from your customer."
 msgstr ""
 
 #: includes/paypal-express.php:155 includes/paypal-express.php:390
-#: includes/paypal-express.php:908
+#: includes/paypal-express.php:912
 msgid ""
 "A reversal has occurred on this transaction because you have given the "
 "customer a refund."
 msgstr ""
 
 #: includes/paypal-express.php:156 includes/paypal-express.php:391
-#: includes/paypal-express.php:909
+#: includes/paypal-express.php:913
 msgid "A reversal has occurred on this transaction due to an unknown reason."
 msgstr ""
 
 #: includes/paypal-express.php:162 includes/paypal-express.php:397
-#: includes/paypal-express.php:916
+#: includes/paypal-express.php:920
 msgid "You refunded the payment."
 msgstr ""
 
 #: includes/paypal-express.php:166 includes/paypal-express.php:401
-#: includes/paypal-express.php:921
+#: includes/paypal-express.php:925
 msgid "You denied the payment when it was marked as pending."
 msgstr ""
 
 #: includes/paypal-express.php:171 includes/paypal-express.php:406
-#: includes/paypal-express.php:927
+#: includes/paypal-express.php:931
 msgid ""
 "The payment is pending because your customer did not include a confirmed "
 "shipping address and your Payment Receiving Preferences is set such that you "
@@ -251,21 +251,21 @@ msgid ""
 msgstr ""
 
 #: includes/paypal-express.php:172 includes/paypal-express.php:407
-#: includes/paypal-express.php:928
+#: includes/paypal-express.php:932
 msgid ""
 "The payment is pending because it has been authorized but not settled. You "
 "must capture the funds first."
 msgstr ""
 
 #: includes/paypal-express.php:173 includes/paypal-express.php:408
-#: includes/paypal-express.php:929
+#: includes/paypal-express.php:933
 msgid ""
 "The payment is pending because it was made by an eCheck that has not yet "
 "cleared."
 msgstr ""
 
 #: includes/paypal-express.php:174 includes/paypal-express.php:409
-#: includes/paypal-express.php:930
+#: includes/paypal-express.php:934
 msgid ""
 "The payment is pending because you hold a non-U.S. account and do not have a "
 "withdrawal mechanism. You must manually accept or deny this payment from "
@@ -273,7 +273,7 @@ msgid ""
 msgstr ""
 
 #: includes/paypal-express.php:175 includes/paypal-express.php:410
-#: includes/paypal-express.php:931
+#: includes/paypal-express.php:935
 msgid ""
 "You do not have a balance in the currency sent, and you do not have your "
 "Payment Receiving Preferences set to automatically convert and accept this "
@@ -281,26 +281,26 @@ msgid ""
 msgstr ""
 
 #: includes/paypal-express.php:176 includes/paypal-express.php:411
-#: includes/paypal-express.php:932
+#: includes/paypal-express.php:936
 msgid ""
 "The payment is pending because it is part of an order that has been "
 "authorized but not settled."
 msgstr ""
 
 #: includes/paypal-express.php:177 includes/paypal-express.php:412
-#: includes/paypal-express.php:933
+#: includes/paypal-express.php:937
 msgid "The payment is pending while it is being reviewed by PayPal for risk."
 msgstr ""
 
 #: includes/paypal-express.php:178 includes/paypal-express.php:413
-#: includes/paypal-express.php:934
+#: includes/paypal-express.php:938
 msgid ""
 "The payment is pending because it was made to an email address that is not "
 "yet registered or confirmed."
 msgstr ""
 
 #: includes/paypal-express.php:179 includes/paypal-express.php:414
-#: includes/paypal-express.php:935
+#: includes/paypal-express.php:939
 msgid ""
 "The payment is pending because it was made via credit card and you must "
 "upgrade your account to Business or Premier status in order to receive the "
@@ -309,21 +309,21 @@ msgid ""
 msgstr ""
 
 #: includes/paypal-express.php:180 includes/paypal-express.php:415
-#: includes/paypal-express.php:936
+#: includes/paypal-express.php:940
 msgid ""
 "The payment is pending because you are not yet verified. You must verify "
 "your account before you can accept this payment."
 msgstr ""
 
 #: includes/paypal-express.php:181 includes/paypal-express.php:416
-#: includes/paypal-express.php:937
+#: includes/paypal-express.php:941
 msgid ""
 "The payment is pending for an unknown reason. For more information, contact "
 "PayPal customer service."
 msgstr ""
 
 #: includes/paypal-express.php:184 includes/paypal-express.php:419
-#: includes/paypal-express.php:940
+#: includes/paypal-express.php:944
 msgid "The payment is pending."
 msgstr ""
 
@@ -359,31 +359,31 @@ msgid ""
 "payment is kept in pending state by PayPal. Please check your PayPal account."
 msgstr ""
 
-#: includes/paypal-express.php:506 includes/paypal-express.php:509
+#: includes/paypal-express.php:510 includes/paypal-express.php:513
 msgid ""
 "There was a problem finalizing your purchase with PayPal. Please try again</"
 "a>."
 msgstr ""
 
-#: includes/paypal-express.php:540
+#: includes/paypal-express.php:544
 #, php-format
 msgid ""
 "Your PayPal payment for this order totaling %s is not yet complete. Here is "
 "the latest status:"
 msgstr ""
 
-#: includes/paypal-express.php:547
+#: includes/paypal-express.php:551
 #, php-format
 msgid ""
 "Your PayPal payment for this order totaling %s is complete. The PayPal "
 "transaction number is <strong>%s</strong>."
 msgstr ""
 
-#: includes/paypal-express.php:611
+#: includes/paypal-express.php:615
 msgid "PayPal Express Checkout Settings"
 msgstr ""
 
-#: includes/paypal-express.php:614
+#: includes/paypal-express.php:618
 msgid ""
 "Express Checkout is PayPal's premier checkout solution, which streamlines "
 "the checkout process for buyers and keeps them on your site after making a "
@@ -394,35 +394,35 @@ msgid ""
 "</a>"
 msgstr ""
 
-#: includes/paypal-express.php:617
+#: includes/paypal-express.php:621
 msgid "PayPal Site"
 msgstr ""
 
-#: includes/paypal-express.php:653
+#: includes/paypal-express.php:657
 msgid "Paypal Currency"
 msgstr ""
 
-#: includes/paypal-express.php:694
+#: includes/paypal-express.php:698
 msgid "PayPal Mode"
 msgstr ""
 
-#: includes/paypal-express.php:697
+#: includes/paypal-express.php:701
 msgid "Sandbox"
 msgstr ""
 
-#: includes/paypal-express.php:698
+#: includes/paypal-express.php:702
 msgid "Live"
 msgstr ""
 
-#: includes/paypal-express.php:703
+#: includes/paypal-express.php:707
 msgid "PayPal Merchant E-mail"
 msgstr ""
 
-#: includes/paypal-express.php:709
+#: includes/paypal-express.php:713
 msgid "PayPal API Credentials"
 msgstr ""
 
-#: includes/paypal-express.php:711
+#: includes/paypal-express.php:715
 msgid ""
 "You must login to PayPal and create an API signature to get your "
 "credentials. <a target=\"_blank\" href=\"https://cms.paypal.com/us/cgi-bin/?"
@@ -430,41 +430,41 @@ msgid ""
 "\">Instructions &raquo;</a>"
 msgstr ""
 
-#: includes/paypal-express.php:713
+#: includes/paypal-express.php:717
 msgid "API Username"
 msgstr ""
 
-#: includes/paypal-express.php:717
+#: includes/paypal-express.php:721
 msgid "API Password"
 msgstr ""
 
-#: includes/paypal-express.php:721
+#: includes/paypal-express.php:725
 msgid "Signature"
 msgstr ""
 
-#: includes/paypal-express.php:727
+#: includes/paypal-express.php:731
 msgid "Payment Data Transfer"
 msgstr ""
 
-#: includes/paypal-express.php:729
+#: includes/paypal-express.php:733
 msgid ""
 "PDT allows you to receive instant notification of payments. Turn on Auto "
 "Return in order to use Payment Data Transfer.<br />Specify <b>"
 msgstr ""
 
-#: includes/paypal-express.php:731
+#: includes/paypal-express.php:735
 msgid "Identity Token"
 msgstr ""
 
-#: includes/paypal-express.php:740
+#: includes/paypal-express.php:744
 msgid "Click for Paypal Page Display Settings"
 msgstr ""
 
-#: includes/paypal-express.php:760
+#: includes/paypal-express.php:764
 msgid "PayPal Header Image (optional)"
 msgstr ""
 
-#: includes/paypal-express.php:762
+#: includes/paypal-express.php:766
 msgid ""
 "URL for an image you want to appear at the top left of the payment page. The "
 "image has a maximum size of 750 pixels wide by 90 pixels high. PayPal "
@@ -472,47 +472,47 @@ msgid ""
 "server. If you do not specify an image, the business name is displayed."
 msgstr ""
 
-#: includes/paypal-express.php:770
+#: includes/paypal-express.php:774
 msgid "PayPal Header Border Color (optional)"
 msgstr ""
 
-#: includes/paypal-express.php:772
+#: includes/paypal-express.php:776
 msgid ""
 "Sets the border color around the header of the payment page. The border is a "
 "2-pixel perimeter around the header space, which is 750 pixels wide by 90 "
 "pixels high. By default, the color is black."
 msgstr ""
 
-#: includes/paypal-express.php:780
+#: includes/paypal-express.php:784
 msgid "PayPal Header Background Color (optional)"
 msgstr ""
 
-#: includes/paypal-express.php:782
+#: includes/paypal-express.php:786
 msgid ""
 "Sets the background color for the header of the payment page. By default, "
 "the color is white."
 msgstr ""
 
-#: includes/paypal-express.php:790
+#: includes/paypal-express.php:794
 msgid "PayPal Page Background Color (optional)"
 msgstr ""
 
-#: includes/paypal-express.php:792
+#: includes/paypal-express.php:796
 msgid ""
 "Sets the background color for the payment page. By default, the color is "
 "white."
 msgstr ""
 
-#: includes/paypal-express.php:854
+#: includes/paypal-express.php:858
 msgid ""
 "There was a problem verifying the IPN string with PayPal. Please try again."
 msgstr ""
 
-#: includes/paypal-express.php:1115
+#: includes/paypal-express.php:1129
 msgid "There was a problem connecting to PayPal. Please try again."
 msgstr ""
 
-#: includes/paypal-express.php:1189
+#: includes/paypal-express.php:1203
 #, php-format
 msgid ""
 "Transaction Id: %d <br/ >Something went wrong with PayPal, while trying to "

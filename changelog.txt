@@ -4,6 +4,7 @@
 
 * Fixed:
     Facebook Login not working
+    Paypal Payment not working
 
 1.4.5 - 2017-08-02 - Umesh Kumar
 ----------------------------------------------------------------------
