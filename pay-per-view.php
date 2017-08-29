@@ -341,7 +341,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 				$l_name = ! empty( $data->last_name ) ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->last_name ) ) : '';
 			}
 
-			$name    = !empty( $data->name ) ? preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $data->name ) ) : ( $f_name . '_' . $l_name );
+			$name    = !empty( $data->name ) ? $data->name : ( $f_name . '_' . $l_name );
 			$wp_user = $this->user_from_email( $email, $name );
 
 			$user = get_userdata( $wp_user );
@@ -3428,7 +3428,14 @@ if ( !class_exists( 'PayPerView' ) ) {
 				$password = wp_generate_password( 12, false );
 				$username = preg_replace( '/[^_0-9a-z]/i', '_', strtolower( $full_name ) );
 
-				$wp_user = wp_create_user( $username, $password, $email );
+                $new_username = $username;
+                $i = 0;
+                while ( username_exists( $new_username ) ) {
+                        $new_username = $username . $i;
+                        $i++;
+                }
+
+               $wp_user = wp_create_user( $new_username, $password, $email );
 
 				if ( is_wp_error( $wp_user ) ) {
 					return false;
