@@ -328,7 +328,7 @@ class PPW_Gateway_Paypal_Express {
 
 		if ( isset( $_SESSION['TOKEN'] ) && isset( $_SESSION['PayerID'] ) && isset( $_SESSION['final_amt'] ) ) {
 			//attempt the final payment
-			$result = $this->DoExpressCheckoutPayment( $_SESSION['TOKEN'], $_SESSION['payer_id'], $_SESSION['final_amts'], $_SESSION['seller_paypal_accounts'], $_SESSION['ipns'], $_SESSION['prs'] );
+			$result = $this->DoExpressCheckoutPayment( $_SESSION['TOKEN'], $_SESSION['PayerID'], $_SESSION['final_amt'], $_SESSION['seller_paypal_accounts'], $_SESSION['ipns'], $_SESSION['prs'] );
 
 			//check response
 			if ( $result["ACK"] == "Success" || $result["ACK"] == "SuccessWithWarning" ) {
@@ -461,6 +461,9 @@ class PPW_Gateway_Paypal_Express {
 						'post_id'    => $_SESSION["ppw_post_id"],
 						'order_id'   => $order_id
 					);
+
+					$orders = array();
+
 					// Check if user had order from before
 					if ( isset( $_COOKIE["pay_per_view"] ) ) {
 						$orders = unserialize( stripslashes( $_COOKIE["pay_per_view"] ) );
@@ -497,6 +500,7 @@ class PPW_Gateway_Paypal_Express {
 				}
 			} else { //whoops, error
 
+				$error = "";
 				for ( $i = 0; $i <= 5; $i ++ ) { //print the first 5 errors
 					if ( isset( $result["L_ERRORCODE$i"] ) ) {
 						$error .= "<li>{$result["L_ERRORCODE$i"]} - {$result["L_SHORTMESSAGE$i"]} - {$result["L_LONGMESSAGE$i"]}</li>";
@@ -1048,12 +1052,22 @@ class PPW_Gateway_Paypal_Express {
 		$nvpstr .= '&PAYERID=' . urlencode( $payer_id );
 		$nvpstr .= '&BUTTONSOURCE=incsub_SP';
 
-		$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $final_amts[0];
+		$amount = is_array($final_amts[0]) ? $final_amts[0] : $final_amts;
+
+		$nvpstr .= "&PAYMENTREQUEST_0_AMT=" . $amount;
+		$nvpstr .= "&PAYMENTREQUEST_0_ITEMAMT=" . $amount;
+
 		$nvpstr .= "&PAYMENTREQUEST_0_CURRENCYCODE=" . $this->currencyCode;
 		$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTACTION=" . $this->payment_action;
-		$nvpstr .= "&PAYMENTREQUEST_0_NOTIFYURL=" . $ipns[0];
-		$nvpstr .= "&PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID=" . $seller_paypal_accounts[0];
-		$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTREQUESTID=" . $prs[0];
+		if( ! empty( $ipns ) ){
+			$nvpstr .= "&PAYMENTREQUEST_0_NOTIFYURL=" . $ipns[0];
+		}
+		if( ! empty( $seller_paypal_accounts ) ){
+			$nvpstr .= "&PAYMENTREQUEST_0_SELLERPAYPALACCOUNTID=" . $seller_paypal_accounts[0];
+		}
+		if( ! empty( $prs ) ){
+			$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTREQUESTID=" . $prs[0];
+		}
 
 		/* Make the call to PayPal to finalize payment
 		*/

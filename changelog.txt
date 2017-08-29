@@ -1,5 +1,10 @@
 ==Pay per View==
 
+1.4.6 - 2017-08-30 - Umesh Kumar
+
+* Fixed:
+    Facebook Login not working
+
 1.4.5 - 2017-08-02 - Umesh Kumar
 ----------------------------------------------------------------------
 

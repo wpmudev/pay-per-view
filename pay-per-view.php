@@ -3,7 +3,7 @@
 Plugin Name: Pay Per View
 Description: Allows protecting posts/pages until visitor pays a nominal price or subscribes to the website.
 Plugin URI: http://premium.wpmudev.org/project/pay-per-view
-Version: 1.4.5
+Version: 1.4.6
 Author: WPMU Dev
 Author URI: http://premium.wpmudev.org/
 TextDomain: ppw
@@ -38,7 +38,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
-		var $version = "1.4.5";
+		var $version = "1.4.6";
 
 		/**
 		* Constructor
