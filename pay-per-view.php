@@ -1095,81 +1095,85 @@ if ( !class_exists( 'PayPerView' ) ) {
 			 * Uses Paypal Payments Standard
 			 * https://developer.paypal.com/docs/classic/products/paypal-payments-standard/
 			 */
-			if ( $this->options['gateways']['paypal-express']['mode'] == 'live' ) {
-				$form .= '<form action="https://www.paypal.com/cgi-bin/webscr" method="post">';
-			} else {
-				$form .= '<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">';
-			}
-			$return_url = get_permalink( $post->ID );
-			$return_url = add_query_arg(
-				array( 'ppw_paypal_subscribe' => 1 ),
-				$return_url
-			);
-			$form .= '<input type="hidden" name="business" value="' . esc_attr( $this->options['gateways']['paypal-express']['merchant_email'] ) . '" />';
-			$form .= '<input type="hidden" name="cmd" value="_xclick-subscriptions">';
-			/* translators: %s refer to blog info */
-			$form .= '<input type="hidden" name="item_name" value="' . sprintf( __( 'Subscription for %s', 'ppw' ), get_bloginfo( 'name' ) ) . '" />';
-			$form .= '<input type="hidden" name="item_number" value="' . __( 'Special offer', 'ppw' ) . '" />';
-			$form .= '<input type="hidden" name="no_shipping" value="1" />';
-			$form .= '<input type="hidden" name="currency_code" value="' . $this->options['currency'] . '" />';
-			$form .= '<input type="hidden" name="return" value="' . $return_url . '" />';
-			$form .= '<input type="hidden" name="rm" value="2" />';
-			$form .= '<input type="hidden" name="cancel_return" value="' . get_option( 'home' ) . '" />';
-			$form .= '<input type="hidden" name="notify_url" value="' . admin_url( 'admin-ajax.php?action=ppw_paypal_ipn' ) . '" />';
-			// No recurring, i.e. period pass
-			if ( ! $subs ) {
+			if ( isset( $this->options['gateways'] ) && is_array( $this->options['gateways'] ) ) {
+				if ( $this->options['gateways']['paypal-express']['mode'] == 'live' ) {
+					$form .= '<form action="https://www.paypal.com/cgi-bin/webscr" method="post">';
+				} else {
+					$form .= '<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">';
+				}
+				$return_url = get_permalink( $post->ID );
+				$return_url = add_query_arg(
+					array( 'ppw_paypal_subscribe' => 1 ),
+					$return_url
+				);
+				$form .= '<input type="hidden" name="business" value="' . esc_attr( $this->options['gateways']['paypal-express']['merchant_email'] ) . '" />';
+				$form .= '<input type="hidden" name="cmd" value="_xclick-subscriptions">';
+				/* translators: %s refer to blog info */
+				$form .= '<input type="hidden" name="item_name" value="' . sprintf( __( 'Subscription for %s', 'ppw' ), get_bloginfo( 'name' ) ) . '" />';
+				$form .= '<input type="hidden" name="item_number" value="' . __( 'Special offer', 'ppw' ) . '" />';
+				$form .= '<input type="hidden" name="no_shipping" value="1" />';
+				$form .= '<input type="hidden" name="currency_code" value="' . $this->options['currency'] . '" />';
+				$form .= '<input type="hidden" name="return" value="' . $return_url . '" />';
+				$form .= '<input type="hidden" name="rm" value="2" />';
+				$form .= '<input type="hidden" name="cancel_return" value="' . get_option( 'home' ) . '" />';
+				$form .= '<input type="hidden" name="notify_url" value="' . admin_url( 'admin-ajax.php?action=ppw_paypal_ipn' ) . '" />';
+				// No recurring, i.e. period pass
+				if ( ! $subs ) {
 
-				$period = empty( $this->options['daily_pass_period'] ) ? 'D' : $this->options['daily_pass_period'];
-				$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
-				$form .= '<input type="hidden" name="a3" value="' . number_format( $this->options['daily_pass_price'], 2 ) . '" />';
-				$form .= '<input type="hidden" name="p3" value="' . $this->options['daily_pass_days'] . '" />';
-				$form .= '<input type="hidden" name="src" value="0" />';
-				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID . ":" . $current_user->ID . ":" . $this->options['daily_pass_days'] . ":0:" . $period . '" />';
-				//Submit button for payment
-				$form .= '<input class="ppw_submit_btn';
-				// Force login if user not logged in
-				if ( ! is_user_logged_in() ) {
-					$form .= ' ppw_not_loggedin'; // Add a class to which javascipt is bound
-					if ( $this->options['accept_api_logins'] ) {
-						$form .= ' ppw_accept_api_logins'; // Add a class to which javascipt is bound
+					$period = empty( $this->options['daily_pass_period'] ) ? 'D' : $this->options['daily_pass_period'];
+					$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
+					$form .= '<input type="hidden" name="a3" value="' . number_format( $this->options['daily_pass_price'], 2 ) . '" />';
+					$form .= '<input type="hidden" name="p3" value="' . $this->options['daily_pass_days'] . '" />';
+					$form .= '<input type="hidden" name="src" value="0" />';
+					$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID . ":" . $current_user->ID . ":" . $this->options['daily_pass_days'] . ":0:" . $period . '" />';
+					//Submit button for payment
+					$form .= '<input class="ppw_submit_btn';
+					// Force login if user not logged in
+					if ( ! is_user_logged_in() ) {
+						$form .= ' ppw_not_loggedin'; // Add a class to which javascipt is bound
+						if ( $this->options['accept_api_logins'] ) {
+							$form .= ' ppw_accept_api_logins'; // Add a class to which javascipt is bound
+						}
 					}
+
+					$form .= '" type="submit" name="submit_btn" value="';
+					$form .= str_replace(
+								array( "PRICE", "DAY", "PERIOD" ), array(
+								$this->options["daily_pass_price"],
+								$this->options["daily_pass_days"],
+								$this->get_interval( $period )
+							),
+								$this->options["daily_pass_description"] ) . '" />';
+
+				} else {
+					$period = empty( $this->options['subscription_period'] ) ? 'D' : $this->options['subscription_period'];
+					$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
+					$form .= '<input type="hidden" name="a3" value="' . number_format( $this->options['subscription_price'], 2 ) . '" />';
+					$form .= '<input type="hidden" name="p3" value="' . $this->options['subscription_days'] . '" />';
+					$form .= '<input type="hidden" name="src" value="1" />';
+					$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID . ":" . $current_user->ID . ":" . $this->options['subscription_days'] . ":1:" . $period . '" />';
+					$form .= '<input class="ppw_submit_btn ';
+					if ( ! is_user_logged_in() ) {
+						$form .= ' ppw_not_loggedin'; // Add a class to which javascipt is bound
+						if ( $this->options['accept_api_logins'] ) {
+							$form .= ' ppw_accept_api_logins';
+						} // Add a class to which javascipt is bound
+					}
+					$form .= '" type="submit" name="submit_btn" value="';
+					$form .= str_replace(
+								array( "PRICE", "DAY", "PERIOD" ), array(
+								$this->options["subscription_price"],
+								$this->options["subscription_days"],
+								$this->get_interval( $period )
+							),
+								$this->options["subscription_description"] ) . '" />';
 				}
-
-				$form .= '" type="submit" name="submit_btn" value="';
-				$form .= str_replace(
-					         array( "PRICE", "DAY", "PERIOD" ), array(
-					         $this->options["daily_pass_price"],
-					         $this->options["daily_pass_days"],
-					         $this->get_interval( $period )
-				         ),
-					         $this->options["daily_pass_description"] ) . '" />';
-
+				// They say Paypal uses this for tracking. I would prefer to remove it if it is not mandatory.
+				$form .= '<img style="display:none" alt="" border="0" width="1" height="1" src="https://www.paypal.com/en_US/i/scr/pixel.gif" />';
+				$form .= '</form>';
 			} else {
-				$period = empty( $this->options['subscription_period'] ) ? 'D' : $this->options['subscription_period'];
-				$form .= '<input type="hidden" name="t3" value="' . $period . '" />';
-				$form .= '<input type="hidden" name="a3" value="' . number_format( $this->options['subscription_price'], 2 ) . '" />';
-				$form .= '<input type="hidden" name="p3" value="' . $this->options['subscription_days'] . '" />';
-				$form .= '<input type="hidden" name="src" value="1" />';
-				$form .= '<input class="ppw_custom" type="hidden" name="custom" value="' . $post->ID . ":" . $current_user->ID . ":" . $this->options['subscription_days'] . ":1:" . $period . '" />';
-				$form .= '<input class="ppw_submit_btn ';
-				if ( ! is_user_logged_in() ) {
-					$form .= ' ppw_not_loggedin'; // Add a class to which javascipt is bound
-					if ( $this->options['accept_api_logins'] ) {
-						$form .= ' ppw_accept_api_logins';
-					} // Add a class to which javascipt is bound
-				}
-				$form .= '" type="submit" name="submit_btn" value="';
-				$form .= str_replace(
-					         array( "PRICE", "DAY", "PERIOD" ), array(
-					         $this->options["subscription_price"],
-					         $this->options["subscription_days"],
-					         $this->get_interval( $period )
-				         ),
-					         $this->options["subscription_description"] ) . '" />';
+				$form .= __( 'PayPal Gateway not configured ', 'ppw' );
 			}
-			// They say Paypal uses this for tracking. I would prefer to remove it if it is not mandatory.
-			$form .= '<img style="display:none" alt="" border="0" width="1" height="1" src="https://www.paypal.com/en_US/i/scr/pixel.gif" />';
-			$form .= '</form>';
 
 			return $form;
 		}

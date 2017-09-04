@@ -828,9 +828,9 @@ class PPW_Gateway_Paypal_Express {
 			$settings = get_option( 'ppw_options' );
 
 			if ( $settings['gateways']['paypal-express']['mode'] == 'sandbox' ) {
-				$domain = 'https://www.sandbox.paypal.com/cgi-bin/webscr';
+				$domain = 'https://ipnpb.sandbox.paypal.comcgi-bin/webscr';
 			} else {
-				$domain = 'https://www.paypal.com/cgi-bin/webscr';
+				$domain = 'https://ipnpb.paypal.com/cgi-bin/webscr';
 			}
 
 			$req = 'cmd=_notify-validate';
@@ -979,11 +979,19 @@ class PPW_Gateway_Paypal_Express {
 		$nvpstr .= "&LOCALECODE=" . $this->locale;
 
 		//formatting
-		$nvpstr .= "&HDRIMG=" . urlencode( $settings['gateways']['paypal-express']['header_img'] );
-		$nvpstr .= "&HDRBORDERCOLOR=" . urlencode( $settings['gateways']['paypal-express']['header_border'] );
-		$nvpstr .= "&HDRBACKCOLOR=" . urlencode( $settings['gateways']['paypal-express']['header_back'] );
-		$nvpstr .= "&PAYFLOWCOLOR=" . urlencode( $settings['gateways']['paypal-express']['page_back'] );
-
+		if ( isset( $settings['gateways']['paypal-express']['header_img'] ) ) {
+			$nvpstr .= "&HDRIMG=" . urlencode( $settings['gateways']['paypal-express']['header_img'] );
+		}
+		if ( isset( $settings['gateways']['paypal-express']['header_border'] ) ) {
+			$nvpstr .= "&HDRBORDERCOLOR=" . urlencode( $settings['gateways']['paypal-express']['header_border'] );
+		}
+		if ( isset( $settings['gateways']['paypal-express']['header_back'] ) ) {
+			$nvpstr .= "&HDRBACKCOLOR=" . urlencode( $settings['gateways']['paypal-express']['header_back'] );
+		}
+		if ( isset( $settings['gateways']['paypal-express']['page_back'] ) ) {
+			$nvpstr .= "&PAYFLOWCOLOR=" . urlencode( $settings['gateways']['paypal-express']['page_back'] );
+		}
+		
 		$nvpstr .= "&PAYMENTREQUEST_0_PAYMENTACTION=Sale";
 		$nvpstr .= "&PAYMENTREQUEST_0_CURRENCYCODE=" . $this->currencyCode; // Fix in V1.2.1
 		$post = get_post( $this->post_id );
