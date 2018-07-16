@@ -2,7 +2,9 @@
 
 1.4.7 - 2018-07-16 - Umesh Kumar
 
-* Fixed: Extended Cookie validity time not considered while showing hidden content
+* Fixed:
+    - Extended Cookie validity time not considered while showing hidden content
+    - Create table on subsites as well
 
 1.4.6 - 2017-08-30 - Umesh Kumar
 

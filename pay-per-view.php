@@ -102,6 +102,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			), 10, 2 );// Add settings link on plugin page
 			add_action( 'admin_print_scripts', array( &$this, 'admin_scripts' ) );
 			add_action( 'admin_print_styles', array( &$this, 'admin_css' ) );
+			add_action( 'wpmu_new_blog', array( $this, 'install_on_subsite' ) );
 
 			// tinyMCE stuff
 			add_action( 'wp_ajax_ppwTinymceOptions', array( &$this, 'tinymce_options' ) );
@@ -595,7 +596,39 @@ if ( !class_exists( 'PayPerView' ) ) {
 		/**
 		 * Installs database table
 		 */
-		function install() {
+		function install( $network_wide ) {
+
+			if ( ( function_exists( 'is_multisite' ) && is_multisite() ) && $network_wide ) {
+
+				$blogs = get_sites();
+
+				foreach ( $blogs as $blog ) {
+					switch_to_blog( $blog->blog_id );
+					$this->create_table();
+					restore_current_blog();
+				}
+
+			} else {
+				$this->create_table();
+			}
+		}
+
+		/**
+		 * Installs database table on new blog/site creation on multisite
+		 */
+		function install_on_subsite( $blog_id ){
+			//No need to check for is_plugin_active_for_network
+			//since it will not be active at all on wpmu_new_blog
+			switch_to_blog( $blog_id );
+			$this->create_table();
+			restore_current_blog();
+		}
+
+		/**
+		 * Create Table
+		 * 
+		 */
+		function create_table() {
 
 			global $wpdb;
 
