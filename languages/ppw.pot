@@ -584,6 +584,10 @@ msgstr ""
 msgid "Processing..."
 msgstr ""
 
+#: pay-per-view.php:1053 pay-per-view.php:1062
+msgid "OR"
+msgstr ""
+
 #. translators: %s refer to blog info
 #: pay-per-view.php:1111
 #, php-format

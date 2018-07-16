@@ -49,7 +49,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			$this->time_format     = get_option( 'time_format' );
 			$this->date_format     = get_option( 'date_format' );
 			$this->datetime_format = $this->date_format . " " . $this->time_format;
-			
+
 			// Read all options at once
 			$this->options = get_option( 'ppw_options' );
 
@@ -1086,7 +1086,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			// For subscription options redirection will be handled by javascript or by the forms themselves
 			if ( $this->options["daily_pass"] ) {
 				if ( $this->options["one_time"] ) {
-					$content .= '<div class="ppw_or">OR</div>';
+					$content .= '<div class="ppw_or">' . __('OR', 'ppw') . '</div>';
 				}
 				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
 				$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden" >&nbsp;</a></div>';
@@ -1095,7 +1095,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 			}
 			if ( $this->options["subscription"] ) {
 				if ( $this->options["one_time"] OR $this->options["daily_pass"] ) {
-					$content .= '<div class="ppw_or">OR</div>';
+					$content .= '<div class="ppw_or">' . __('OR', 'ppw') . '</div>';
 				}
 				$content .= '<div class="ppw_inner ppw_inner' . $n . '">';
 				$content .= '<div style="display:none"><a href="' . wp_login_url( get_permalink() ) . '" class="ppw_login_hidden">&nbsp;</a></div>';
