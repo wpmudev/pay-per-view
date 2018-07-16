@@ -12,7 +12,7 @@ WDP ID: 261
 */
 
 /*
-Copyright 2007-2015 Incsub (http://incsub.com)
+Copyright 2007-2018 Incsub (http://incsub.com)
 
 Contributor: Hakan Evin (Incsub), Arnold Bailey (Incsub), Umesh Kumar (umeshsingla05@gmail.com)
 
@@ -34,7 +34,7 @@ if ( !class_exists( 'PayPerView' ) ) {
 
 	class PayPerView {
 
-		var $version = "1.4.6";
+		var $version = "1.4.7";
 
 		/**
 		* Constructor
@@ -719,6 +719,8 @@ if ( !class_exists( 'PayPerView' ) ) {
 		 * @return mixed
 		 */
 		function subscription_status( $post, $method ) {
+			$settings = get_option( 'ppw_options' );
+			$duration = !empty( $settings['cookie']) ? $settings['cookie'] * 3600 : 7200;
 			// If user paid, show content. 'Tool' option has its own logic
 			if ( isset( $_COOKIE["pay_per_view"] ) && $method != 'tool' ) {
 				// On some installations slashes are added while serializing. So get rid of them.
@@ -747,11 +749,12 @@ if ( !class_exists( 'PayPerView' ) ) {
 							AND %d < transaction_stamp UNION",
 								$order['post_id'],
 								$order['order_id'],
-								( time() - 7200 ) ); // Give another 1 hour grace time
+								( time() - $duration ) );
 
 						}
 
-						$query  = rtrim( $query, "UNION" ); // Get rid of the last UNION
+						// Get rid of the last UNION
+						$query  = rtrim( $query, "UNION" );
 						$result = $wpdb->get_results( $query );
 
 						return $result;

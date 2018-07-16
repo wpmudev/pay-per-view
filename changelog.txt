@@ -1,5 +1,9 @@
 ==Pay per View==
 
+1.4.7 - 2018-07-16 - Umesh Kumar
+
+* Fixed: Extended Cookie validity time not considered while showing hidden content
+
 1.4.6 - 2017-08-30 - Umesh Kumar
 
 * Fixed:
