@@ -81,3 +81,5 @@ Once installed and activated, you'll see a new menu item in your WordPress Dashb
 #### Using Pay-per-view Directly In Your Templates
 
 If you want to protect content that is outside of the post content (in a custom field, for example) then you can use the template function wpmudev_ppw_html. This function replaces the HTML with payment buttons, revealing the content only when payment is confirmed. For example, the following code snippet, when added to a theme template, hides a YouTube video until the $1.50 PPV fee has been paid: Note: The content is always protected regardless of the PPV settings for the page or post. As well as protecting the content using the wpmudev_ppw_html function, you also need to ensure that the PPV stylesheet and javascript files are included in the page.  This can be done as follows:
+
+https://gist.github.com/anonymous/7aca988626cd2d1e9323.js
